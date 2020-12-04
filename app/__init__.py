@@ -38,8 +38,11 @@ db = SQLAlchemy(app)
 # "app", "db" and "login_manager" from this file
 # pylint: disable=wrong-import-position
 from app.models.user import User
+from app.models.usergroup import UserGroup
 
 # Repositories (classes containing helper functions for a specific table, for example to manage a group of users)
+from app.repositories.users import UserRepository
+from app.repositories.usergroups import UserGroupRepository
 
 # Blueprints (routers)
 from app.routes.api import api
@@ -56,12 +59,27 @@ app.register_blueprint(website, url_prefix='/')
 # TODO add more init here
 # - add a condition (with "and") to check if the default objects exist or not
 # - add the init instructions in the body of the if
+if UserGroup.query.filter_by(name='admin').count() == 0:
+    admin_group = UserGroup(name='admin')
+    admin_group.set_is_admin(True)
+
+    db.session.add(admin_group)
+
+    db.session.commit()
+
+if UserGroup.query.filter_by(name='regular').count() == 0:
+    user_group = UserGroup(name='regular')
+
+    db.session.add(user_group)
+
+    db.session.commit()
+
+
 if User.query.filter_by(username='admin').count() == 0: 
     # Create admin user
-    admin_user = User(
+    admin_user = UserRepository.addUser(
         username='admin',
-        password='admin'
+        password='admin',
+        mail='admin@localhost',
+        usergroup='admin'
     )
-    # Commit changes
-    db.session.add(admin_user)
-    db.session.commit()
