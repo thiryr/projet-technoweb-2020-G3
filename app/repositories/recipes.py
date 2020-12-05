@@ -44,7 +44,7 @@ class RecipeRepository:
             additional_utensil = Utensil(utensil_text, recipe.id)
             db.session.add(additional_utensil)
         
-        for step_text in ingredients:
+        for step_text in steps:
             additional_step = Step(step_text, recipe.id)
             db.session.add(additional_ingredient)
         
