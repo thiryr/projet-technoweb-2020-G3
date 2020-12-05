@@ -45,7 +45,7 @@ class RecipeRepository:
             db.session.add(additional_utensil)
         
         for step_text in ingredients:
-            additional_step = Ingredient(step_text, recipe.id)
+            additional_step = Step(step_text, recipe.id)
             db.session.add(additional_ingredient)
         
         
