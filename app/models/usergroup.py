@@ -26,14 +26,14 @@ class UserGroup(db.Model):
 
     # Init
     # By default, permissions are that of a regular user
-    def __init__(self, name: str):
+    def __init__(self, name: str, can_access_user_page=True, can_login = True, is_admin = False, can_have_public_recipes = True, can_access_social_features = True, can_rate = False):
         self.name = name
-        self.can_access_user_page = True
-        self.can_login = True
-        self.is_admin = False
-        self.can_have_public_recipes = True
-        self.can_access_social_features = True
-        self.can_rate = False
+        self.can_access_user_page = can_access_user_page
+        self.can_login = can_login
+        self.is_admin = is_admin
+        self.can_have_public_recipes = can_have_public_recipes
+        self.can_access_social_features = can_access_social_features
+        self.can_rate = can_rate
 
     def set_is_admin(self, new_value: bool):
         self.is_admin = new_value

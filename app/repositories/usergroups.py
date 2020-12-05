@@ -39,3 +39,16 @@ class UserGroupRepository:
 
         # Find group with this name, or None if there isn't any
         return UserGroup.query.filter_by(name=group_name).first()
+    
+
+    @staticmethod
+    def add_usergroup(group_name:str, can_access_user_page=True, can_login = True, is_admin = False, can_have_public_recipes = True, can_access_social_features = True, can_rate = False):
+        if find_group_by_name(group_name) != None:
+            raise ValueError("A group with this name already exists")
+        
+        usergroup = UserGroup(group_name, can_access_social_features, can_login, is_admin, can_have_public_recipes, can_access_social_features, can_rate)
+        
+        db.session.add(usergroup)
+        db.session.commit()
+    
+    

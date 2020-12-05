@@ -22,7 +22,7 @@ app.config.from_object(Config)
 fa = FontAwesome(app)
 
 # Set the locale for date formatting
-setlocale(LC_TIME, 'fr_BE')
+#setlocale(LC_TIME, 'fr_BE')
 
 # Configure login manager
 login_manager = LoginManager(app)
@@ -39,11 +39,14 @@ db = SQLAlchemy(app)
 # pylint: disable=wrong-import-position
 from app.models.user import User
 from app.models.usergroup import UserGroup
+from app.models.recipe import Recipe
+from app.models.category import Category
 
 # Repositories (classes containing helper functions for a specific table, for example to manage a group of users)
 from app.repositories.users import UserRepository
 from app.repositories.usergroups import UserGroupRepository
-
+from app.repositories.categories import CategoryRepository
+from app.repositories.recipes import RecipeRepository
 # Blueprints (routers)
 from app.routes.api import api
 from app.routes.frontend import website
@@ -55,31 +58,48 @@ db.create_all()
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(website, url_prefix='/')
 
+
+
 # Init database if it is empty
 # TODO add more init here
-# - add a condition (with "and") to check if the default objects exist or not
-# - add the init instructions in the body of the if
-if UserGroup.query.filter_by(name='admin').count() == 0:
-    admin_group = UserGroup(name='admin')
-    admin_group.set_is_admin(True)
-
-    db.session.add(admin_group)
-
-    db.session.commit()
-
-if UserGroup.query.filter_by(name='regular').count() == 0:
-    user_group = UserGroup(name='regular')
-
-    db.session.add(user_group)
-
-    db.session.commit()
 
 
-if User.query.filter_by(username='admin').count() == 0: 
-    # Create admin user
-    admin_user = UserRepository.addUser(
-        username='admin',
-        password='admin',
-        mail='admin@localhost',
-        usergroup='admin'
-    )
+#Existence check was moved to repositories
+#Exceptions are only ignored here because they're excpected to already exist
+
+#groups
+try:
+    UserGroupRepository.add_usergroup('admin')
+except:
+    pass
+
+try:
+    UserGroupRepository.add_usergroup('regular')
+except:
+    pass
+
+#default user (make sure admin group is added before it)
+try:
+    UserRepository.add_user('admin','admin','admin@localhost',usergroup='admin')
+except:
+    pass
+
+#categories
+try:
+    CategoryRepository.add_category('Lunch')
+except:
+    pass
+try:
+    CategoryRepository.add_category('Breakfast')
+except:
+    pass
+try:
+    CategoryRepository.add_category('Dinner')
+except:
+    pass
+
+#test recipe
+cat = CategoryRepository.name_to_id('Lunch')
+reci = RecipeRepository.add_recipe("Steak Frite", 4, 1, True, "2020-12-05", cat)
+
+RecipeRepository.compile_recipe(reci, ingredients=["4 Steaks","1Kg pomme de terres"], utensils=["1 grand couteau","une poelle"], steps=["Do the thing"])

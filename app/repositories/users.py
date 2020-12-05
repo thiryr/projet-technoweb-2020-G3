@@ -12,7 +12,12 @@ class UserRepository:
     This repository provides all CRUD operations."""
 
     @staticmethod
-    def add_user(username: str, password: str, mail: str, usergroup="regular"):
+    def add_user(username: str, password: str, mail: str, usergroup='regular'):
+        if UserRepository.find_user_by_username(username) != None:
+            raise ValueError('A user already uses that username')
+        if UserRepository.find_user_by_mail(mail) != None:
+            raise ValueError('A user already uses that mail address')
+
         # Create a new user
         new_user = User(username, password, mail, usergroup)
         # Add it to the database
