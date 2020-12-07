@@ -1,3 +1,5 @@
+"""Model for the step table, containing the steps for a specific recipe"""
+
 # Import Column and types directly from sqlalchemy because pylint
 # doesn't detect them if we imported them via the "db" object
 from sqlalchemy.sql.schema import Column, ForeignKey

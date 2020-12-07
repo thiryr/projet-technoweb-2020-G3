@@ -1,3 +1,5 @@
+"""class for static methods around the Recipe table"""
+
 from app import db
 from app.models.recipe import Recipe
 from app.models.recipe_elements.ingredient import Ingredient
@@ -14,7 +16,6 @@ class RecipeRepository:
         """
         Should return all recipes matching some search term (look up tags and categories too..)
         """
-        pass
 
 
     @staticmethod
@@ -42,26 +43,25 @@ class RecipeRepository:
         for ingredient_text in ingredients:
             additional_ingredient = Ingredient(ingredient_text, recipe.id)
             db.session.add(additional_ingredient)
-        
+
         for utensil_text in utensils:
             additional_utensil = Utensil(utensil_text, recipe.id)
             db.session.add(additional_utensil)
-        
+
         for step_text in steps:
             additional_step = Step(step_text, recipe.id)
-            db.session.add(additional_ingredient)
-        
-        
+            db.session.add(additional_step)
+
         for tag_text in tags:
             #get the tag
             tag = TagRepository.name_to_tag(tag_text)
             #add it if it doesn't exist
-            if tag == None:
+            if tag is None:
                 tag = TagRepository.add_tag(tag_text)
-            
+    
             new_link = TagLinkRepository.add_taglink(tag.id, recipe.id)
             db.session.add(new_link)
-                
-        
-        
+         
+
+
         db.session.commit()

@@ -1,3 +1,5 @@
+"""Model for the rating table, handling the chef rating feature"""
+
 # Import Column and types directly from sqlalchemy because pylint
 # doesn't detect them if we imported them via the "db" object
 from sqlalchemy.sql.schema import Column, ForeignKey

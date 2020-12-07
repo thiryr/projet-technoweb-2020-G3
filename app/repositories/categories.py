@@ -1,3 +1,5 @@
+"""class for static methods around the Category table"""
+
 from app import db
 from app.models.category import Category
 
@@ -17,7 +19,7 @@ class CategoryRepository:
         Adds a category to the table
         """
 
-        if CategoryRepository.name_to_id(name) != None:
+        if CategoryRepository.name_to_category(name) is None:
             raise ValueError("Tried to add an already-existing category")
 
         new_cat = Category(name)

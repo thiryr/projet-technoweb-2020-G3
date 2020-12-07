@@ -1,3 +1,5 @@
+"""Model for the subsciption table, handling who follows who"""
+
 # Import Column and types directly from sqlalchemy because pylint
 # doesn't detect them if we imported them via the "db" object
 from sqlalchemy.sql.schema import Column, ForeignKey

@@ -1,3 +1,5 @@
+"""class for static methods around the Tag table"""
+
 from app import db
 from app.models.tag import Tag
 
@@ -17,7 +19,6 @@ class TagRepository:
         Returns the tag based on the id, None if it doesn't exist
         """
         return Tag.query.get(tagid)
-    
 
     @staticmethod
     def add_tag(name:str)->Tag:
@@ -27,15 +28,10 @@ class TagRepository:
         @returns the created tag
         """
 
-        if TagRepository.name_to_tag(name) != None:
-            raise ValueError(f"Tried to add an existing tag")
-        
-        
+        if TagRepository.name_to_tag(name) is None:
+            raise ValueError("Tried to add an existing tag")
 
         new_tag = Tag(name)
-        
         db.session.add(new_tag)
-        
         db.session.commit()
-
         return new_tag

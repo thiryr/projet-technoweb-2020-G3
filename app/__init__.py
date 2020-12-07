@@ -70,32 +70,32 @@ app.register_blueprint(website, url_prefix='/')
 #groups
 try:
     UserGroupRepository.add_usergroup('admin')
-except:
+except ValueError:
     pass
 
 try:
     UserGroupRepository.add_usergroup('regular')
-except:
+except ValueError:
     pass
 
 #default user (make sure admin group is added before it)
 try:
     UserRepository.add_user('admin','admin','admin@localhost',usergroup='admin')
-except:
+except ValueError:
     pass
 
 #categories
 try:
     CategoryRepository.add_category('Lunch')
-except:
+except ValueError:
     pass
 try:
     CategoryRepository.add_category('Breakfast')
-except:
+except ValueError:
     pass
 try:
     CategoryRepository.add_category('Dinner')
-except:
+except ValueError:
     pass
 
 #test recipe

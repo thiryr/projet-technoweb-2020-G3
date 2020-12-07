@@ -1,3 +1,5 @@
+"""Model for the recipe table, handling recipe-specific data"""
+
 # Import Column and types directly from sqlalchemy because pylint
 # doesn't detect them if we imported them via the "db" object
 from sqlalchemy.sql.schema import Column, ForeignKey
@@ -15,7 +17,7 @@ class Recipe(db.Model):
     name = Column(st.String(50), nullable=False)
 
     image_url = Column(st.String(512), nullable=True)
-    
+
     portion_number = Column(st.Integer, nullable=False)
     difficulty = Column(st.Integer, nullable=False)
     is_public = Column(st.Boolean, nullable=False)
@@ -44,6 +46,9 @@ class Recipe(db.Model):
         self.category_id = category_id
 
     
-def parse_date(st:str)->datetime.date:
-    return datetime.strptime(st, "%Y-%d-%m").date()
+def parse_date(date:str)->datetime.date:
+    """
+    parses string to python date format
+    """
+    return datetime.strptime(date, "%Y-%d-%m").date()
 
