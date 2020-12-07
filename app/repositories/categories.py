@@ -4,11 +4,11 @@ from app.models.category import Category
 class CategoryRepository:
 
     @staticmethod
-    def name_to_id(category_name: str) -> int:
+    def name_to_category(category_name: str) -> Category:
         """
         Returns the id associated with a category name, None if it doesn't exist
         """
-        return Category.query.filter_by(name=category_name).first().id
+        return Category.query.filter_by(name=category_name).first()
 
 
     @staticmethod
