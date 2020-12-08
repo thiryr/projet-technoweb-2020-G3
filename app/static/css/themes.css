@@ -1,0 +1,59 @@
+/* Define themes in variables */
+
+/* Common variables */
+
+html {
+    /* Sizes */
+    --main-max-width: 120rem;
+    --appbar-height: 4.5rem;
+    --appbar-title-font-size: 1.8rem;
+    --appbar-button-font-size: 1.5rem;
+    --appbar-button-min-width: 11rem;
+    --appbar-avatar-size: 3.3rem;
+    --appbar-usermenu-width: 30rem;
+
+    --line-height: 1.43;
+    --link-line-height: 1.6;
+}
+
+/* Light theme */
+
+html.light {
+    /* Colors */
+    --bg-color: #ecf0f1;
+    --fg-color: black;
+    --main-bg-color: white;
+    --appbar-bg-color: #34495e;
+    --appbar-fg-color: white;
+    --appbar-button-selected-bg-color: #46596d;
+    --appbar-mobile-nav-bg: #ffffff;
+    --appbar-mobile-nav-fg: black;
+    --appbar-mobile-nav-selected-bg: #46596d;
+    --appbar-mobile-nav-selected-fg: white;
+    --searchbar-bg-color: #eeeeee;
+    --searchbar-fg-color: black;
+    --searchbar-placeholder-color: #5a5a5a;
+    --elevation-shadow-color-1: #0000001f;
+    --elevation-shadow-color-2: #0000003d;
+}
+
+/* Dark theme */
+
+html.dark {
+    /* Colors */
+    --bg-color: #121212;
+    --fg-color: white;
+    --main-bg-color: #191919;
+    --appbar-bg-color: #070707;
+    --appbar-fg-color: white;
+    --appbar-button-selected-bg-color: #1c1c1c;
+    --appbar-mobile-nav-bg: #101010;
+    --appbar-mobile-nav-fg: white;
+    --appbar-mobile-nav-selected-bg: #1c1c1c;
+    --appbar-mobile-nav-selected-fg: white;
+    --searchbar-bg-color: #313131;
+    --searchbar-fg-color: white;
+    --searchbar-placeholder-color: #d8d8d8;
+    --elevation-shadow-color-1: transparent;
+    --elevation-shadow-color-2: transparent;
+}

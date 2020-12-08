@@ -4,6 +4,7 @@ all the routes related to the frontend (pages).
 """
 
 from flask import Blueprint, render_template_string
+from flask.templating import render_template
 from app.repositories.users import UserRepository
 
 # Create blueprint
@@ -11,9 +12,16 @@ website = Blueprint('frontend', __name__, url_prefix='/')
 
 
 @website.route('/')
-def ping():
-    user = UserRepository.find_user_by_id(1)
-    return render_template_string('<h1>Hello {{name}}</h1>', name=user.username)
+def index_page():
+    """
+    Page d'accueil
+    """
+    return render_template('pages/index.html', theme='dark')
+
+
+@website.route('/light')
+def index_page_light():
+    return render_template('pages/index.html', theme='light')
 
 
 @website.route('/login')

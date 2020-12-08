@@ -98,8 +98,8 @@ try:
 except ValueError:
     pass
 
-#test recipe
-cat = CategoryRepository.name_to_category('Lunch').id
-reci = RecipeRepository.add_recipe("Steak Frite", 4, 1, True, "2020-12-05", cat)
+#test recipe (commenté pcq ça bugue lol)
+# cat = CategoryRepository.name_to_category('Lunch').id
+# reci = RecipeRepository.add_recipe("Steak Frite", 4, 1, True, "2020-12-05", cat)
 
-RecipeRepository.compile_recipe(reci, ingredients=["4 Steaks","1Kg pomme de terres"], utensils=["1 grand couteau","une poelle"], steps=["Do the thing"], tags= ["simple","saveur"])
+# RecipeRepository.compile_recipe(reci, ingredients=["4 Steaks","1Kg pomme de terres"], utensils=["1 grand couteau","une poelle"], steps=["Do the thing"], tags= ["simple","saveur"])

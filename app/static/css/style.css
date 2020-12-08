@@ -1,0 +1,338 @@
+html {
+    /* Basic properties on the whole html element */
+    height: 100%;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Set rem */
+    font-size: 62.5%;
+}
+
+body {
+    /* Take the whole viewport */
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    /* Use a more modern font */
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 400;
+    line-height: var(--line-height);
+    letter-spacing: 0.01071em;
+    font-size: 1.6rem;
+    /* Use flex for layout */
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    /* Apply base color theme */
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+}
+
+*, *:before, *:after {
+    /* Inherit the box sizing everywhere */
+    box-sizing: inherit;
+}
+
+main {
+    /* Center it in the page */
+    margin: auto;
+    /* Shift below appbar */
+    margin-top: var(--appbar-height);
+    /* Padding to avoid touching the borders on small screens */
+    padding: 1.6rem;
+    /* Take as much space as possible */
+    width: 100%;
+    height: 100%;
+    /* But don't go too wide either */
+    max-width: var(--main-max-width);
+    /* Apply color theme */
+    background-color: var(--main-bg-color);
+}
+
+/* Disable ugly default values of html elements */
+
+a {
+    font-weight: 500;
+    line-height: var(--link-line-height);
+    font-variant: normal;
+    text-decoration: none;
+    color: inherit;
+    -webkit-tap-highlight-color: #ffffff20;
+}
+
+p {
+    text-align: justify;
+}
+
+a:focus {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+
+input[type="search"] {
+    border: none;
+    background-color: inherit;
+    color: var(--searchbar-fg-color);
+    font: inherit;
+    font-size: 1.4rem;
+}
+
+input[type="search"]::placeholder {
+    color: var(--searchbar-placeholder-color);
+}
+
+/* Change the white to any color ;) */
+
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+    box-shadow: 0 0 0 3rem var(--searchbar-bg-color) inset !important;
+    -webkit-box-shadow: 0 0 0 3rem var(--searchbar-bg-color) inset !important;
+    -webkit-text-fill-color: var(--searchbar-fg-color) !important;
+    border-radius: 0.4rem;
+}
+
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus, select:-webkit-autofill, select:-webkit-autofill:hover, select:-webkit-autofill:focus {
+    transition: background-color 5000s ease-in-out 0s;
+    box-shadow: 0 0 0 30rem var(--searchbar-bg-color) inset !important;
+    -webkit-box-shadow: 0 0 0 30rem var(--searchbar-bg-color) inset !important;
+    -webkit-text-fill-color: var(--searchbar-fg-color) !important;
+    border-radius: 0.4rem;
+}
+
+button {
+    font: inherit;
+    font-style: normal;
+    text-decoration: none;
+    box-shadow: unset;
+    outline: unset;
+    border: unset;
+    color: inherit;
+    background-color: inherit;
+    /* Use a hand pointer to show that it is clickable */
+    cursor: pointer;
+    /* Remove interaction */
+    -webkit-user-drag: none;
+    -moz-window-dragging: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+/* Define common classes */
+
+.expand {
+    flex-grow: 1;
+}
+
+/* App bar */
+
+#appbar {
+    /* Position */
+    position: fixed;
+    /* Layout */
+    width: 100%;
+    height: var(--appbar-height);
+    /* Apply color theme */
+    background-color: var(--appbar-bg-color);
+    color: var(--appbar-fg-color);
+}
+
+#appbar .content {
+    /* Center it in the page */
+    margin: auto;
+    /* Take as much space as possible */
+    width: 100%;
+    height: 100%;
+    min-height: var(--appbar-height);
+    /* But don't go too wide either */
+    max-width: var(--main-max-width);
+    /* Layout */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    align-items: center;
+    justify-content: start;
+}
+
+/* Title */
+
+#appbar .title {
+    flex-grow: 1;
+    align-items: flex-start;
+    justify-content: start;
+    display: inline-flex;
+}
+
+#appbar .title a {
+    font-size: var(--appbar-title-font-size);
+    text-align: start;
+    height: 100%;
+    padding: calc((var(--appbar-height) - var(--appbar-title-font-size) * var(--link-line-height))/ 2) 1rem;
+    overflow: hidden;
+}
+
+/* Search bar */
+
+#appbar .searchbar {
+    position: relative;
+    flex-grow: 1;
+    height: 2.7rem;
+}
+
+#appbar .searchbar input[type="search"] {
+    background-color: var(--searchbar-bg-color);
+    padding: 0.3rem 1rem;
+    border-radius: 0.4rem;
+    width: 100%;
+    height: 100%;
+}
+
+#appbar .searchbar input[type="search"]:focus {
+    outline: none;
+    border: none;
+}
+
+#appbar .searchbar button[type="submit"] {
+    color: var(--searchbar-fg-color);
+    background-color: inherit;
+    position: absolute;
+    font-size: 1.35rem;
+    right: 0.5rem;
+    height: 100%;
+}
+
+/* Nav */
+
+#appbar nav {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    float: left;
+}
+
+#appbar .mobile-menu {
+    background-color: inherit;
+    padding: 0.5rem;
+    margin: 0 2.2rem;
+    font-size: 2rem;
+    display: none;
+}
+
+#appbar nav ul {
+    list-style: none;
+    float: left;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    max-height: var(--appbar-height);
+}
+
+#appbar nav>ul>li {
+    display: block;
+    float: left;
+}
+
+#appbar nav a {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    min-width: var(--appbar-button-min-width);
+    font-size: var(--appbar-button-font-size);
+    padding: calc((var(--appbar-height) - var(--appbar-button-font-size) * var(--link-line-height)) / 2) 1rem;
+}
+
+#appbar nav a[selected] {
+    background-color: var(--appbar-button-selected-bg-color);
+}
+
+#appbar nav .my-account {
+    padding: 0;
+    margin: calc((var(--appbar-height) - var(--appbar-avatar-size)) / 2) 1.5rem;
+    line-height: 0;
+}
+
+#appbar nav .my-account img {
+    height: var(--appbar-avatar-size);
+    border-radius: 50%;
+}
+
+#appbar nav .user-menu {
+    float: none;
+    position: absolute;
+    top: var(--appbar-height);
+    width: var(--appbar-usermenu-width);
+    max-height: 0rem;
+    transition: max-height 0.6s ease-in-out;
+    transform: translate(calc(3rem + var(--appbar-avatar-size) - var(--appbar-usermenu-width)), 0);
+    box-shadow: 0rem 0.2rem 0.4rem var(--elevation-shadow-color-1), 0 0.1rem 0.15rem var(--elevation-shadow-color-2);
+}
+
+#appbar nav .user-menu>li {
+    display: block;
+    float: none;
+    background-color: var(--appbar-mobile-nav-bg);
+    color: var(--appbar-mobile-nav-fg);
+}
+
+#appbar nav .my-account:focus+ul {
+    max-height: 50rem;
+}
+
+/* Adapt Appbar on smaller devices */
+
+@media (max-width: calc(100em * 0.625)) {
+    /* Hide title */
+    #appbar .title {
+        display: none;
+    }
+    #appbar .content {
+        margin-left: 1rem;
+    }
+}
+
+@media (max-width: calc(70em * 0.625)) {
+    /* Add a menu button and put the options in a dropdown */
+    #appbar nav .mobile-menu {
+        display: block;
+    }
+    #appbar nav .mobile-menu:focus+ul {
+        max-height: 50rem;
+    }
+    #appbar nav>ul {
+        float: none;
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: var(--appbar-height);
+        width: 100%;
+        background-color: var(--appbar-mobile-nav-bg);
+        color: var(--appbar-mobile-nav-fg);
+    }
+    #appbar nav a[selected] {
+        background-color: var(--appbar-mobile-nav-selected-bg);
+        color: var(--appbar-mobile-nav-selected-fg)
+    }
+    #appbar nav>ul {
+        float: none;
+        transition: max-height 0.6s ease-in-out;
+        max-height: 0;
+    }
+    #appbar nav>ul>li {
+        float: none;
+        display: block;
+    }
+    #appbar nav .my-account {
+        display: none;
+    }
+    #appbar nav .user-menu {
+        position: relative;
+        top: unset;
+        width: inherit;
+        max-height: inherit;
+        transition: none;
+        transform: none;
+    }
+}
