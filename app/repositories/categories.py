@@ -27,4 +27,20 @@ class CategoryRepository:
         db.session.add(new_cat)
         
         db.session.commit()
+        
+        
+    @staticmethod
+    def delete_category(name:str):
+        """
+        delete a category to the table
+        """
+
+        if CategoryRepository.name_to_category(name) is None:
+            raise ValueError("Tried to delete an already-existing category")
+
+        new_cat = None
+        
+        db.session.add(new_cat)
+        
+        db.session.commit()     
     
