@@ -4,7 +4,7 @@ all the routes related to the api (CRUD operations on the database).
 """
 
 from flask import Blueprint, redirect, request
-from flask_login.utils import login_required, login_user, current_user
+from flask_login.utils import login_required, login_user, logout_user
 
 
 from app.repositories.users import UserRepository
@@ -63,7 +63,7 @@ def create_user():
     return redirect("/")
 
 @api.route('/user/update_role', methods=['POST'])
-def update_user_group():
+def update_user_group() -> Response:
     #if not current_user.is_admin:
     #    return 'You do not have the necessary permissions'
     

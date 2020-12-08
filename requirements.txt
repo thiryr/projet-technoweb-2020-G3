@@ -6,3 +6,4 @@ Flask-SQLAlchemy==2.4.4
 python-dotenv==0.15.0
 autopep8==1.5.4
 pylint==2.6.0
+flask-sqlalchemy-stubs==0.2

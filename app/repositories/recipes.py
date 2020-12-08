@@ -1,5 +1,7 @@
 """class for static methods around the Recipe table"""
 
+from typing import List
+
 from app import db
 from app.models.recipe import Recipe
 from app.models.recipe_elements.ingredient import Ingredient
@@ -34,7 +36,7 @@ class RecipeRepository:
         return new_recipe
     
     @staticmethod
-    def compile_recipe(recipe: Recipe, ingredients: [str], utensils: [str], steps: [str], tags: [str]):
+    def compile_recipe(recipe: Recipe, ingredients: List[str], utensils: List[str], steps: List[str], tags: List[str]):
         """
         Adds components of the recipe in the tables
         """
@@ -58,10 +60,10 @@ class RecipeRepository:
             #add it if it doesn't exist
             if tag is None:
                 tag = TagRepository.add_tag(tag_text)
-    
+
             new_link = TagLinkRepository.add_taglink(tag.id, recipe.id)
             db.session.add(new_link)
-         
+
 
 
         db.session.commit()

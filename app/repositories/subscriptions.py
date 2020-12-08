@@ -1,5 +1,7 @@
 """class for static methods around the Subscription table"""
 
+from typing import List
+
 from app import db
 from app.models.subscription import Subscription
 from app.repositories.users import UserRepository
@@ -7,14 +9,14 @@ from app.repositories.users import UserRepository
 class SubscriptionRepository:
 
     @staticmethod
-    def find_subscriptions_from(userid: int) -> [Subscription]:
+    def find_subscriptions_from(userid: int) -> List[Subscription]:
         """
         Returns a list of subscription from that user id or None
         """
         return Subscription.query.filter_by(subscriber=userid)
 
     @staticmethod
-    def find_subscriptions_to(userid: int) -> [Subscription]:
+    def find_subscriptions_to(userid: int) -> List[Subscription]:
         """
         Returns a list of subscriptions to that user id or None
         """
