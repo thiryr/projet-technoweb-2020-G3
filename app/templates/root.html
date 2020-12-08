@@ -34,6 +34,8 @@
                 <!-- Navbar -->
                 <nav>
                     <button class="mobile-menu" type="button"><i class="fa fa-bars"></i></button>
+                    {# if user is connected, show the full menu #}
+                    {% if user %}
                     <ul>
                         <li><a>Accueil</a></li>
                         <li><a>Abonnements</a></li>
@@ -50,6 +52,15 @@
                             </ul>
                         </li>
                     </ul>
+                    {# else show the basic menu #}
+                    {% else %}
+                    <ul>
+                        <li><a>Accueil</a></li>
+                        <li><a>Se connecter</a></li>
+                        <li><a>S'inscrire</a></li>
+                    </ul>
+                    {% endif %}
+
                 </nav>
             </div>
         </div>

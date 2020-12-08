@@ -16,12 +16,12 @@ def index_page():
     """
     Page d'accueil
     """
-    return render_template('pages/index.html', theme='dark')
+    return render_template('pages/index.html', theme='dark', user=True)
 
 
 @website.route('/light')
 def index_page_light():
-    return render_template('pages/index.html', theme='light')
+    return render_template('pages/index.html', theme='light', user=True)
 
 
 @website.route('/login')
