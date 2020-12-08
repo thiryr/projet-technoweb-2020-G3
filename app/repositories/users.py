@@ -27,7 +27,12 @@ class UserRepository:
     @staticmethod
     # Tell login_manager that it can use this function as loader
     @login_manager.user_loader
-    def find_user_by_id(id: str) -> User:
+    def find_user_by_str_id(id: str) -> User:
+        """Finds a user in the list by a str id. (used by login_manager)"""
+        return UserRepository.find_user_by_id(int(id))
+
+    @staticmethod
+    def find_user_by_id(id: int) -> User:
         """Finds a user in the list by id
 
         Args:
@@ -39,7 +44,7 @@ class UserRepository:
         """
 
         # Find the id user in the database, else return None
-        return User.query.get(int(id))
+        return User.query.get(id)
 
     @staticmethod
     def find_user_by_username(username: str) -> User:

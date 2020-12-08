@@ -12,7 +12,7 @@ website = Blueprint('frontend', __name__, url_prefix='/')
 
 @website.route('/')
 def ping():
-    user = UserRepository.find_user_by_id('1')
+    user = UserRepository.find_user_by_id(1)
     return render_template_string('<h1>Hello {{name}}</h1>', name=user.username)
 
 @website.route('/login')

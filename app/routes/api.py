@@ -63,7 +63,7 @@ def create_user():
     return redirect("/")
 
 @api.route('/user/update_role', methods=['POST'])
-def update_user_group() -> Response:
+def update_user_group():
     #if not current_user.is_admin:
     #    return 'You do not have the necessary permissions'
     
@@ -84,8 +84,8 @@ def create_subscription():
         SubscriptionRepository.add_subscription(1,2)
     except ValueError:
         return 'Invalid user ids',400
-    except:
-        return 'Could not commit changes',500
+    except Exception as e:
+        return 'Could not commit changes', 500
     
     #send to previous page if possible, index otherwise
     if request.referrer:
