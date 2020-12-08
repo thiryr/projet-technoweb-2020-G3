@@ -5,13 +5,12 @@
 from sqlalchemy.sql.schema import Column, ForeignKey
 import sqlalchemy.sql.sqltypes as st
 
-from datetime import datetime
+import datetime
 
 from app import db
 
 
-
-class Recipe(db.Model):
+class Recipe(db.Model):  # type: ignore
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
     name = Column(st.String(50), nullable=False)
@@ -24,15 +23,11 @@ class Recipe(db.Model):
 
     publicated_on = Column(st.Date, nullable=False)
 
-    category_id =  Column(st.Integer, ForeignKey('category.id'), nullable=False)
-
-
-
-
+    category_id = Column(st.Integer, ForeignKey('category.id'), nullable=False)
 
     # Init
     # By default, permissions are that of a regular user
-    def __init__(self, name: str, portion_number:int, difficulty:int, is_public:bool, publicated_on:str, category_id:int, image_url=None):
+    def __init__(self, name: str, portion_number: int, difficulty: int, is_public: bool, publicated_on: str, category_id: int, image_url=None):
         self.name = name
 
         self.portion_number = portion_number
@@ -45,10 +40,9 @@ class Recipe(db.Model):
 
         self.category_id = category_id
 
-    
-def parse_date(date:str)->datetime.date:
+
+def parse_date(date: str) -> datetime.date:
     """
     parses string to python date format
     """
-    return datetime.strptime(date, "%Y-%d-%m").date()
-
+    return datetime.datetime.strptime(date, "%Y-%d-%m").date()

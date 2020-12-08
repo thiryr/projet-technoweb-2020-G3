@@ -9,7 +9,7 @@ from app import db
 
 
 
-class Ingredient(db.Model):
+class Ingredient(db.Model): #type: ignore
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
     text = Column(st.String(32), nullable=False)

@@ -9,7 +9,7 @@ from app import db
 
 
 
-class TagLink(db.Model):
+class TagLink(db.Model): #type: ignore
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
 

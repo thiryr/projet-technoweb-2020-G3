@@ -9,7 +9,7 @@ from app import db
 
 
 
-class Subscription(db.Model):
+class Subscription(db.Model): #type: ignore
     id = Column(st.Integer, primary_key=True, autoincrement=True)
 
     subscriber_id = Column(st.Integer, ForeignKey('user.id'), nullable=False)

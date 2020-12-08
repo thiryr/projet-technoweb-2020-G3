@@ -9,7 +9,7 @@ from app import db
 
 
 
-class Tag(db.Model):
+class Tag(db.Model): #type: ignore
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
     

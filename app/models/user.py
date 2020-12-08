@@ -13,7 +13,7 @@ from app.repositories.usergroups import UserGroupRepository
 from app import db
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin, db.Model): #type: ignore
     # Columns
     #uniques
     id = Column(st.Integer, primary_key=True, autoincrement=True)

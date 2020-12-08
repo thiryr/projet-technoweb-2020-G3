@@ -15,6 +15,7 @@ def ping():
     user = UserRepository.find_user_by_id(1)
     return render_template_string('<h1>Hello {{name}}</h1>', name=user.username)
 
+
 @website.route('/login')
 def login():
     return '<h1>Sign in now !</h1>'

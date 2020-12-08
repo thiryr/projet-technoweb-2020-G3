@@ -9,7 +9,7 @@ from app import db
 
 
 
-class Rating(db.Model):
+class Rating(db.Model): #type: ignore
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
 

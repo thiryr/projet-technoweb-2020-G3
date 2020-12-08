@@ -9,7 +9,7 @@ from app import db
 
 
 
-class Step(db.Model):
+class Step(db.Model): #type: ignore
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
     text = Column(st.Text, nullable=False)

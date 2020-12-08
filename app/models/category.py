@@ -9,7 +9,7 @@ from app import db
 
 
 
-class Category(db.Model):
+class Category(db.Model): #type: ignore
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
 

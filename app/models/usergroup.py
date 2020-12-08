@@ -9,7 +9,7 @@ from app import db
 
 
 
-class UserGroup(db.Model):
+class UserGroup(db.Model): #type: ignore
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
     name = Column(st.String(50), unique=True, nullable=False)

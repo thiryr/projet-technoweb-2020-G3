@@ -26,7 +26,7 @@ fa = FontAwesome(app)
 
 # Configure login manager
 login_manager = LoginManager(app)
-login_manager.login_view = "frontend.login"
+login_manager.login_view = "frontend.login" # type: ignore
 login_manager.login_message_category = "info"
 login_manager.login_message = "You cannot access this page. Please log in to access this page."
 login_manager.session_protection = "strong"
@@ -65,7 +65,7 @@ app.register_blueprint(website, url_prefix='/')
 
 
 #Existence check was moved to repositories
-#Exceptions are only ignored here because they're excpected to already exist
+#Exceptions are only ignored here because they're expected to already exist
 
 #groups
 try:
