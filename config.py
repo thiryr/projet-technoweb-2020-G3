@@ -11,3 +11,6 @@ class Config:
     # PATH to the database
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'database.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # Icons to import
+    FONTAWESOME_STYLES=['all']
+    FONTAWESOME_TYPE='svg/js'

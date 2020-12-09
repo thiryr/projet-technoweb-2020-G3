@@ -3,6 +3,7 @@ This file contains the definition of the "frontend" blueprint containing
 all the routes related to the frontend (pages).
 """
 
+from app.models.recipe import Recipe
 from flask import Blueprint, render_template_string
 from flask.templating import render_template
 from app.repositories.users import UserRepository
@@ -21,7 +22,8 @@ def index_page():
 
 @website.route('/light')
 def index_page_light():
-    return render_template('pages/index.html', theme='light', user=True)
+    recipe = Recipe('Poulet rôti', 4, 2, True, '2020-01-09', 0, 'https://assets.afcdn.com/recipe/20200227/108291_w1024h1024c1cx1824cy2736.webp')
+    return render_template('pages/index.html', theme='light', user=True, r1=recipe)
 
 
 @website.route('/login')

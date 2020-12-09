@@ -20,21 +20,33 @@ html {
 
 html.light {
     /* Colors */
-    --bg-color: #ecf0f1;
+    --bg-color: #d6d9da;
     --fg-color: black;
-    --main-bg-color: white;
+    --main-bg-color: #eeebeb;
+    --elevation-shadow-color-1: #0000001f;
+    --elevation-shadow-color-2: #0000003d;
+
+    --card-bg-color: #ffffff;
+
     --appbar-bg-color: #34495e;
     --appbar-fg-color: white;
     --appbar-button-selected-bg-color: #46596d;
     --appbar-mobile-nav-bg: #ffffff;
     --appbar-mobile-nav-fg: black;
-    --appbar-mobile-nav-selected-bg: #46596d;
-    --appbar-mobile-nav-selected-fg: white;
+    --appbar-mobile-nav-selected-bg: #e0d9d9;
+    --appbar-mobile-nav-selected-fg: rgb(10, 10, 10);
+
     --searchbar-bg-color: #eeeeee;
     --searchbar-fg-color: black;
     --searchbar-placeholder-color: #5a5a5a;
-    --elevation-shadow-color-1: #0000001f;
-    --elevation-shadow-color-2: #0000003d;
+
+    --recipe-name-fg-color: black;
+    --recipe-author-fg-color: #303030;
+
+    --empty-icon-color: #bbc0c4;
+    --rating-star-color: #f1c40f;
+    --favorite-heart-color: #e74c3c;
+
 }
 
 /* Dark theme */
@@ -44,6 +56,11 @@ html.dark {
     --bg-color: #121212;
     --fg-color: white;
     --main-bg-color: #191919;
+    --elevation-shadow-color-1: transparent;
+    --elevation-shadow-color-2: transparent;
+
+    --card-bg-color: #292929;
+
     --appbar-bg-color: #070707;
     --appbar-fg-color: white;
     --appbar-button-selected-bg-color: #1c1c1c;
@@ -51,9 +68,18 @@ html.dark {
     --appbar-mobile-nav-fg: white;
     --appbar-mobile-nav-selected-bg: #1c1c1c;
     --appbar-mobile-nav-selected-fg: white;
+
     --searchbar-bg-color: #313131;
     --searchbar-fg-color: white;
     --searchbar-placeholder-color: #d8d8d8;
-    --elevation-shadow-color-1: transparent;
-    --elevation-shadow-color-2: transparent;
+
+    --recipe-name-fg-color: #dddddd;
+    --recipe-author-fg-color: #999999;
+
+    --empty-icon-color: #bdc3c7;
+    --rating-star-color: #f1c40f;
+    --favorite-heart-color: #e74c3c;
+
+
+
 }
