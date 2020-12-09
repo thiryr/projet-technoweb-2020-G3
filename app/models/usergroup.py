@@ -10,10 +10,11 @@ from app import db
 
 
 class UserGroup(db.Model): #type: ignore
+    __tablename__ = 'usergroup'
     # Columns
     id = Column(st.Integer, primary_key=True, autoincrement=True)
     name = Column(st.String(50), unique=True, nullable=False)
-    
+
     can_access_user_page = Column(st.Boolean, nullable=False)
     can_login = Column(st.Boolean, nullable=False)
     is_admin = Column(st.Boolean, nullable=False)

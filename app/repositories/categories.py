@@ -14,33 +14,36 @@ class CategoryRepository:
 
 
     @staticmethod
-    def add_category(name:str):
+    def add_category(name:str) -> Category:
         """
         Adds a category to the table
+        @returns the new category
         """
 
-        if CategoryRepository.name_to_category(name) is None:
-            raise ValueError("Tried to add an already-existing category")
+        if CategoryRepository.name_to_category(name) is not None:
+            raise ValueError(f"Tried to add an already-existing category, {name}")
 
         new_cat = Category(name)
         
         db.session.add(new_cat)
         
         db.session.commit()
+
+        return new_cat
         
         
     @staticmethod
-    def delete_category(name:str):
+    def delete_category(name:str) -> None:
         """
         delete a category to the table
         """
 
-        if CategoryRepository.name_to_category(name) is None:
-            raise ValueError("Tried to delete an already-existing category")
+        cat = CategoryRepository.name_to_category(name)
 
-        new_cat = None
-        
-        db.session.add(new_cat)
-        
-        db.session.commit()     
+        if cat is None:
+            print("WARNING: Tried to delete a non-existant category")
+            return
+
+        db.session.delete(cat)
+        db.session.commit()
     
