@@ -30,7 +30,6 @@ def all_names_added() -> None:
             print("test was likely improperly cleaned up last time")
     #test
     for ind,name in enumerate(names):
-        print(categories)
         assert CategoryRepository.name_to_category(name) == categories[ind]
     #cleanup
     for name in names:
