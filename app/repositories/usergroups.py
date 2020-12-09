@@ -48,12 +48,10 @@ class UserGroupRepository:
         @arguments mandatory unique name and permissions, permissions are that of a regular user by default
         @raises ValueError if it already exists
         """
-        if UserGroupRepository.find_group_by_name(group_name) is None:
+        if UserGroupRepository.find_group_by_name(group_name) is not None:
             raise ValueError("A group with this name already exists")
         
         usergroup = UserGroup(group_name, can_access_user_page, can_login, is_admin, can_have_public_recipes, can_access_social_features, can_rate)
         
         db.session.add(usergroup)
         db.session.commit()
-    
-    

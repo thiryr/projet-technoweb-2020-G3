@@ -23,7 +23,7 @@ class User(UserMixin, db.Model): #type: ignore
     mail = Column(st.String(255), unique=True, nullable=False)
 
     #foreign key
-    user_group = Column(st.Integer, ForeignKey('user_group.id'), nullable=False)
+    user_group = Column(st.Integer, ForeignKey('usergroup.id'), nullable=False)
     
     #nullables
     first_name = Column(st.String(50), nullable=True)

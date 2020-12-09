@@ -28,7 +28,7 @@ class TagRepository:
         @returns the created tag
         """
 
-        if TagRepository.name_to_tag(name) is None:
+        if TagRepository.name_to_tag(name) is not None:
             raise ValueError("Tried to add an existing tag")
 
         new_tag = Tag(name)
