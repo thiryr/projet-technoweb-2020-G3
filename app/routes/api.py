@@ -3,6 +3,8 @@ This file contains the definition of the "api" blueprint containing
 all the routes related to the api (CRUD operations on the database).
 """
 
+from app.repositories.favorites import FavoriteRepository
+from app.repositories.recipes import RecipeRepository
 from flask import Blueprint, redirect, request
 from flask.wrappers import Response
 from flask_login.utils import login_required, login_user, logout_user
@@ -146,5 +148,53 @@ def remove_subscription():
     SubscriptionRepository.remove_subscription(sub.id)
 
     return 'Ok', 200
+
+
+
+#Recipe-related routes
+
+
+#Favorite-related routes
+
+@api.route('/favorite/switch', methods=['POST'])
+@login_required
+def switch_favorite():
+    """Adds or removes the favorite between the current user and the specified recipe
+    Arguments:
+        Expects a recipe identifier
+    Returns:
+        A json of type {'is_favorite':bool} where is_favorite is true if a favorite was added
+    """
+    #request to dict
+    req_content = request.form
+    
+    #retrieve recipe_id
+    recipe_id_str = str(req_content.get('recipe_id'))
+
+    try:
+        recipe_id = int(recipe_id_str)
+    except Exception:
+        return 'recipe_id should be an integer',400
+
+    current_id = current_user.id
+
+    #Try to get the favorite
+    fav = FavoriteRepository.get_specific_favorite(current_id, recipe_id)
+    #if none, add it
+    if fav is None:
+        try:
+            FavoriteRepository.add_favorite(current_id, recipe_id)
+        except Exception:
+            return 'Could not add a favorite',500
+        is_favorite = True
+    else:
+        try:
+            FavoriteRepository.remove_favorite(fav.id)
+        except Exception:
+            return 'Could not remove this favorite',500
+        is_favorite = False
+    
+    return json.dumps({'is_favorite':is_favorite}),200
+
 
 #def retrieve_user_recipes():

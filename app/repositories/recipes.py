@@ -1,5 +1,6 @@
 """class for static methods around the Recipe table"""
 
+
 from typing import List
 
 from app import db
@@ -63,7 +64,10 @@ class RecipeRepository:
 
             new_link = TagLinkRepository.add_taglink(tag.id, recipe.id)
             db.session.add(new_link)
-
-
-
-        db.session.commit()
+            db.session.commit()
+    
+    @staticmethod
+    def get_recipe_from_id(recipe_id: int) -> Recipe:
+        """Returns the recipe based on the id, or None
+        """
+        return Recipe.query.get(recipe_id)
