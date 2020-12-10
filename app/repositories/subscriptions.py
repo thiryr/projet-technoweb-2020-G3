@@ -13,14 +13,14 @@ class SubscriptionRepository:
         """
         Returns a list of subscription from that user id or None
         """
-        return Subscription.query.filter_by(subscriber=userid)
+        return Subscription.query.filter_by(subscriber=userid).all()
 
     @staticmethod
     def get_subscriptions_to(userid: int) -> List[Subscription]:
         """
         Returns a list of subscriptions to that user id or None
         """
-        return Subscription.query.filter_by(subscriber=userid)
+        return Subscription.query.filter_by(subscriber=userid).all()
     
     @staticmethod
     def get_specific_subscription(subscriber_id: int, subscribed_id:int) -> Subscription:

@@ -3,6 +3,7 @@ This file contains the definition of the "api" blueprint containing
 all the routes related to the api (CRUD operations on the database).
 """
 
+from app.repositories.ratings import RatingRepository
 from app.repositories.favorites import FavoriteRepository
 from app.repositories.recipes import RecipeRepository
 from flask import Blueprint, redirect, request
@@ -11,6 +12,7 @@ from flask_login.utils import login_required, login_user, logout_user
 from flask_login import current_user
 
 import json
+import math
 
 
 from app.repositories.users import UserRepository
@@ -153,6 +155,50 @@ def remove_subscription():
 
 #Recipe-related routes
 
+@api.route('/recipe/user_recipes', methods=['POST'])
+@login_required
+def retrieve_user_recipes():
+    """Returns all the information necessary to display the user's recipes
+
+    Returns: json {'recipes_info':
+    [{'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    'average_rating': int, 'favorites': int, 'is_favorite': bool},..]}
+    """
+
+    current_id = current_user.id
+
+    recipes = RecipeRepository.get_recipe_from_user(current_id)
+
+    recipe_jsons = []
+
+    for recipe in recipes:
+        #get key elements
+        author = UserRepository.find_user_by_id(recipe.author)
+        ratings = RatingRepository.get_ratings_to(recipe.id)
+        favorite_number = FavoriteRepository.get_favorites_number_to(recipe.id)
+        current_favorite = FavoriteRepository.user_has_favorite(current_id, recipe.id)
+        
+        #compute average
+        rating_sum = 0
+        rating_count = 0
+        for rating in ratings:
+            rating_sum+=rating
+            rating_count+=1
+        
+        if rating_count!=0:
+            average_rating = math.ceil(rating_sum/rating_count)
+        else:
+            average_rating = 0
+        
+        recipe_jsons.append({'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'average_rating': average_rating, 
+        'favorites': favorite_number, 'is_favorite': current_favorite})
+    
+    return json.dumps({'recipes_info':recipe_jsons})
+
+
+
+
 
 #Favorite-related routes
 
@@ -197,4 +243,3 @@ def switch_favorite():
     return json.dumps({'is_favorite':is_favorite}),200
 
 
-#def retrieve_user_recipes():

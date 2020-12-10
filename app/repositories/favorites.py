@@ -16,14 +16,22 @@ class FavoriteRepository:
         """
         Returns all favorites from a user, or None
         """
-        return Favorite.query.filter_by(user_id=userid)
+        return Favorite.query.filter_by(user_id=userid).all()
 
     @staticmethod
     def get_favorites_to(recipeid: int) -> List[Favorite]:
         """
         Returns a list of favorites to that recipe id, or None
         """
-        return Favorite.query.filter_by(recipe_id=recipeid)
+        return Favorite.query.filter_by(recipe_id=recipeid).all()
+    
+    @staticmethod
+    def get_favorites_number_to(recipeid: int) -> int:
+        """
+        Returns the number of favorites to that recipe id
+        """
+        return Favorite.query.filter_by(recipe_id=recipeid).count()
+
     
     @staticmethod
     def get_specific_favorite(userid: int, recipeid:int) -> Favorite:
@@ -32,7 +40,13 @@ class FavoriteRepository:
         """
         return Favorite.query.filter_by(user_id=userid, recipe_id=recipeid).first()
 
-
+    @staticmethod
+    def user_has_favorite(userid:int, recipeid:int) -> bool:
+        """Returns true if the user has favorited that recipe
+        """
+        if FavoriteRepository.get_specific_favorite(userid,recipeid) is None:
+            return False
+        return True
     @staticmethod
     def add_favorite(userid: int, recipeid:int) -> Favorite:
         """

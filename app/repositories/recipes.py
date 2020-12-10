@@ -1,6 +1,7 @@
 """class for static methods around the Recipe table"""
 
 
+from datetime import date
 from typing import List
 
 from app import db
@@ -22,13 +23,14 @@ class RecipeRepository:
 
 
     @staticmethod
-    def add_recipe(name: str, portion_number:int, difficulty:int, is_public:bool, publicated_on:str, category_id:int, image_url=None)->Recipe:
+    def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 
+    is_public:bool, publicated_on:str, category_id:int, image_url=None)->Recipe:
         """
         Adds a recipe to the table
         @Returns the recipe added
         """
 
-        new_recipe = Recipe(name , portion_number, difficulty, is_public, publicated_on, category_id, image_url)
+        new_recipe = Recipe(name, author_id, portion_number, difficulty, is_public, publicated_on, category_id, image_url)
         
         db.session.add(new_recipe)
         
@@ -66,8 +68,17 @@ class RecipeRepository:
             db.session.add(new_link)
             db.session.commit()
     
+    #GET
+
+    #recipe
     @staticmethod
     def get_recipe_from_id(recipe_id: int) -> Recipe:
         """Returns the recipe based on the id, or None
         """
         return Recipe.query.get(recipe_id)
+
+    @staticmethod
+    def get_recipe_from_user(user_id: int) -> List[Recipe]:
+        """Returns all the recipes written by a user, ordered by date
+        """
+        return Recipe.query.filter_by(author=user_id).order_by(Recipe.publicated_on).all()
