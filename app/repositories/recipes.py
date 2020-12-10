@@ -6,6 +6,9 @@ from typing import List
 
 from app import db
 from app.models.recipe import Recipe
+from app.models.category import Category # viens d'etre rajouter
+from app.models.tag import Tag # viens d'etre rajouter
+from app.models.taglink import TagLink # viens d'etre rajouter
 from app.models.recipe_elements.ingredient import Ingredient
 from app.models.recipe_elements.step import Step
 from app.models.recipe_elements.utensil import Utensil
@@ -13,12 +16,33 @@ from app.models.recipe_elements.utensil import Utensil
 from app.repositories.tags import TagRepository
 from app.repositories.taglinks import TagLinkRepository
 
-class RecipeRepository:
+
+class RecipeRepository: #romeo viens d'etre rajouter
 
     @staticmethod
     def search(word: str):
         """
         Should return all recipes matching some search term (look up tags and categories too..)
+        """
+        q = db.session.query(
+            Recipe,
+            Category,
+            Ingredient,
+            TagLink,
+            Tag
+        ) \
+        .filter(Recipe.category_id == Category.id) \
+        .filter(Recipe.id == Ingredient.recipe_id) \
+        .filter(Recipe.id == TagLink.recipe_id) \
+        .filter(TagLink.Tag_id == Tag.id) \
+        .filter(or_(
+            word in Recipe.name,
+            word in Tag.name,
+            word in Ingredient.text,
+            word in Category.name)
+        ).all()
+        
+        return q
         """
 
 
