@@ -1,28 +1,23 @@
 {% extends 'root.html' %}
+{% import 'macros.html' as macros %}
 
 {% block body %}
 <article class="recipe-detail">
     <div class="row">
         <div class="info">
-            <h1>Steak-frite de mamy</h1>
-            <span>Par <a href="/light">Mamy Dupont</a></span>
+            <h1>{{ recipe.title }}</h1>
+            <span>Par <a href="{{ recipe.author_url }}">{{ recipe.author_name }}</a></span>
 
             <div class="row">
                 <span>Note des chefs : </span>
-                <ul class="rating">
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                </ul>
+                {{ macros.rating(recipe.average_rating) }}
             </div>
 
             <div class="row">
                 <span>Favoris : </span>
                 <div class="fav-number">
-                    <span>45</span>
-                    <button><i class="fa fa-heart"></i></button>
+                    <span>{{recipe.fav_count}}</span>
+                    <button><i class="{{ 'fa' if recipe.current_user_favorited == True else 'far' }} fa-heart"></i></button>
                 </div>
             </div>
 
@@ -30,60 +25,39 @@
                 <div class="ingredients">
                     <h2>Ingrédients</h2>
                     <ul>
-                        <li>Steak</li>
-                        <li>250g de frites</li>
-                        <li>1/2 salade</li>
-                        <li>De la béarnaise</li>
-                        <li>2 gros oignons</li>
-                        <li>Sel/poivre</li>
-                        <li>Des piment du sud de l'Amérique, j'ai oublié le nom malheureusement</li>
+                        {{ macros.as_list(recipe.ingredients) }}
                     </ul>
                 </div>
                 <div class="ustensiles">
                     <h2>Ustensiles</h2>
                     <ul>
-                        <li>Une poële</li>
-                        <li>Un saladier</li>
-                        <li>Une friteuse</li>
-                        <li>Un plat à frites</li>
-                        <li>Une spatule</li>
+                        {{ macros.as_list(recipe.ustensiles) }}
                     </ul>
                 </div>
             </div>
         </div>
-            <img class="cover"
-                src="https://cdn.pratico-pratiques.com/app/uploads/sites/4/2018/08/30183348/steak-frite-sauce-dijonnaise.jpeg">
+            <img class="cover" src="{{ recipe.picture }}">
         
     </div>
 
     <div class="steps">
         <h2>Préparation</h2>
         <ol>
-            <li>Préchauffer la friteuse à 170°</li>
-            <li>Faire fondre du beurre (ou de la margarine) dans la poëlle.</li>
-            <li>Une fois la graisse chaude, plonger les frites surgelées pour une première cuisson. Après quelques
-                minutes, retirer le bac de l'huile.</li>
-            <li>Prenez le steak et cuisez le dans la poëlle (+/- 1min sur chaque face ? jsp moi faites comme vous
-                voulez)</li>
-            <li>Oubliez pas d'avoir lavé la salade avant de faire tout ça, ensuite mettez de la vinaigraîte et des
-                oignons dedans.</li>
-            <li>Refaites une cuisson des frites une fois que la température atteint 170° à nouveau.</li>
-            <li>Faites les étapes que j'ai oublié.</li>
-            <li>Oui je sais, dans la photo y'a des tomates. Mais bon à mon âge on n'a pas d'appareil photo hein !</li>
-            <li>Dégustez ! Et alors elle est bonne ou pas la recette de mamy ?</li>
+            {{ macros.as_list(recipe.steps) }}
         </ol>
     </div>
 </article>
 
 <div class="recipe-comments">
     <h2>Commentaires des chefs</h2>
-<ul>
+<ul id="comments">
+    {% if is_chef and not already_rated %}
     <li class="comment row editor">
         <img src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg" alt="avatar" class="avatar">
         <div class="column bubble">
             <div class="row all-width">
                 <span class="name expand">Ajouter votre review</span>
-                <ul class="rating">
+                <ul class="rating" id="rating-input">
                     <li><button><i class="far fa-star"></i></button></li>
                     <li><button><i class="far fa-star"></i></button></li>
                     <li><button><i class="far fa-star"></i></button></li>
@@ -91,43 +65,12 @@
                     <li><button><i class="far fa-star"></i></button></li>
                 </ul>
             </div>
-            <textarea placeholder="Comment avez-vous trouvé cette recette ?"></textarea>
-            <button class="outlined-button">Publier</button>
+            <textarea id="comment-input" placeholder="Comment avez-vous trouvé cette recette ?"></textarea>
+            <button id="submit-rating-button" class="outlined-button">Publier</button>
         </div>
     </li>
-
-    <li class="comment row">
-        <img class="avatar" src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg">
-        <div class="column bubble">
-            <div class="row all-width">
-                <span class="name expand">Michel Dupont</span>
-                <ul class="rating">
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                </ul>
-            </div>
-            <span class="message">Hé salut mamy, c'est vraiment bon ton truc dis donc ! gros bisous on se voit à noel</span>
-        </div>
-    </li>
-    <li class="comment row">
-        <img class="avatar" src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg">
-        <div class="column bubble">
-            <div class="row all-width">
-                <span class="name expand">Daniel Dufour</span>
-                <ul class="rating">
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                </ul>
-            </div>
-            <span class="message">Quelle idée de proposer de mettre de la margarine dans la poële ! Le beurre devrait être la seule proposition. De nos jours, les jeunes ne savent plus ce qu'est un vrai steak au beurre, et ça m'attriste. C'est à cause de recettes comme celle-ci qu'ils oublient les bonnes vieilles traditions. Et venant de Mamy, je suis terriblement déçu, étant donné que c'est elle qui est censée rapporter les traditions. Il faut protéger notre patrimoine gastronomique à tout prix !</span>
-        </div>
-    </li>
+    {% endif %}
+    <!-- other comments here -->
 </ul>
 </div>
 {% endblock %}

@@ -1,0 +1,19 @@
+{# Render the correct number of stars for the given rating #}
+{% macro rating(number) %}
+<ul class="rating">
+    {% for i in range(5) %}
+    {% if i < number %}
+    <li><i class="fa fa-star"></i></li>
+    {% else %}
+    <li><i class="far fa-star"></i></li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endmacro %}
+
+{# Write the given list as a list of <li> #}
+{% macro as_list(list) %}
+{% for line in list %}
+<li>{{line | e}}</li>
+{% endfor %}
+{% endmacro %}

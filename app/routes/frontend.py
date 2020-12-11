@@ -15,16 +15,49 @@ def index_page():
     """
     Page d'accueil
     """
-    recipe = Recipe('Poulet rôti', 4, 2, True, '2020-01-09', 0,
-                    'https://assets.afcdn.com/recipe/20200227/108291_w1024h1024c1cx1824cy2736.webp')
-    return render_template('pages/recipe.html', theme='dark', user=True, r1=recipe)
+    return render_template('pages/recipe.html', theme='dark', user=True, is_chef=True, already_rated=False, recipe={
+        "title": "Steak-frite",
+        "author_name": "Mamy Dupont",
+        "author_url": "/light",
+        "average_rating": 3,
+        "fav_count": 45,
+        "current_user_favorited": True,
+        "ingredients" : [
+            "Steak",
+            "250g de frites",
+            "1/2 salade",
+            "De la béarnaise",
+            "2 gros oignons",
+            "Sel / Poivre"
+        ],
+        "ustensiles": [
+            "Une poële",
+            "Un saladier",
+            "Une friteuse",
+            "Un plat à frites",
+            "Une spatule"
+        ],
+        "picture": "https://cdn.pratico-pratiques.com/app/uploads/sites/4/2018/08/30183348/steak-frite-sauce-dijonnaise.jpeg",
+        "steps": [
+            "Préchauffer la friteuse à 170°",
+            "Faire fondre du beurre (ou de la margarine) dans la poëlle.",
+            "Une fois la graisse chaude, plonger les frites surgelées pour une première cuisson. Après que",
+            "minutes, retirer le bac de l'huile.",
+            "Prenez le steak et cuisez le dans la poëlle (+/- 1min sur chaque face ? jsp moi faites comme",
+            "voulez)",
+            "Oubliez pas d'avoir lavé la salade avant de faire tout ça, ensuite mettez de la vinaigraîte e",
+            "oignons dedans.",
+            "Refaites une cuisson des frites une fois que la température atteint 170° à nouveau.",
+            "Faites les étapes que j'ai oublié.",
+            "Oui je sais, dans la photo y'a des tomates. Mais bon à mon âge on n'a pas d'appareil photo hein !",
+            "Dégustez ! Et alors elle est bonne ou pas la recette de mamy ?"
+        ],
+    })
 
 
 @website.route('/light')
 def index_page_light():
-    recipe = Recipe('Poulet rôti', 4, 2, True, '2020-01-09', 0,
-                    'https://assets.afcdn.com/recipe/20200227/108291_w1024h1024c1cx1824cy2736.webp')
-    return render_template('pages/recipe.html', theme='light', user=True, r1=recipe)
+    return render_template('pages/recipe.html', theme='light', user=True)
 
 
 
