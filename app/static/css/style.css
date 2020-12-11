@@ -32,22 +32,29 @@ body {
 *, *:before, *:after {
     /* Inherit the box sizing everywhere */
     box-sizing: inherit;
+    /* Disable drag by default */
+    -webkit-user-drag: none;
 }
 
 main {
     /* Center it in the page */
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
     /* Shift below appbar */
     margin-top: var(--appbar-height);
     /* Padding to avoid touching the borders on small screens */
     padding: 1.6rem;
     /* Take as much space as possible */
     width: 100%;
-    height: 100%;
+    flex-grow: 1;
     /* But don't go too wide either */
     max-width: var(--main-max-width);
     /* Apply color theme */
     background-color: var(--main-bg-color);
+}
+
+main>* {
+    z-index: 1;
 }
 
 /* Disable ugly default values of html elements */
@@ -120,20 +127,123 @@ button {
     -moz-user-select: none;
 }
 
+textarea {
+    background-color: var(--textarea-bg-color);
+    color: var(--textarea-fg-color);
+    transition: background-color 150ms ease-in-out;
+    border: 0;
+    width: 100%;
+    border-radius: 0.5rem;
+    resize: vertical;
+    font-family: inherit;
+    padding: 1rem;
+    font-size: 1.5rem;
+    min-height: 7rem;
+}
+
+textarea:focus {
+    outline: 0;
+    background-color: var(--textarea-focus-bg-color);
+}
+
+textarea::placeholder {
+    color: var(--textarea-placeholder-color);
+}
+
 /* Define common classes */
+
+h1 {
+    font-size: 3.9rem;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+h2 {
+    font-weight: 400;
+    font-size: 2.2rem;
+    text-align: left;
+}
 
 .expand {
     flex-grow: 1;
+}
+
+.expand2 {
+    flex-grow: 2;
+}
+
+.expand3 {
+    flex-grow: 3;
 }
 
 .row {
     /* Row that take the whole space */
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
     align-items: center;
     justify-content: flex-start;
+    width: fit-content;
+}
+
+.all-width {
     width: 100%;
+}
+
+.column {
+    /* column that take the whole space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: fit-content;
+}
+
+.all-height {
+    height: 100%;
+}
+
+.nowrap {
+    flex-wrap: nowrap;
+}
+
+img.avatar {
+    height: var(--appbar-avatar-size);
+    border-radius: 50%;
+    border: 0.15rem solid var(--avatar-border-color);
+}
+
+.filled-button {
+    padding: 0.78rem 4rem;
+    min-width: 10rem;
+    color: var(--filled-button-fg-color);
+    background-color: var(--filled-button-bg-color);
+    border-radius: 1rem;
+    margin: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.017rem;
+    font-size: 1.4rem;
+    line-height: 1.75;
+    text-transform: uppercase;
+    transition: background-color 250ms ease-out;
+}
+
+.filled-button:hover {
+    background-color: var(--filled-button-hover-color);
+}
+
+.outlined-button {
+    margin: 0.6rem;
+    padding: 0.6rem 4rem;
+    border: 0.124rem solid var(--outlined-button-border-color);
+    transition: border 200ms ease-in-out;
+    border-radius: 1.2rem;
+}
+
+.outlined-button:hover {
+    border: 0.124rem solid var(--outlined-button-hover-border-color);
 }
 
 /* App bar */
@@ -275,11 +385,6 @@ button {
     line-height: 0;
 }
 
-#appbar nav .my-account img {
-    height: var(--appbar-avatar-size);
-    border-radius: 50%;
-}
-
 #appbar nav .user-menu {
     float: none;
     position: absolute;
@@ -357,79 +462,6 @@ button {
     }
 }
 
-/* Recipe card */
-
-.recipe {
-    width: fit-content;
-    padding: 1rem;
-    margin: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    background-color: var(--card-bg-color);
-    border-radius: 0.5rem;
-}
-
-.recipe .name {
-    text-align: start;
-    padding: 0.2rem 0;
-    padding-top: 0.8rem;
-    font-weight: 500;
-    font-size: 1.5rem;
-    color: var(--recipe-name-fg-color)
-}
-
-.recipe .author {
-    text-align: start;
-    padding: 0.2rem 0;
-    font-weight: 400;
-    font-size: 1.2rem;
-    color: var(--recipe-author-fg-color)
-}
-
-.recipe img {
-    height: 20rem;
-    width: 20rem;
-    object-fit: cover;
-}
-
-/* Rating stars */
-
-ul.rating {
-    float: left;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-ul.rating > li {
-    float: left;
-}
-
-ul.rating > li > svg[data-prefix="far"] {
-    color: var(--empty-icon-color)
-}
-
-ul.rating > li > svg[data-prefix="fa"] {
-    color: var(--rating-star-color)
-}
-
-/* Favorite number */
-
-.fav-number button > svg[data-prefix="far"]   {
-    color: var(--empty-icon-color)
-}
-
-.fav-number button > svg[data-prefix="fa"] {
-    color: var(--favorite-heart-color)
-}
-
-.fav-number button {
-    margin: 0 0.2rem;
-    padding: 0;
-}
-
-
 /* Recipe list */
 
 .recipe-list {
@@ -444,5 +476,244 @@ ul.rating > li > svg[data-prefix="fa"] {
     list-style-type: none;
     padding: 0;
     margin: 0;
+}
+
+/* Recipe card */
+
+.recipe {
+    width: fit-content;
+    padding: 1rem;
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    background-color: var(--card-bg-color);
+    border-radius: 0.5rem;
+    -webkit-user-drag: none;
+}
+
+.recipe .name {
+    text-align: start;
+    padding: 0.2rem 0;
+    padding-top: 0.8rem;
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: var(--recipe-name-fg-color);
+    -webkit-user-drag: none;
+}
+
+.recipe .name:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    -webkit-user-drag: none;
+}
+
+.recipe .author {
+    text-align: start;
+    padding: 0.2rem 0;
+    font-weight: 400;
+    font-size: 1.2rem;
+    color: var(--recipe-author-fg-color);
+}
+
+.recipe .author:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    -webkit-user-drag: none;
+}
+
+.recipe img {
+    height: 20rem;
+    width: 20rem;
+    object-fit: cover;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+/* Rating stars */
+
+ul.rating {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+ul.rating>li {
+    float: left;
+    user-select: none;
+}
+
+ul.rating>li svg[data-prefix="far"] {
+    color: var(--empty-icon-color)
+}
+
+ul.rating>li svg[data-prefix="fa"] {
+    color: var(--rating-star-color)
+}
+
+/* Favorite number */
+
+.fav-number {
+    user-select: none;
+}
+
+.fav-number button>svg[data-prefix="far"] {
+    color: var(--empty-icon-color)
+}
+
+.fav-number button>svg[data-prefix="fa"] {
+    color: var(--favorite-heart-color)
+}
+
+.fav-number button {
+    margin: 0 0.2rem;
+    user-select: none;
+    padding: 0;
+}
+
+/* == Recipe detail == */
+
+.recipe-detail {
+    text-align: justify;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.recipe-detail .row {
+    align-items: flex-start;
+}
+
+.recipe-detail li {
+    font-weight: 300;
+}
+
+/* Infos at the top */
+
+.recipe-detail>.row {
+    flex-wrap: wrap-reverse;
+    width: 100%;
+    justify-content: center;
+}
+
+.recipe-detail .info {
+    flex-wrap: wrap;
+    flex-grow: 1;
+    width: min-content;
+}
+
+.recipe-detail .info .row.requirements {
+    width: auto;
+    justify-content: center;
+}
+
+.recipe-detail .info li {
+    text-align: left;
+}
+
+.recipe-detail .fav-number, .recipe-detail .rating {
+    margin-left: 1rem;
+}
+
+.recipe-detail .ingredients, .recipe-detail .ustensiles {
+    flex-grow: 1;
+    width: 100%;
+}
+
+/* Image */
+
+.recipe-detail img.cover {
+    width: 100%;
+    min-width: 30rem;
+    max-width: 50rem;
+    height: 35rem;
+    object-fit: cover;
+    border-radius: 1rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+}
+
+/* Steps */
+
+.recipe-detail .steps li {
+    margin: 0.5rem 0;
+}
+
+/* Recipe comment */
+
+.recipe-comments ul {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem;
+}
+
+.comment {
+    margin: 1rem 0;
+    max-width: var(--comment-width);
+    width: 100%;
+}
+
+.comment .bubble {
+    position: relative;
+    align-items: flex-start;
+    margin-left: 2.6rem;
+    background-color: var(--comment-bg-color);
+    color: var(--comment-fg-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    width: 100%;
+}
+
+.comment .bubble:after {
+    /* bubble triangle */
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 1.5rem solid transparent;
+    border-right-color: var(--comment-bg-color);
+    border-left: 0;
+    border-top: 0;
+    margin-left: -1.5rem;
+}
+
+.comment .name {
+    font-weight: 500;
+    font-size: 1.6rem;
+}
+
+.comment .message {
+    margin-top: 0.4rem;
+    font-weight: 300;
+    font-size: 1.4rem;
+    text-align: justify;
+}
+
+.comment .row {
+    text-align: left;
+}
+
+/* editor */
+
+.comment.editor textarea {
+    margin-top: 1rem;
+}
+
+.comment.editor .rating button {
+    margin: 0;
+    padding: 0;
+}
+
+.comment.editor .rating svg {
+    transition: all 250ms ease-in-out;
 }
 

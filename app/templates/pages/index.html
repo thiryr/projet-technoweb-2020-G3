@@ -1,17 +1,17 @@
 {% extends 'root.html' %}
-{% import 'macros/recipe.html' as recipe %}
 
 
 {% block body %}
 <ul class="recipe-list">
     <li>
+        <!-- TODO temp remove -->
         <div class="recipe">
             <img src="https://cdn.pratico-pratiques.com/app/uploads/sites/4/2018/08/30183348/steak-frite-sauce-dijonnaise.jpeg"
                 alt="Steak frite">
-            <span class="name">Steak-frite de mamy</span>
-            <span class="author">Mamy Dupont</span>
+            <a class="name" href="/light">Steak-frite de mamy</a>
+            <a class="author" href="/light">Mamy Dupont</a>
 
-            <div class="row">
+            <div class="row all-width">
                 <ul class="rating expand">
                     <li><i class="fa fa-star"></i></li>
                     <li><i class="fa fa-star"></i></li>
@@ -31,7 +31,7 @@
             <img src="https://assets.afcdn.com/recipe/20160419/14652_w1024h576c1cx2420cy1872.webp" alt="Steak frite">
             <span class="name">Spaghettis bolognèse</span>
             <span class="author">Thierry Latour</span>
-            <div class="row">
+            <div class="row all-width">
                 <div class="expand"></div>
                 <div class="fav-number">
                     <span>3</span>
@@ -46,6 +46,13 @@
                 alt="Steak frite">
             <span class="name">Oeuf brouillé au fromage</span>
             <span class="author">Thomas Dufour</span>
+            <div class="row all-width">
+                <div class="expand"></div>
+                <div class="fav-number">
+                    <span>6</span>
+                    <button><i class="far fa-heart"></i></button>
+                </div>
+            </div>
         </div>
     </li>
     <li>
@@ -53,6 +60,13 @@
             <img src="https://assets.afcdn.com/recipe/20190529/93106_w1024h1024c1cx3744cy2104.jpg" alt="Steak frite">
             <span class="name">Gateau au chocolat</span>
             <span class="author">Christelle Dupuis</span>
+            <div class="row all-width">
+                <div class="expand"></div>
+                <div class="fav-number">
+                    <span>9</span>
+                    <button><i class="far fa-heart"></i></button>
+                </div>
+            </div>
         </div>
     </li>
     <li>
@@ -61,6 +75,19 @@
                 alt="Steak frite">
             <span class="name">Blanquette de veau</span>
             <span class="author">Michel Dupont</span>
+            <div class="row all-width">
+                <ul class="rating expand">
+                    <li><i class="fa fa-star"></i></li>
+                    <li><i class="fa fa-star"></i></li>
+                    <li><i class="fa fa-star"></i></li>
+                    <li><i class="fa fa-star"></i></li>
+                    <li><i class="far fa-star"></i></li>
+                </ul>
+                <div class="fav-number">
+                    <span>58</span>
+                    <button><i class="fa fa-heart"></i></button>
+                </div>
+            </div>
         </div>
     </li>
     <li>
@@ -69,9 +96,15 @@
                 alt="Steak frite">
             <span class="name">Burger maison</span>
             <span class="author">Éleonore Latoile</span>
+            <div class="row all-width">
+                <div class="expand"></div>
+                <div class="fav-number">
+                    <span>18</span>
+                    <button><i class="fa fa-heart"></i></button>
+                </div>
+            </div>
 
         </div>
     </li>
-    {{ recipe.recipe_thumbnail(r1) }}
 </ul>
 {% endblock %}

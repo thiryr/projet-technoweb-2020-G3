@@ -14,6 +14,8 @@ html {
 
     --line-height: 1.43;
     --link-line-height: 1.6;
+
+    --comment-width: 80rem;
 }
 
 /* Light theme */
@@ -27,6 +29,8 @@ html.light {
     --elevation-shadow-color-2: #0000003d;
 
     --card-bg-color: #ffffff;
+
+    --avatar-border-color: #8d8d8d;
 
     --appbar-bg-color: #34495e;
     --appbar-fg-color: white;
@@ -46,6 +50,21 @@ html.light {
     --empty-icon-color: #bbc0c4;
     --rating-star-color: #f1c40f;
     --favorite-heart-color: #e74c3c;
+    
+    --comment-bg-color: #466172;
+    --comment-fg-color: #ffffff;
+
+    --textarea-bg-color: #f3f3f3;
+    --textarea-focus-bg-color: #f1f1f1;
+    --textarea-placeholder-color: #6b6b6b;
+    --textarea-fg-color: #000000;
+
+    --filled-button-bg-color: #3f6883;
+    --filled-button-hover-color: #527294;
+    --filled-button-fg-color: white;
+
+    --outlined-button-border-color:  #acacac;
+    --outlined-button-hover-border-color:  white;
 
 }
 
@@ -60,6 +79,8 @@ html.dark {
     --elevation-shadow-color-2: transparent;
 
     --card-bg-color: #292929;
+
+    --avatar-border-color: transparent;
 
     --appbar-bg-color: #070707;
     --appbar-fg-color: white;
@@ -80,6 +101,20 @@ html.dark {
     --rating-star-color: #f1c40f;
     --favorite-heart-color: #e74c3c;
 
+    --comment-bg-color: #3d3d3d;
+    --comment-fg-color: #ffffff;
+
+    --textarea-bg-color: #212121;
+    --textarea-focus-bg-color: #1c1c1c;
+    --textarea-placeholder-color: #c7c7c7;
+    --textarea-fg-color: #ffffff;
+
+    --filled-button-bg-color: #3f8fd1;
+    --filled-button-hover-color: #57859e;
+    --filled-button-fg-color: white;
+
+    --outlined-button-border-color:  #acacac;
+    --outlined-button-hover-border-color:  white;
 
 
 }
