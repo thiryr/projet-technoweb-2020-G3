@@ -75,3 +75,31 @@ class UserRepository:
 
         # Find user with this username, or None if there isn't any
         return User.query.filter_by(mail=mail).first()
+    
+    
+    #romeo a verifier svp
+    @staticmethod
+    def delete_user(user: User) -> User:
+        """Finds a user in the User table and delete this
+
+        Args:
+            user (User): The user to delete
+
+        """
+
+        db.session.delete(user)
+        db.session.commit()
+
+    #romeo a verifier svp
+    @staticmethod
+    def change_user_group(user: User, new_group) -> User:
+        """Finds a user in the User table and delete this
+
+        Args:
+            user (User): The user to delete
+
+        """
+
+        user.user_group = new_group
+
+        db.session.commit()
