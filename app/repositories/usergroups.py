@@ -55,3 +55,27 @@ class UserGroupRepository:
         
         db.session.add(usergroup)
         db.session.commit()
+        
+        
+        #romeo a verifier
+    @staticmethod
+    def updat_name_of_usergroup(group_name:str, group:UserGroup):
+        """
+        updat the name of one usergroup
+        @arguments mandatory unique name and permissions, permissions are that of a regular user by default
+        @raises ValueError if it already exists
+        """
+        group.name = group_name
+        
+        db.session.commit()
+
+    #romeo a verifier
+    @staticmethod
+    def delete_group(group:UserGroup):
+        """
+        updat the name of one usergroup
+        @arguments mandatory unique name and permissions, permissions are that of a regular user by default
+        @raises ValueError if it already exists
+        """
+        db.session.delete(group)
+        db.session.commit()
