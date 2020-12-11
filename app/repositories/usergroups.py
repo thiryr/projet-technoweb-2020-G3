@@ -50,32 +50,45 @@ class UserGroupRepository:
         """
         if UserGroupRepository.find_group_by_name(group_name) is not None:
             raise ValueError("A group with this name already exists")
-        
+
         usergroup = UserGroup(group_name, can_access_user_page, can_login, is_admin, can_have_public_recipes, can_access_social_features, can_rate)
-        
+
         db.session.add(usergroup)
         db.session.commit()
-        
-        
-        #romeo a verifier
+
+
+    
     @staticmethod
-    def updat_name_of_usergroup(group_name:str, group:UserGroup):
+    def update_name_of_usergroup(group_name:str, group_id: int):
         """
-        updat the name of one usergroup
-        @arguments mandatory unique name and permissions, permissions are that of a regular user by default
-        @raises ValueError if it already exists
+        update the name of one usergroup
+        @arguments a unique group_name and a valid group_id
+        @raises ValueError if the group doesn't exist or the group_name is taken
         """
+        group = UserGroupRepository.find_group_by_id(group_id)
+        if group is None:
+            raise ValueError(f"Group {group_id} does not exist")
+
+        if UserGroupRepository.find_group_by_name(group_name=group_name) is not None:
+            raise ValueError(f"Group name {group_name} is already in use")
+
         group.name = group_name
-        
+
         db.session.commit()
 
-    #romeo a verifier
+    
     @staticmethod
-    def delete_group(group:UserGroup):
+    def delete_group(group_id:int):
         """
         updat the name of one usergroup
         @arguments mandatory unique name and permissions, permissions are that of a regular user by default
         @raises ValueError if it already exists
         """
+
+        group = UserGroupRepository.find_group_by_id(group_id)
+        if group is None:
+            print(f"WARNING: tried to delete non-existant group {group_id}")
+            return
+
         db.session.delete(group)
         db.session.commit()
