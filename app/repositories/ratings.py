@@ -10,8 +10,8 @@ from app.models.rating import Rating
 from typing import List
 
 
-min_score = 0
-max_score = 5
+MIN_SCORE = 0
+MAX_SCORE = 5
 
 class RatingRepository:
 
@@ -88,7 +88,7 @@ class RatingRepository:
 
 
         #score domain
-        if score<min_score or score>max_score:
+        if score<MIN_SCORE or score>MAX_SCORE:
             raise ValueError(f"Score should be in integer range [0,5], was {score}")
 
         user = UserRepository.find_user_by_id(userid)
@@ -130,7 +130,7 @@ class RatingRepository:
         """Removes a subscription with some id from the database
         """
 
-        if new_score<min_score or new_score>max_score:
+        if new_score<MIN_SCORE or new_score>MAX_SCORE:
             raise ValueError(f"Score should be in integer range [0,5], was {new_score}")
 
         rating = Rating.query.get(rating_id)

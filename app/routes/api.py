@@ -19,7 +19,6 @@ from flask_login.utils import login_required, login_user, logout_user
 from flask_login import current_user
 
 import json
-import math
 
 
 from app.repositories.users import UserRepository
@@ -169,7 +168,7 @@ def retrieve_user_recipes():
 
     Returns: json {'recipes_info':
     [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
-    'average_rating': int, 'favorites': int, 'is_favorite': bool},..]}
+    'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
     """
 
     current_id = current_user.id
@@ -188,14 +187,55 @@ def retrieve_user_recipes():
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
         'author_first': author.first_name, 'author_last': author.last_name, 'average_rating': ratings_average, 
-        'favorites': favorite_number, 'is_favorite': current_favorite})
+        'favorites': favorite_number, 'is_favorite': current_favorite, 'img_url': recipe.image_url})
 
     return json.dumps({'recipes_info':recipe_jsons})
 
 
 
+@api.route('/recipe/get_info', methods=['POST'])
+def retrieve_recipe_info():
+    """Returns all ingredients for a recipe
+
+    Arguments:
+    Expects a specific recipe id as 'recipe_id' field
+
+    Returns: json {'recipe_id': int, 'recipe_name': str, 'img_url': str, 
+    'author_nick': str, 'author_first': str, 'author_last': str, 
+    'favorites':int, 'rating': int}
+    """
+
+    #request to dict
+    req_content = request.form
+    
+    recipe_id_field = req_content.get('recipe_id')
+    if recipe_id_field is None:
+        return 'Missing recipe_id field',400
+    #convert to int
+    try:
+        recipe_id = int(recipe_id_field)
+    except Exception:
+        return 'recipe_id should be integer',400
+    
+    recipe = RecipeRepository.get_recipe_from_id(recipe_id)
+    if recipe is None:
+        return 'recipe_id does not correspond to any recipe',400
+
+    favorite_nb = FavoriteRepository.get_favorites_number_to(recipe_id)
+    average_rating = RatingRepository.get_average_rating_for(recipe_id)
+    
+    img_url = recipe.image_url
+
+    author = UserRepository.find_user_by_id(recipe.author)
+    author_nick = author.username
+    author_first = author.first_name
+    author_last = author.last_name
+
+    return json.dumps({'recipe_id':recipe.id, 'recipe_name': recipe.name, 'img_url':img_url,
+    'author_nick': author_nick, 'author_first': author_first, 'author_last': author_last, 
+    'favorites':favorite_nb, 'rating': average_rating})
+
 @api.route('/recipe/get_ingredients', methods=['POST'])
-@login_required
 def retrieve_ingredients():
     """Returns all ingredients for a recipe
 
@@ -211,7 +251,7 @@ def retrieve_ingredients():
     recipe_id_field = req_content.get('recipe_id')
     if recipe_id_field is None:
         return 'Missing recipe_id field',400
-    #retrieve name
+    #convert to int
     try:
         recipe_id = int(recipe_id_field)
     except Exception:
@@ -224,9 +264,112 @@ def retrieve_ingredients():
     except Exception:
         return 'Something went wrong',500
 
-    recipe = RecipeRepository.get_recipe_from_id(recipe_id)
-
     return json.dumps({'ingredients':ingredients})
+
+
+@api.route('/recipe/get_steps', methods=['POST'])
+def retrieve_steps():
+    """Returns all steps for a recipe in order
+
+    Arguments:
+    Expects a specific recipe id as 'recipe_id' field
+
+    Returns: json {steps:[str]}
+    """
+
+    #request to dict
+    req_content = request.form
+    
+    recipe_id_field = req_content.get('recipe_id')
+    if recipe_id_field is None:
+        return 'Missing recipe_id field',400
+    #convert to int
+    try:
+        recipe_id = int(recipe_id_field)
+    except Exception:
+        return 'recipe_id should be integer',400
+
+    try:
+        steps = StepRepository.get_ingredients_of(recipe_id)
+    except ValueError:
+        return 'recipe_id might have been invalid',400
+    except Exception:
+        return 'Something went wrong',500
+
+    return json.dumps({'steps':steps})
+
+
+@api.route('/recipe/get_utensils', methods=['POST'])
+def retrieve_utensils():
+    """Returns all utensils for a recipe
+
+    Arguments:
+    Expects a specific recipe id as 'recipe_id' field
+
+    Returns: json {utensils:[str]}
+    """
+
+    #request to dict
+    req_content = request.form
+    
+    recipe_id_field = req_content.get('recipe_id')
+    if recipe_id_field is None:
+        return 'Missing recipe_id field',400
+    #convert to int
+    try:
+        recipe_id = int(recipe_id_field)
+    except Exception:
+        return 'recipe_id should be integer',400
+
+    try:
+        utensils = UtensilRepository.get_ingredients_of(recipe_id)
+    except ValueError:
+        return 'recipe_id might have been invalid',400
+    except Exception:
+        return 'Something went wrong',500
+
+    return json.dumps({'utensils':utensils})
+
+@api.route('/recipe/get_reviews', methods=['POST'])
+def retrieve_reviews():
+    """Returns all the reviews
+
+    Arguments:
+    Expects a specific recipe id as 'recipe_id' field
+
+    Returns: json {reviews:[{'text':str,'score':int}]}
+    """
+
+    #request to dict
+    req_content = request.form
+    
+    recipe_id_field = req_content.get('recipe_id')
+
+    if recipe_id_field is None:
+        return 'Missing recipe_id field',400
+    #convert to int
+    try:
+        recipe_id = int(recipe_id_field)
+    except Exception:
+        return 'recipe_id should be integer',400
+
+    try:
+        ratings = RatingRepository.get_ratings_to(recipe_id)
+    except ValueError:
+        return 'recipe_id might have been invalid',400
+    except Exception:
+        return 'Something went wrong',500
+    
+
+    reviews = []
+    for review in ratings:
+        review_text = review.comment
+        review_score = review.value
+        reviews.append({'text':review_text,'score':review_score})
+
+
+    return json.dumps({'reviews':reviews})
+
 
 
 
