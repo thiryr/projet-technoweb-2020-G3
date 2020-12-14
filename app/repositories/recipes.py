@@ -13,9 +13,14 @@ from app.models.recipe_elements.utensil import Utensil
 import app.repositories.tags as tag_rep
 import app.repositories.taglinks as taglink_rep
 
+
+import app.repositories.favorites as fav_rep
+import app.repositories.ratings as rating_rep
+
 import app.repositories.recipe_elements.ingredients as ing_rep
 import app.repositories.recipe_elements.utensils as uten_rep
 import app.repositories.recipe_elements.steps as step_rep
+
 
 
 
@@ -75,6 +80,11 @@ def remove_recipe(recipeid: int) -> None:
         recipeid ([type]): [description]
     """
     
+    recipe = get_recipe_from_id(recipeid)
+    if recipe is None:
+        print('WARNING: Tried to remove a non-existant recipe')
+        return
+    
     ingredients = ing_rep.get_ingredients_of(recipeid)
     utensils = uten_rep.get_utensils_of(recipeid)
     steps = step_rep.get_steps_of(recipeid)
@@ -85,6 +95,18 @@ def remove_recipe(recipeid: int) -> None:
         db.session.delete(step)
     for utensil in utensils:
         db.session.delete(utensil)
+    
+    favorites = fav_rep.get_favorites_to(recipeid)
+    for favorite in favorites:
+        fav_rep.remove_favorite(favorite.id)
+    
+    ratings = rating_rep.get_ratings_to(recipeid)
+    for rating in ratings:
+        rating_rep.remove_rating(rating.id)
+    
+
+
+    db.session.delete(recipe)
     
     #TODO FINISH THIS
     

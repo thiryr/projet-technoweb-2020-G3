@@ -1,8 +1,8 @@
 """class for static methods around the Rating table"""
 
-from app.repositories.recipes import get_recipe_from_id
-from app.repositories.users import find_user_by_id
-from app.repositories.usergroups import find_group_by_id, find_group_by_name
+import app.repositories.recipes as recipe_rep
+import app.repositories.users as user_rep
+import app.repositories.usergroups as usergroup_rep
 from app import db
 
 from app.models.rating import Rating
@@ -19,10 +19,10 @@ def get_ratings_from(userid: int) -> List[Rating]:
     """
     Returns all favorites from a user, or None
     """
-    user = find_user_by_id(userid)
+    user = user_rep.find_user_by_id(userid)
     if user is None:
         raise ValueError("User does not exist")
-    if find_group_by_id(user.user_group) != find_group_by_name('chef'):
+    if usergroup_rep.find_group_by_id(user.user_group) != usergroup_rep.find_group_by_name('chef'):
         raise ValueError("User is not a chef")
     return Rating.query.filter_by(user_id=userid).all()
 
@@ -56,6 +56,17 @@ def get_ratings_to(recipeid: int) -> List[Rating]:
     """
     return Rating.query.filter_by(recipe_id=recipeid).all()
 
+def get_ratings_number_to(recipeid: int) -> int:
+    """Gives the number of ratings for a given recipe
+
+    Args:
+        recipeid (int): a valid recipe id
+
+    Returns:
+        int: the number of ratings
+    """
+    return Rating.query.filter_by(recipe_id=recipeid).count()
+
 def get_specific_rating(userid: int, recipeid:int) -> Rating:
     """
     Returns the specified rating instance, or None
@@ -75,8 +86,8 @@ def add_rating(userid: int, recipeid:int, score:int, comment: str) -> Rating:
     #score domain
     if score<MIN_SCORE or score>MAX_SCORE:
         raise ValueError(f"Score should be in integer range [0,5], was {score}")
-    user = find_user_by_id(userid)
-    recipe = get_recipe_from_id(recipeid)
+    user = user_rep.find_user_by_id(userid)
+    recipe = recipe_rep.get_recipe_from_id(recipeid)
     #check that they exist
     if user is None:
         raise ValueError(f"User did not exist, ID: {userid}")

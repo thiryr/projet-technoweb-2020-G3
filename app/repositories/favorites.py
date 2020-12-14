@@ -1,7 +1,7 @@
 """class for static methods around the Favorite table"""
 
-from app.repositories.recipes import get_recipe_from_id
-from app.repositories.users import find_user_by_id
+import app.repositories.recipes as recipe_rep
+import app.repositories.users as user_rep
 from app import db
 
 from app.models.favorite import Favorite
@@ -52,8 +52,8 @@ def add_favorite(userid: int, recipeid:int) -> Favorite:
     #no double favorite
     if get_specific_favorite(userid,recipeid) is not None:
         raise ValueError(f"Favorite from user {userid} to recipe {recipeid} already exists")
-    user = find_user_by_id(userid)
-    recipe = get_recipe_from_id(recipeid)
+    user = user_rep.find_user_by_id(userid)
+    recipe = recipe_rep.get_recipe_from_id(recipeid)
     #check that they exist
     if user is None:
         raise ValueError(f"User did not exist, ID: {userid}")
@@ -74,7 +74,7 @@ def remove_favorite(fav_id: int) -> None:
         return
     
     #update follow_number
-    recipe = get_recipe_from_id(fav.recipe_id)
+    recipe = recipe_rep.get_recipe_from_id(fav.recipe_id)
     recipe.follow_number -= 1
     assert recipe.follow_number>=0
     
