@@ -27,6 +27,8 @@ class Recipe(db.Model):  # type: ignore
 
     category_id = Column(st.Integer, ForeignKey('category.id'), nullable=False)
 
+    pinned = Column(st.Boolean, nullable=False)
+
     #added for convenience, can be derived
     average_score = Column(st.Integer, nullable=False)
     follow_number = Column(st.Integer, nullable=False)
@@ -50,9 +52,13 @@ class Recipe(db.Model):  # type: ignore
         self.category_id = category_id
 
 
+        
+        self.pinned = False
+
         #non-essential (conceptually)
         self.average_score = 0
         self.follow_number = 0
+        
 
         if image_url is None:
             image_url = "https://i2.wp.com/www.foodrepublic.com/wp-content/uploads/2012/05/testkitchen_argentinesteak.jpg?resize=1280%2C%20560&ssl=1"

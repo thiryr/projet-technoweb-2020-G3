@@ -1,6 +1,6 @@
 """Proto-test-suite for the category repository"""
 
-from app.repositories.categories import CategoryRepository
+from app.repositories.categories import add_category,delete_category,name_to_category
 
 
 def run_all_tests() -> None:
@@ -22,18 +22,18 @@ def all_names_added() -> None:
     #core
     for name in names:
         try:
-            categories.append(CategoryRepository.add_category(name))
+            categories.append(add_category(name))
         except ValueError:
-            CategoryRepository.delete_category(name)
-            categories.append(CategoryRepository.add_category(name))
+            delete_category(name)
+            categories.append(add_category(name))
 
             print("test was likely improperly cleaned up last time")
     #test
     for ind,name in enumerate(names):
-        assert CategoryRepository.name_to_category(name) == categories[ind]
+        assert name_to_category(name) == categories[ind]
     #cleanup
     for name in names:
-        CategoryRepository.delete_category(name)
+        delete_category(name)
 
 def add_remove_consistancy() -> None:
     """
@@ -42,8 +42,8 @@ def add_remove_consistancy() -> None:
     #setup
     name="Gkslaj;kj"
     #core
-    CategoryRepository.add_category(name)
-    CategoryRepository.delete_category(name)
+    add_category(name)
+    delete_category(name)
     #test
-    assert CategoryRepository.name_to_category(name) is None
+    assert name_to_category(name) is None
     #cleanup

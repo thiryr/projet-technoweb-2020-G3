@@ -43,10 +43,10 @@ from app.models.recipe import Recipe
 from app.models.category import Category
 
 # Repositories (classes containing helper functions for a specific table, for example to manage a group of users)
-from app.repositories.users import UserRepository
-from app.repositories.usergroups import UserGroupRepository
-from app.repositories.categories import CategoryRepository
-from app.repositories.recipes import RecipeRepository
+from app.repositories.users import add_user
+from app.repositories.usergroups import add_usergroup
+from app.repositories.categories import add_category, name_to_category
+from app.repositories.recipes import add_recipe, compile_recipe
 # Blueprints (routers)
 from app.routes.api import api
 from app.routes.frontend import website
@@ -77,32 +77,32 @@ clear_data(db.session)
 
 #groups
 try:
-    UserGroupRepository.add_usergroup('admin')
+    add_usergroup('admin')
 except ValueError:
     pass
 
 try:
-    UserGroupRepository.add_usergroup('regular')
+    add_usergroup('regular')
 except ValueError:
     pass
 
 #default user (make sure admin group is added before it)
 try:
-    UserRepository.add_user('admin','admin','admin@localhost',usergroup='admin')
+    add_user('admin','admin','admin@localhost',usergroup='admin')
 except ValueError:
     pass
 
 #categories
 try:
-    CategoryRepository.add_category('Lunch')
+    add_category('Lunch')
 except ValueError:
     pass
 try:
-    CategoryRepository.add_category('Breakfast')
+    add_category('Breakfast')
 except ValueError:
     pass
 try:
-    CategoryRepository.add_category('Dinner')
+    add_category('Dinner')
 except ValueError:
     pass
 
@@ -115,8 +115,8 @@ import app.tests.repository_tests.categories_test as cat_test
 cat_test.run_all_tests()
 
 #test recipe
-cat = CategoryRepository.name_to_category('Lunch').id
-reci = RecipeRepository.add_recipe("Steak Frite", author_id=1, portion_number=4, difficulty=1, is_public=True, publicated_on="2020-12-05", category_id=cat)
+cat = name_to_category('Lunch').id
+reci = add_recipe("Steak Frite", author_id=1, portion_number=4, difficulty=1, is_public=True, publicated_on="2020-12-05", category_id=cat)
 
-RecipeRepository.compile_recipe(reci, ingredients=["4 Steaks","1Kg pomme de terres"], 
+compile_recipe(reci, ingredients=["4 Steaks","1Kg pomme de terres"], 
 utensils=["1 grand couteau","une poelle"], steps=["Do the thing"], tags= ["simple","saveur"])

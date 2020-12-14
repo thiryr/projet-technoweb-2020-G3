@@ -3,12 +3,12 @@ This file contains the definition of the "api" blueprint containing
 all the routes related to the api (CRUD operations on the database).
 """
 
-from app.repositories.ratings import RatingRepository
-from app.repositories.favorites import FavoriteRepository
-from app.repositories.recipes import RecipeRepository
-from app.repositories.recipe_elements.ingredients import IngredientRepository
-from app.repositories.recipe_elements.utensils import UtensilRepository
-from app.repositories.recipe_elements.steps import StepRepository
+from app.repositories.ratings import *
+from app.repositories.favorites import *
+from app.repositories.recipes import *
+from app.repositories.recipe_elements.ingredients import *
+from app.repositories.recipe_elements.utensils import *
+from app.repositories.recipe_elements.steps import *
 
 
 
@@ -21,8 +21,8 @@ from flask_login import current_user
 import json
 
 
-from app.repositories.users import UserRepository
-from app.repositories.subscriptions import SubscriptionRepository
+from app.repositories.users import *
+from app.repositories.subscriptions import *
 
 # Create blueprint
 api = Blueprint('api', __name__, url_prefix='/api')
@@ -36,7 +36,7 @@ def ping():
 # Login
 @api.route('/login', methods=['POST','GET'])
 def login():
-    user = UserRepository.find_user_by_username('admin')
+    user = find_user_by_username('admin')
     password = 'admin'
 
     if user == None:
@@ -70,7 +70,7 @@ def create_user():
     """
 
 
-    UserRepository.add_user("Bob", "123", "bob@bob.com")
+    add_user("Bob", "123", "bob@bob.com")
     return redirect("/")
 
 
@@ -80,7 +80,7 @@ def update_user_group():
     if not current_user.is_admin:
         return 'You do not have the necessary permissions'
 
-    UserRepository.find_user_by_username("Bob").set_user_group("admin")
+    find_user_by_username("Bob").set_user_group("admin")
 
     # send to previous page if possible, index otherwise
     if request.referrer:
@@ -106,7 +106,7 @@ def create_subscription():
     subscribed_name = str(req_content.get('username'))
 
     current_id = current_user.id
-    subscribed_user = UserRepository.find_user_by_username(subscribed_name)
+    subscribed_user = find_user_by_username(subscribed_name)
 
     #make sure user was found
     if subscribed_user is None:
@@ -115,7 +115,7 @@ def create_subscription():
     subscribed_id = subscribed_user.id
 
     try:
-        SubscriptionRepository.add_subscription(subscriber_id=current_id, subscribed_id=subscribed_id)
+        add_subscription(subscriber_id=current_id, subscribed_id=subscribed_id)
     except ValueError:
         return 'Invalid user ids in the server', 500
     except Exception as e:
@@ -141,7 +141,7 @@ def remove_subscription():
     subscribed_name = str(req_content.get('username'))
 
     current_id = current_user.id
-    subscribed_user = UserRepository.find_user_by_username(subscribed_name)
+    subscribed_user = find_user_by_username(subscribed_name)
 
     #make sure user was found
     if subscribed_user is None:
@@ -149,11 +149,11 @@ def remove_subscription():
     
     subscribed_id = subscribed_user.id
 
-    sub = SubscriptionRepository.get_specific_subscription(current_id,subscribed_id)
+    sub = get_specific_subscription(current_id,subscribed_id)
     if sub is None:
         return 'No such subscription existed', 199
 
-    SubscriptionRepository.remove_subscription(sub.id)
+    remove_subscription(sub.id)
 
     return 'Ok', 200
 
@@ -173,16 +173,16 @@ def retrieve_user_recipes():
 
     current_id = current_user.id
 
-    recipes = RecipeRepository.get_recipe_from_user(current_id)
+    recipes = get_recipe_from_user(current_id)
 
     recipe_jsons = []
 
     for recipe in recipes:
         #get key elements
-        author = UserRepository.find_user_by_id(recipe.author)
-        ratings_average = RatingRepository.get_average_rating_for(recipe.id)
-        favorite_number = FavoriteRepository.get_favorites_number_to(recipe.id)
-        current_favorite = FavoriteRepository.user_has_favorite(current_id, recipe.id)
+        author = find_user_by_id(recipe.author)
+        ratings_average = get_average_rating_for(recipe.id)
+        favorite_number = get_favorites_number_to(recipe.id)
+        current_favorite = user_has_favorite(current_id, recipe.id)
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
@@ -217,16 +217,16 @@ def retrieve_recipe_info():
     except Exception:
         return 'recipe_id should be integer',400
     
-    recipe = RecipeRepository.get_recipe_from_id(recipe_id)
+    recipe = get_recipe_from_id(recipe_id)
     if recipe is None:
         return 'recipe_id does not correspond to any recipe',400
 
-    favorite_nb = FavoriteRepository.get_favorites_number_to(recipe_id)
-    average_rating = RatingRepository.get_average_rating_for(recipe_id)
+    favorite_nb = get_favorites_number_to(recipe_id)
+    average_rating = get_average_rating_for(recipe_id)
     
     img_url = recipe.image_url
 
-    author = UserRepository.find_user_by_id(recipe.author)
+    author = find_user_by_id(recipe.author)
     author_nick = author.username
     author_first = author.first_name
     author_last = author.last_name
@@ -258,7 +258,7 @@ def retrieve_ingredients():
         return 'recipe_id should be integer',400
 
     try:
-        ingredients = IngredientRepository.get_ingredients_of(recipe_id)
+        ingredients = get_ingredients_of(recipe_id)
     except ValueError:
         return 'recipe_id might have been invalid',400
     except Exception:
@@ -290,7 +290,7 @@ def retrieve_steps():
         return 'recipe_id should be integer',400
 
     try:
-        steps = StepRepository.get_ingredients_of(recipe_id)
+        steps = get_steps_of(recipe_id)
     except ValueError:
         return 'recipe_id might have been invalid',400
     except Exception:
@@ -322,7 +322,7 @@ def retrieve_utensils():
         return 'recipe_id should be integer',400
 
     try:
-        utensils = UtensilRepository.get_ingredients_of(recipe_id)
+        utensils = get_utensils_of(recipe_id)
     except ValueError:
         return 'recipe_id might have been invalid',400
     except Exception:
@@ -354,7 +354,7 @@ def retrieve_reviews():
         return 'recipe_id should be integer',400
 
     try:
-        ratings = RatingRepository.get_ratings_to(recipe_id)
+        ratings = get_ratings_to(recipe_id)
     except ValueError:
         return 'recipe_id might have been invalid',400
     except Exception:
@@ -398,17 +398,17 @@ def switch_favorite():
     current_id = current_user.id
 
     #Try to get the favorite
-    fav = FavoriteRepository.get_specific_favorite(current_id, recipe_id)
+    fav = get_specific_favorite(current_id, recipe_id)
     #if none, add it
     if fav is None:
         try:
-            FavoriteRepository.add_favorite(current_id, recipe_id)
+            add_favorite(current_id, recipe_id)
         except Exception:
             return 'Could not add a favorite',500
         is_favorite = True
     else:
         try:
-            FavoriteRepository.remove_favorite(fav.id)
+            remove_favorite(fav.id)
         except Exception:
             return 'Could not remove this favorite',500
         is_favorite = False

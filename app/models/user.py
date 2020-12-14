@@ -8,7 +8,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-from app.repositories.usergroups import UserGroupRepository
+from app.repositories.usergroups import find_group_by_name
 
 from app import db
 
@@ -59,7 +59,7 @@ class User(UserMixin, db.Model): #type: ignore
 
     #usergroup
     def set_user_group(self, group_name: str):
-        new_user_group = UserGroupRepository.find_group_by_name(group_name)
+        new_user_group = find_group_by_name(group_name)
 
         if new_user_group == None:
             raise ValueError(f"Could not set the user's group to {group_name}, the group could not be found")

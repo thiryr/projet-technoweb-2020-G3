@@ -4,7 +4,7 @@ all the routes related to the frontend (pages).
 """
 
 from flask import Blueprint, render_template_string
-from app.repositories.users import UserRepository
+from app.repositories.users import *
 
 # Create blueprint
 website = Blueprint('frontend', __name__, url_prefix='/')
@@ -12,7 +12,7 @@ website = Blueprint('frontend', __name__, url_prefix='/')
 
 @website.route('/')
 def ping():
-    user = UserRepository.find_user_by_id(1)
+    user = find_user_by_id(1)
     return render_template_string('<h1>Hello {{name}}</h1> <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script><script>$.post("/api/recipe/user_recipes", {recipe_id:1},console.log,"json")</script>', name=user.username)
 
 
