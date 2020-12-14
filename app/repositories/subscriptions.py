@@ -53,6 +53,7 @@ def remove_subscription(subscription_id: int) -> None:
     """Removes a subscription with some id from the database
     """
     sub = Subscription.query.get(subscription_id)
+    
     if sub is None:
         print("WARNING: Tried to remove a non-existant subscription")
         return
