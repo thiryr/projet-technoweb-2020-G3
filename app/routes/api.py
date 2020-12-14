@@ -6,6 +6,13 @@ all the routes related to the api (CRUD operations on the database).
 from app.repositories.ratings import RatingRepository
 from app.repositories.favorites import FavoriteRepository
 from app.repositories.recipes import RecipeRepository
+from app.repositories.recipe_elements.ingredients import IngredientRepository
+from app.repositories.recipe_elements.utensils import UtensilRepository
+from app.repositories.recipe_elements.steps import StepRepository
+
+
+
+
 from flask import Blueprint, redirect, request
 from flask.wrappers import Response
 from flask_login.utils import login_required, login_user, logout_user
@@ -95,7 +102,7 @@ def create_subscription():
     """
     #request to dict
     req_content = request.form
-    
+
     #retrieve name
     subscribed_name = str(req_content.get('username'))
 
@@ -105,7 +112,7 @@ def create_subscription():
     #make sure user was found
     if subscribed_user is None:
         return 'Could not resolve username to existing user', 400
-    
+
     subscribed_id = subscribed_user.id
 
     try:
@@ -161,7 +168,7 @@ def retrieve_user_recipes():
     """Returns all the information necessary to display the user's recipes
 
     Returns: json {'recipes_info':
-    [{'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
     'average_rating': int, 'favorites': int, 'is_favorite': bool},..]}
     """
 
@@ -174,29 +181,52 @@ def retrieve_user_recipes():
     for recipe in recipes:
         #get key elements
         author = UserRepository.find_user_by_id(recipe.author)
-        ratings = RatingRepository.get_ratings_to(recipe.id)
+        ratings_average = RatingRepository.get_average_rating_for(recipe.id)
         favorite_number = FavoriteRepository.get_favorites_number_to(recipe.id)
         current_favorite = FavoriteRepository.user_has_favorite(current_id, recipe.id)
-        
-        #compute average
-        rating_sum = 0
-        rating_count = 0
-        for rating in ratings:
-            rating_sum+=rating
-            rating_count+=1
-        
-        if rating_count!=0:
-            average_rating = math.ceil(rating_sum/rating_count)
-        else:
-            average_rating = 0
-        
-        recipe_jsons.append({'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'average_rating': average_rating, 
+
+
+        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'average_rating': ratings_average, 
         'favorites': favorite_number, 'is_favorite': current_favorite})
-    
+
     return json.dumps({'recipes_info':recipe_jsons})
 
 
+
+@api.route('/recipe/get_ingredients', methods=['POST'])
+@login_required
+def retrieve_ingredients():
+    """Returns all ingredients for a recipe
+
+    Arguments:
+    Expects a specific recipe id as 'recipe_id' field
+
+    Returns: json {ingredients:[str]}
+    """
+
+    #request to dict
+    req_content = request.form
+    
+    recipe_id_field = req_content.get('recipe_id')
+    if recipe_id_field is None:
+        return 'Missing recipe_id field',400
+    #retrieve name
+    try:
+        recipe_id = int(recipe_id_field)
+    except Exception:
+        return 'recipe_id should be integer',400
+
+    try:
+        ingredients = IngredientRepository.get_ingredients_of(recipe_id)
+    except ValueError:
+        return 'recipe_id might have been invalid',400
+    except Exception:
+        return 'Something went wrong',500
+
+    recipe = RecipeRepository.get_recipe_from_id(recipe_id)
+
+    return json.dumps({'ingredients':ingredients})
 
 
 
@@ -241,5 +271,3 @@ def switch_favorite():
         is_favorite = False
     
     return json.dumps({'is_favorite':is_favorite}),200
-
-

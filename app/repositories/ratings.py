@@ -29,12 +29,42 @@ class RatingRepository:
         return Rating.query.filter_by(user_id=userid).all()
 
     @staticmethod
+    def get_average_rating_for(recipeid: int) -> int:
+        """Gives the average of all ratings for a recipe
+
+        Args:
+            recipeid (int): a valid recipe id
+
+        Returns:
+            int: the average of ratings or 0 if no rating OR invalid recipeid
+        """
+        #get ratings or no rating if invalid id
+        try:
+            ratings = RatingRepository.get_ratings_to(recipeid)
+        except ValueError:
+            ratings = []
+
+        #compute average
+        rating_sum = 0
+        rating_count = 0
+        for rating in ratings:
+            rating_sum+=rating
+            rating_count+=1
+
+        if rating_count!=0:
+            average_rating = int(round(rating_sum/rating_count))
+        else:
+            average_rating = 0
+
+        return average_rating
+
+    @staticmethod
     def get_ratings_to(recipeid: int) -> List[Rating]:
         """
         Returns a list of ratings to that recipe id, or None
         """
         return Rating.query.filter_by(recipe_id=recipeid).all()
-    
+
     @staticmethod
     def get_specific_rating(userid: int, recipeid:int) -> Rating:
         """
@@ -55,12 +85,12 @@ class RatingRepository:
         #no double rating
         if RatingRepository.get_specific_rating(userid,recipeid) is not None:
             raise ValueError(f"Rating from user {userid} to recipe {recipeid} already exists")
-        
+
 
         #score domain
         if score<min_score or score>max_score:
             raise ValueError(f"Score should be in integer range [0,5], was {score}")
-        
+
         user = UserRepository.find_user_by_id(userid)
         recipe = RecipeRepository.get_recipe_from_id(recipeid)
 
@@ -91,7 +121,7 @@ class RatingRepository:
         if rating is None:
             print("WARNING: Tried to remove a non-existant favorite")
             return
-        
+
         db.session.delete(rating)
         db.session.commit()
 
@@ -108,7 +138,7 @@ class RatingRepository:
         if rating is None:
             print("WARNING: Tried to remove a non-existant favorite")
             return
-        
+
         Rating.value = new_score
 
         db.session.commit()
@@ -123,7 +153,7 @@ class RatingRepository:
         if rating is None:
             print("WARNING: Tried to remove a non-existant favorite")
             return
-        
+
         Rating.comment = new_comment
-        
+
         db.session.commit()

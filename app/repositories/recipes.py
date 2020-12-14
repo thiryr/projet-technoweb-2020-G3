@@ -40,8 +40,14 @@ class RecipeRepository:
     
     @staticmethod
     def compile_recipe(recipe: Recipe, ingredients: List[str], utensils: List[str], steps: List[str], tags: List[str]):
-        """
-        Adds components of the recipe in the tables
+        """Adds components of the recipe in the tables
+
+        Args:
+            recipe (Recipe): The recipe to be compiled with
+            ingredients (List[str]): a list of the ingredients as strings
+            utensils (List[str]): a list of the utensils as strings
+            steps (List[str]): a list of the steps in order as they should appear in the recipe as strings
+            tags (List[str]): a list of the tags to link to a recipe, as strings
         """
 
         #create and add the elements
@@ -53,8 +59,8 @@ class RecipeRepository:
             additional_utensil = Utensil(utensil_text, recipe.id)
             db.session.add(additional_utensil)
 
-        for step_text in steps:
-            additional_step = Step(step_text, recipe.id)
+        for step_number, step_text in enumerate(steps):
+            additional_step = Step(step_text, step_number, recipe.id)
             db.session.add(additional_step)
 
         for tag_text in tags:
