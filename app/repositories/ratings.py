@@ -163,3 +163,19 @@ class RatingRepository:
         Rating.comment = new_comment
 
         db.session.commit()
+
+
+    @staticmethod
+    def user_has_rating(user_id: int, recipe_id:int) -> bool:
+        """Tells whether or not a user already has a rating
+
+        Args:
+            user_id (int): a valid user id
+            recipe_id (int): a valid recipe id
+
+        Returns:
+            bool: True if rating exists
+        """
+        if RatingRepository.get_specific_rating(user_id, recipe_id) is None:
+            return False
+        return True
