@@ -10,12 +10,12 @@ from app.models.recipe_elements.ingredient import Ingredient
 from app.models.recipe_elements.step import Step
 from app.models.recipe_elements.utensil import Utensil
 
-from app.repositories.tags import name_to_tag, add_tag
-from app.repositories.taglinks import add_taglink
+import app.repositories.tags as tag_rep
+import app.repositories.taglinks as taglink_rep
 
-#from app.repositories.recipe_elements.ingredients import get_ingredients_of
-#from app.repositories.recipe_elements.utensils import get_utensils_of
-#from app.repositories.recipe_elements.steps import get_steps_of
+import app.repositories.recipe_elements.ingredients as ing_rep
+import app.repositories.recipe_elements.utensils as uten_rep
+import app.repositories.recipe_elements.steps as step_rep
 
 
 
@@ -61,11 +61,11 @@ def compile_recipe(recipe: Recipe, ingredients: List[str], utensils: List[str], 
         db.session.add(additional_step)
     for tag_text in tags:
         #get the tag
-        tag = name_to_tag(tag_text)
+        tag = tag_rep.name_to_tag(tag_text)
         #add it if it doesn't exist
         if tag is None:
-            tag = add_tag(tag_text)
-        new_link = add_taglink(tag.id, recipe.id)
+            tag = tag_rep.add_tag(tag_text)
+        new_link = taglink_rep.add_taglink(tag.id, recipe.id)
         db.session.add(new_link)
         db.session.commit()
 
@@ -74,10 +74,10 @@ def remove_recipe(recipeid: int) -> None:
     Args:
         recipeid ([type]): [description]
     """
-    """
-    ingredients = get_ingredients_of(recipeid)
-    utensils = get_steps_of(recipeid)
-    steps = get_steps_of(recipeid)
+    
+    ingredients = ing_rep.get_ingredients_of(recipeid)
+    utensils = uten_rep.get_utensils_of(recipeid)
+    steps = step_rep.get_steps_of(recipeid)
 
     for ingredient in ingredients:
         db.session.delete(ingredient)
@@ -85,7 +85,7 @@ def remove_recipe(recipeid: int) -> None:
         db.session.delete(step)
     for utensil in utensils:
         db.session.delete(utensil)
-        """
+    
     #TODO FINISH THIS
     
 

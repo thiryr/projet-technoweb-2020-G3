@@ -1,6 +1,6 @@
 """class for static methods around the Ingredient table"""
 
-from app.repositories.recipes import get_recipe_from_id
+import app.repositories.recipes as recipe_rep
 from app import db
 
 from app.models.recipe_elements.utensil import Utensil
@@ -15,6 +15,6 @@ def get_utensils_as_string_of(recipeid: int) -> List[str]:
     return list(map(lambda utenObject: utenObject.text, get_utensils_of(recipeid)))
 
 def get_utensils_of(recipeid: int) -> List[Utensil]:
-    if get_recipe_from_id(recipeid) is None:
+    if recipe_rep.get_recipe_from_id(recipeid) is None:
         raise ValueError(f"Tried to get the utensils of non-existant recipe {recipeid}")
     return Utensil.query.filter_by(recipe_id=recipeid).all()
