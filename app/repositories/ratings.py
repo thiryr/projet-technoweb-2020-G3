@@ -107,6 +107,12 @@ class RatingRepository:
 
         db.session.commit()
 
+
+        #update the average_score of the recipe
+        recipe.average_score = RatingRepository.get_average_rating_for(recipe.id)
+
+        db.session.commit()
+
         return new_rating
 
 

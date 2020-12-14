@@ -71,6 +71,8 @@ class FavoriteRepository:
 
         new_fav = Favorite(userid, recipeid)
 
+        recipe.follow_number+=1
+
         db.session.add(new_fav)
 
         db.session.commit()
@@ -89,6 +91,11 @@ class FavoriteRepository:
         if fav is None:
             print("WARNING: Tried to remove a non-existant favorite")
             return
+        
+        #update follow_number
+        recipe = RecipeRepository.get_recipe_from_id(fav.recipe_id)
+        recipe.follow_number -= 1
+        assert recipe.follow_number>=0
         
         db.session.delete(fav)
         db.session.commit()

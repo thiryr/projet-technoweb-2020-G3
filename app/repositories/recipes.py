@@ -87,4 +87,14 @@ class RecipeRepository:
     def get_recipe_from_user(user_id: int) -> List[Recipe]:
         """Returns all the recipes written by a user, ordered by date
         """
-        return Recipe.query.filter_by(author=user_id).order_by(Recipe.publicated_on).all()
+        return Recipe.query.filter_by(author=user_id).order_by(Recipe.publicated_on.desc()).all()
+
+    @staticmethod
+    def get_top_recipes(recipe_number = 20, up_to=date.today().replace(day=1)) -> List[Recipe]:
+        """Returns a list of the recipes in order of their score
+
+        Args:
+            number (int, optional): the number of recipes to fetch. Defaults to 20.
+            up_to (date, optional): the maximum date for a recipe. Defaults to the first day of the current month.
+        """
+        return Recipe.query.filter(Recipe.publicated_on<=up_to).order_by(Recipe.average_score.desc(), Recipe.follow_number.desc()).all()[:recipe_number]

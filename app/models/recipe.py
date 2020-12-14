@@ -27,6 +27,10 @@ class Recipe(db.Model):  # type: ignore
 
     category_id = Column(st.Integer, ForeignKey('category.id'), nullable=False)
 
+    #added for convenience, can be derived
+    average_score = Column(st.Integer, nullable=False)
+    follow_number = Column(st.Integer, nullable=False)
+
     # Init
     # By default, permissions are that of a regular user
     def __init__(self, name: str, author_id: int,  portion_number: int, difficulty: int, 
@@ -44,6 +48,11 @@ class Recipe(db.Model):  # type: ignore
         self.author = author_id
 
         self.category_id = category_id
+
+
+        #non-essential (conceptually)
+        self.average_score = 0
+        self.follow_number = 0
 
         if image_url is None:
             image_url = "https://i2.wp.com/www.foodrepublic.com/wp-content/uploads/2012/05/testkitchen_argentinesteak.jpg?resize=1280%2C%20560&ssl=1"
