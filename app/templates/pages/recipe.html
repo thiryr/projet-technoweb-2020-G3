@@ -1,24 +1,20 @@
-{% extends 'root.html' %}
-{% import 'macros.html' as macros %}
-
-{% block body %}
+{% extends 'root.html' %} {% import 'macros.html' as macros %} {% block head %}
+<script src="{{url_for('static',filename='js/pages/recipe/new_rating/star-rating.js')}}"></script>
+{% endblock %} {% block body %}
 <article class="recipe-detail">
 
     {% if user != None and (recipe.current_user_is_author or user.is_admin) %}
     <div class="row buttons">
         <button class="outlined-button" id="make-public">Rendre public</button>
-        <button class="outlined-button" id="delete">Supprimer</button>
-        {% if user.is_admin == true %}
-        <button class="outlined-button" id="pin">Épingler</button>
-        {% endif %}
+        <button class="outlined-button" id="delete">Supprimer</button> {% if user.is_admin == true %}
+        <button class="outlined-button" id="pin">Épingler</button> {% endif %}
     </div>
     {% endif %}
     <div class="row top">
         <div class="info">
             <div class="row">
                 {% if recipe.public == False %}
-                <i class="fa fa-lock margin-right"></i>
-                {% endif %}
+                <i class="fa fa-lock margin-right"></i> {% endif %}
                 <h1>{{ recipe.title }}</h1>
             </div>
 
@@ -28,20 +24,16 @@
 
             <div class="row">
                 <span>Par</span>
-                <a class='author' id='author' href="{{ recipe.author_url }}">{{ recipe.author_name }}</a>
-                {% if recipe.author_is_chef %}
+                <a class='author' id='author' href="{{ recipe.author_url }}">{{ recipe.author_name }}</a> {% if recipe.author_is_chef %}
                 <div class="badge">Chef</div>
                 {% endif %}
             </div>
 
             <div class="row">
                 {% if recipe.comments|length > 0 %}
-                <span>Note des chefs : </span>
-                {{ macros.rating(recipe.average_rating) }}
-                <span>({{recipe.comments|length}})</span>
-                {% else %}
-                <span>Aucune évaluation</span>
-                {% endif %}
+                <span>Note des chefs : </span> {{ macros.rating(recipe.average_rating) }}
+                <span>({{recipe.comments|length}})</span> {% else %}
+                <span>Aucune évaluation</span> {% endif %}
             </div>
 
             <div class="row">
@@ -53,8 +45,7 @@
                 </div>
             </div>
             <div class="row">
-                <span>Difficulté:</span>
-                {{ macros.difficulty(recipe.difficulty) }}
+                <span>Difficulté:</span> {{ macros.difficulty(recipe.difficulty) }}
             </div>
             <span>{{ recipe.category }} - pour {{ recipe.target_people }} personnes</span>
 
@@ -90,8 +81,7 @@
     <ul id="comments">
         {% if user.is_chef and not recipe.already_rated_by_current_user %}
         <li class="comment row editor">
-            <img src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg" alt="avatar"
-                class="avatar">
+            <img src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg" alt="avatar" class="avatar">
             <div class="column bubble">
                 <div class="row all-width">
                     <span class="name expand">Ajouter votre review</span>
@@ -114,8 +104,7 @@
             <img class="avatar" src="{{comment.avatar_url}}" alt="avatar">
             <div class="column bubble">
                 <div class="row all-width">
-                    <span class="name expand">{{comment.username}}</span>
-                    {{ macros.rating(comment.rating) }}
+                    <span class="name expand">{{comment.username}}</span> {{ macros.rating(comment.rating) }}
                 </div>
                 <span class="message">{{comment.message}}</span>
             </div>
