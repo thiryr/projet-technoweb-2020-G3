@@ -413,3 +413,77 @@ def switch_favorite():
         is_favorite = False
     
     return json.dumps({'is_favorite':is_favorite}),200
+
+
+#Review-related (Rating-related) routes
+
+@api.route('/ratings/add', methods=['POST'])
+@login_required
+def add_review():
+    """Adds a rating for a specific recipe from the currently logged-in user
+    Arguments:
+        Expects a recipe identifier "recipe_id"
+        a comment "comment"
+        a score "score"
+    Returns:
+        200 'ok' if alright
+    """
+
+    
+
+    #request to dict
+    req_content = request.form
+    
+    #retrieve recipe_id
+    recipe_id_field = req_content.get('recipe_id')
+
+    if recipe_id_field is None:
+        return 'Missing recipe_id field',400
+    
+    #convert to int
+    try:
+        recipe_id = int(recipe_id_field)
+    except Exception:
+        return 'recipe_id should be integer',400
+    
+
+    #retrieve score
+    score_field = req_content.get('score')
+
+    if score_field is None:
+        return 'Missing score field',400
+    
+    #convert to int
+    try:
+        score = int(score_field)
+    except Exception:
+        return 'score should be integer',400
+    
+    if score<1 or score>5:
+        return 'score should be between 1 and 5',400
+    
+    #retrieve comment
+    comment = req_content.get('comment')
+
+    if comment is None:
+        return 'Missing comment field',400
+
+    
+
+    
+
+    recipe = recipe_rep.get_recipe_from_id(recipe_id)
+
+    if recipe is None:
+        return 'No such recipe',400
+
+    current_id = current_user.id
+    try:
+        rating_rep.add_rating(current_id,recipe_id,score=score,comment=comment)
+    except ValueError:
+        return 'User already has a review for that recipe or information was invalid'
+    except Exception:
+        return 'Could not add a review',500
+
+    return 'ok',200
+    
