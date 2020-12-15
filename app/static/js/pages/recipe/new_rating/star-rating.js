@@ -144,7 +144,7 @@ $(document).ready(function() {
                 var recipe_id = parseInt(recipe_id_str)
 
 
-                $.post("/api/ratings/add", { recipe_id: recipe_id }).done(function() {
+                $.post("/api/ratings/add", { 'recipe_id': recipe_id, 'score': current_rating, 'comment': $("#comment-input").val().trim() }).done(function() {
                         //if success, remove button, lock input and write success    
                         $("#comment-input").remove()
                         $("#comment-input").attr("readonly", "true")
