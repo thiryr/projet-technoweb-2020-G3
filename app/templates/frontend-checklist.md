@@ -45,15 +45,15 @@ Une petite checklist pour rien oublier
     - [x] Ranking
   - [x] Bouton "s'abonner" si utilisateur différent de celui actif
   - ~~Bouton pour voir ses recettes publiques~~
-- [ ] Modifier mon profil
-  - [ ] Formulaire (pouvoir modifier les infos suivantes)
-    - [ ] Pseudo
-    - [ ] Nom
-    - [ ] Prénom
-    - [ ] Date de naissance
-    - [ ] Photo de profil
-    - [ ] Bouton ok
-    - [ ] Bouton annuler
+- [x] Modifier mon profil
+  - [x] Formulaire (pouvoir modifier les infos suivantes)
+    - [x] Pseudo
+    - [x] Nom
+    - [x] Prénom
+    - [x] Date de naissance
+    - [x] Photo de profil
+    - [x] Bouton ok
+    - [x] Bouton annuler
 - [x] Modifier une recette
   - [x] Formulaire
     - [x] Liste des ingrédients
@@ -127,7 +127,7 @@ Une petite checklist pour rien oublier
   - [x] Visualisation de recette (partie principale)
   - [ ] Utilisateurs
   - [x] Profil
-  - [ ] Modification de profil
+  - [x] Modification de profil
 - [x] Page dynamiques (faire la grosse base et laisser des ids pour modifier en js)
   - [x] Accueil
   - [x] Abonnements

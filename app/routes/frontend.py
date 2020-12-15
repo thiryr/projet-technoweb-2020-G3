@@ -3,7 +3,7 @@ This file contains the definition of the "frontend" blueprint containing
 all the routes related to the frontend (pages).
 """
 
-from app.forms import RegisterForm, SignInForm
+from app.forms import EditProfileForm, RegisterForm, SignInForm
 from flask import Blueprint, render_template
 
 # Create blueprint
@@ -99,6 +99,15 @@ def login_page():
 def register_page():
     form = RegisterForm()
     return render_template('pages/formpage.html', theme='dark', user=False, form=form)
+
+@website.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile_page():
+    form = EditProfileForm()
+    return render_template('pages/formpage.html', theme='dark', user={
+        "is_chef": True,
+        "is_admin": False,
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, form=form)
 
 
 @website.route('/edit-recipe', methods=['GET', 'POST'])

@@ -46,6 +46,11 @@
     {% set error_msg = field.errors | join(" ") %}
     {{ wtf_string_field(field, error=error_msg, autofocus=loop.first) }}
 
+    {# Same for FileField #}
+    {% elif 'FileField' in field.__class__.__name__ %}
+    {% set error_msg = field.errors | join(" ") %}
+    {{ wtf_file_field(field, error=error_msg) }}
+
     {# Same for Submit #}
     {% elif 'SubmitField' in field.__class__.__name__ %}
     {{ wtf_text_button(field, outlined=form.submit_outlined) }}
@@ -57,6 +62,23 @@
 </form>
 {% endmacro %}
 
+{# File field #}
+{% macro wtf_file_field(field, error="") %}
+<div class="file-field">
+    <label>{{field.label}}</label>
+    {{ field() }}
+
+    {# If there is an error message, display it #}
+    {% if error != "" %}
+    <p class="helper-text error">{{error}}</p>
+    {# Else, display the description #}
+    {% elif field.description != "" %}
+    <p class="helper-text">{{field.description}}</p>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{# Text field (no wtform) #}
 {% macro text_field(id, label, placeholder="", helper_text="", error="", autofocus=false, type='text') %}
 <div class="text-field">
     <label for="{{id}}">{{label}}</label>

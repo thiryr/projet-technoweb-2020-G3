@@ -3,6 +3,11 @@
 
 {% block body %}
 <div id="profile">
+    {# profile of the current user #}
+    <div class="row toolbar">
+        <button class="outlined-button">Modifier le profil</button>
+    </div>
+
     <div class="row info">
         <img class="avatar" src="{{viewed_user.avatar_url}}">
 

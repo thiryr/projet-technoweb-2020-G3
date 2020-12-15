@@ -173,6 +173,36 @@ textarea::placeholder {
     color: var(--textarea-placeholder-color);
 }
 
+::-webkit-file-upload-button {
+    outline: none;
+    border: none;
+    font-weight: 500;
+    letter-spacing: 0.017rem;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+    padding: 0.3rem 2rem;
+    border-radius: 0.7rem;
+    cursor: pointer;
+    margin: 0.8rem 0.5rem;
+    margin-right: 1rem;
+    width: min-content;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: inherit;
+    color: inherit;
+    -webkit-box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+    -moz-box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+    box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+}
+
+
+::-webkit-file-upload-button:hover {
+    -webkit-box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
+    -moz-box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
+    box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
+}
+
 /* Headers style */
 
 h1 {
@@ -368,7 +398,7 @@ img.avatar {
 
 /* Text field */
 
-.text-field, .dropdown-menu, .input-list {
+.text-field, .dropdown-menu, .input-list, .file-field {
     /* Take as much width as possible */
     width: 100%;
     /* inherit color theme */
@@ -413,7 +443,7 @@ img.avatar {
     color: var(--text-field-placeholder-color);
 }
 
-.text-field .helper-text, .dropdown-menu .helper-text, .input-list .helper-text {
+.text-field .helper-text, .dropdown-menu .helper-text, .input-list .helper-text, .file-field .helper-text {
     color: var(--text-field-helper-text-color);
     transition: color 250ms ease-in-out;
     text-align: left;
@@ -428,11 +458,11 @@ img.avatar {
     margin-bottom: 0.4rem;
 }
 
-.text-field .helper-text.error, .dropdown-menu .helper-text.error, .input-list .helper-text.error {
+.text-field .helper-text.error, .dropdown-menu .helper-text.error, .input-list .helper-text.error, .file-field .helper-text.error {
     color: var(--text-field-error-color);
 }
 
-.text-field label, .dropdown-menu label, .input-list label {
+.text-field label, .dropdown-menu label, .input-list label, .file-field label {
     text-align: left;
     font-size: 1.2rem;
     width: 100%;
@@ -662,6 +692,14 @@ ul.tags>li {
     line-height: 1;
 }
 
+/* File field */
+
+.file-field {
+    text-align: left;
+}
+
+
+
 /* == App bar == */
 
 #appbar {
@@ -790,7 +828,7 @@ ul.tags>li {
     padding: calc((var(--appbar-height) - var(--appbar-button-font-size) * var(--link-line-height)) / 2) 1rem;
 }
 
-#appbar nav a:hover{
+#appbar nav a:hover {
     text-decoration: underline;
 }
 
@@ -900,7 +938,6 @@ ul.tags>li {
     margin: 0;
 }
 
-
 /* Recipe card */
 
 .recipe {
@@ -978,7 +1015,6 @@ ul.tags>li {
         max-width: unset;
     }
 }
-
 
 /* Rating stars */
 
@@ -1218,7 +1254,16 @@ ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth
     height: auto;
     max-width: 22rem;
     max-height: 22rem;
-    margin: 4rem;
+    margin: 1rem 4rem;
+}
+
+#profile .toolbar {
+    width: 100%;
+    justify-content: flex-end;
+}
+
+#profile .toolbar .outlined-button {
+    width: auto;
 }
 
 #profile .info {
@@ -1312,17 +1357,18 @@ ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth
     #profile .info {
         justify-content: center;
     }
-
-    #profile .info > .column {
+    #profile .info>.column {
         align-items: center;
     }
 }
 
-#sorted > .row, #my-recipes > .row {
+/* == Other pages == */
+
+#sorted>.row, #my-recipes>.row {
     width: 100%;
 }
 
-#sorted > .row .dropdown-menu {
+#sorted>.row .dropdown-menu {
     max-width: 25rem;
 }
 

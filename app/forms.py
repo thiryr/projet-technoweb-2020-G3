@@ -2,6 +2,7 @@ from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms.fields import PasswordField, StringField
 from wtforms.fields.core import Field
+from wtforms.fields.simple import FileField
 from wtforms.validators import InputRequired, Length, ValidationError
 from wtforms.widgets.core import HTMLString, escape_html, html_params
 
@@ -135,6 +136,90 @@ class RegisterForm(FlaskForm):
     submit = Field(
         widget=ButtonWidget(submit=True),
         label='S\'inscrire'
+    )
+
+    # Custom validator for the birthday field
+    # That way, we can customize the error message
+    def validate_birthday(self, form, field):
+        try:
+            birthday = datetime.strptime(field.data, '%d/%m/%Y')
+        except Exception:
+            raise ValidationError(
+                'Erreur : Date invalide. Le format est JJ/MM/AAAA.')
+
+        if birthday >= datetime.now():
+            raise ValidationError(
+                'Erreur : Date invalide. La date doit être antérieure à aujourd\'hui.')
+
+    # Validate second password : must be equal to the first one
+    def validate_confirm_password(self, form, field):
+        if field.data != form.password.data:
+            raise ValidationError(
+                'Erreur : Les deux mots de passe sont différents.')
+
+
+class EditProfileForm(FlaskForm):
+    method = 'POST'
+    title = 'Modifier le profil'
+
+    # Username of the user
+    username = StringField(
+        label='Nom d\'utilisateur',
+        validators=[InputRequired('Ce champ est obligatoire'),
+                    Length(max=80, message="Le texte ne peut pas dépasser 80 caractères.")],
+        render_kw={"placeholder": "John12"}
+    )
+
+    # Password of the user
+    password = PasswordField(
+        label='Mot de passe',
+        validators=[],
+        render_kw={"placeholder": "azerty1234"}
+    )
+
+    confirm_password = PasswordField(
+        label='Confirmer le mot de passe',
+        validators=[],
+        render_kw={"placeholder": "azerty1234"}
+    )
+
+    # Email of the user
+    email = StringField(
+        label='Adresse email',
+        validators=[InputRequired('Ce champ est obligatoire')],
+        render_kw={"placeholder": "john.doe@example.com"}
+    )
+
+    first_name = StringField(
+        label='Prénom',
+        render_kw={"placeholder": "John"}
+    )
+
+    last_name = StringField(
+        label='Nom',
+        render_kw={"placeholder": "Doe"}
+    )
+
+    # Use a StringField and validate manually (see below)
+    birthday = StringField(
+        label='Date de naissance',
+        validators=[InputRequired('Ce champ est obligatoire'), ],
+        description='Le format est JJ/MM/AAAA.',
+        render_kw={"placeholder": "12/12/1980"}
+    )
+
+    picture = FileField(
+        label='Photo de profil'
+    )
+
+    cancel = Field(
+        widget=ButtonWidget(outlined=True, href="/profile"),
+        label='Annuler'
+    )
+
+    submit = Field(
+        widget=ButtonWidget(submit=True),
+        label='Valider'
     )
 
     # Custom validator for the birthday field
