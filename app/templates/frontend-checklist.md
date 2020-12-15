@@ -31,9 +31,9 @@ Une petite checklist pour rien oublier
 - [x] Mes recettes
   - [x] Affiche les recettes d'un utilisateur dans l'ordre anti chronologique
   - [x] Bouton "créer une nouvelle recette" si utilisateur = celui actif
-- [ ] Utilisateurs
-  - [ ] Liste des utilisateurs
-  - [ ] Pouvoir changer un utilisateur de groupe
+- [x] Utilisateurs
+  - [x] Liste des utilisateurs
+  - [x] Pouvoir changer un utilisateur de groupe
 - [x] Profil d'un utilisateur
   - [x] Affiche les infos publiques
     - [x] Photo de profil
@@ -121,11 +121,11 @@ Une petite checklist pour rien oublier
   - [x] input à badges
   - [x] dropdown menu
   - [x] Texte statique
-- [ ] Pages statiques en jinja
+- [x] Pages statiques en jinja
   - [x] Login
   - [x] Inscription
   - [x] Visualisation de recette (partie principale)
-  - [ ] Utilisateurs
+  - [x] Utilisateurs
   - [x] Profil
   - [x] Modification de profil
 - [x] Page dynamiques (faire la grosse base et laisser des ids pour modifier en js)

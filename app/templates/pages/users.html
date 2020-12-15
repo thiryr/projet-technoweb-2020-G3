@@ -1,0 +1,39 @@
+{% extends 'root.html' %}
+{% import 'macros.html' as macros %}
+
+{% block body %}
+<h2>Utilisateurs</h2>
+<table>
+    <thead>
+        <tr>
+            <td></td>
+            <td>Pseudo</td>
+            <td>Vrai nom</td>
+            <td>Note globale</td>
+            <td>Groupe</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td><img class="avatar" src="{{user.avatar_url}}"></td>
+            <td><a href="{{user.profile_url}}">{{user.pseudo}}</a></td>
+            <td><a href="{{user.profile_url}}">{{user.name}}</a></td>
+            <td>
+                {% if user.ranking != none %}
+                <div class="center">
+                    {{macros.rating(user.ranking)}}
+                </div>
+                {% endif %}
+            </td>
+            <td>{{macros.dropdown_menu(
+                id="user" + loop.index|string,
+                label="",
+                options=groups,
+                default=user.usergroup
+            )}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

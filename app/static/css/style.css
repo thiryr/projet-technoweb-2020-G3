@@ -70,6 +70,10 @@ a {
     -webkit-tap-highlight-color: #ffffff20;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
 p {
     text-align: justify;
 }
@@ -144,6 +148,25 @@ select {
     text-decoration: none;
     /* Use a hand pointer to show that it is clickable */
     cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border: 0;
+    border-spacing: 0;
+}
+
+tbody tr {
+    background-color: var(--table-odd-row-bg-color);
+}
+
+tbody tr:nth-child(2n) {
+    background-color: var(--table-even-row-bg-color);
+}
+
+td {
+    border: 0;
+    padding: 0.1rem 1rem;
 }
 
 /* == Define common classes == */
@@ -606,7 +629,6 @@ ul.tags>li {
 
 .dropdown-menu {
     position: relative;
-    z-index: 0;
     text-align: start;
 }
 
@@ -645,6 +667,7 @@ ul.tags>li {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    z-index: 5;
     /* style */
     list-style: none;
     border-radius: 1rem;
@@ -828,9 +851,7 @@ ul.tags>li {
     padding: calc((var(--appbar-height) - var(--appbar-button-font-size) * var(--link-line-height)) / 2) 1rem;
 }
 
-#appbar nav a:hover {
-    text-decoration: underline;
-}
+
 
 #appbar nav a[selected] {
     background-color: var(--appbar-button-selected-bg-color);

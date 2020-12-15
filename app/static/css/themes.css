@@ -101,6 +101,9 @@ html.light {
     --subscribe-button-fg-color: #ffffff;
     --subscribe-button-count-fg-color: #000000;
     --subscribe-button-count-bg-color: #d8dfe7;
+
+    --table-odd-row-bg-color: #edeff3;
+    --table-even-row-bg-color: #d0d3da;
 }
 
 
@@ -185,4 +188,6 @@ html.dark {
     --subscribe-button-count-fg-color: #000000;
     --subscribe-button-count-bg-color: #e6e6e6;
 
+    --table-odd-row-bg-color: #1c1c1c;
+    --table-even-row-bg-color: #222222;
 }

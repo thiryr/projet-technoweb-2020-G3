@@ -65,7 +65,9 @@
                                 {% endif %}
                                 </a></li>
                                 <li><a>Mon profil</a></li>
-                                <li><a>Utilisateurs</a></li>
+                                {% if user.is_admin %}
+                                <li><a {{'selected' if page == 'users' }} href='/users'>Utilisateurs</a></li>
+                                {% endif %}
                                 <li><a>Déconnexion</a></li>
                             </ul>
                         </li>
