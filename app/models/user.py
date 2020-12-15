@@ -31,6 +31,10 @@ class User(UserMixin, db.Model): #type: ignore
     birthdate = Column(st.Date, nullable=True)
 
 
+    #display_related
+    dark_mode = Column(st.Boolean, nullable=False)
+
+
 
 
     # Init
@@ -39,6 +43,9 @@ class User(UserMixin, db.Model): #type: ignore
         self.password_hash = generate_password_hash(password)
         self.mail = mail
         self.set_user_group(usergroup)
+
+        #defaults
+        self.dark_mode = True
 
     #password
     def set_password(self, new_password: str):

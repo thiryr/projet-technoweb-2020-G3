@@ -7,9 +7,9 @@ from app.models.user import User
 
     
 def add_user(username: str, password: str, mail: str, usergroup='regular'):
-    if find_user_by_username(username) != None:
+    if find_user_by_username(username) is not None:
         raise ValueError('A user already uses that username')
-    if find_user_by_mail(mail) != None:
+    if find_user_by_mail(mail) is not None:
         raise ValueError('A user already uses that mail address')
     # Create a new user
     new_user = User(username, password, mail, usergroup)
@@ -55,3 +55,22 @@ def find_user_by_mail(mail: str) -> User:
     """
     # Find user with this username, or None if there isn't any
     return User.query.filter_by(mail=mail).first()
+
+def set_user_darkmode(userid:int, darkmode=True) -> None:
+    """sets the specified user's visual mode
+
+    Args:
+        userid (int): a valid user id
+        darkmode (bool, optional): True to set theme to dark. Defaults to True.
+    """
+
+    user = find_user_by_id(userid)
+
+    #absolutely non-critical, just issue a warning and keep going
+    if user is None:
+        print("WARNING: User did not exist")
+        return
+    
+    user.dark_mode = darkmode
+    
+    db.session.commit()

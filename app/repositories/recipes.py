@@ -143,10 +143,15 @@ def get_recipe_from_id(recipe_id: int) -> Recipe:
     """
     return Recipe.query.get(recipe_id)
 
+
+
+
 def get_recipe_from_user(user_id: int) -> List[Recipe]:
     """Returns all the recipes written by a user, ordered by date
     """
     return Recipe.query.filter_by(author=user_id).order_by(Recipe.publicated_on.desc()).all()
+
+
 
 def get_top_recipes(recipe_number = 20, up_to=date.today().replace(day=1)) -> List[Recipe]:
     """Returns a list of the recipes in order of their score
@@ -156,7 +161,25 @@ def get_top_recipes(recipe_number = 20, up_to=date.today().replace(day=1)) -> Li
     """
     return Recipe.query.filter(Recipe.publicated_on<=up_to).order_by(Recipe.average_score.desc(), Recipe.follow_number.desc()).all()[:recipe_number]
 
+def get_n_recipes(recipe_number = 20, up_to=date(2020,1,1), newest_first=False) -> List[Recipe]:
+    """Gives all recipes to to some date (first day of 2020 by default)
 
+    Args:
+        recipe_number (int, optional): limit number of recipes in the list. Defaults to 20
+        up_to (date, optional): limit date. Defaults to first day of 2020
+        newest_first (boolean, optional): True for newest to oldest. Defaults to True
+
+    Returns:
+        List[Recipe]: list of recipe in order of date
+    """
+    default_query = Recipe.query.filter(Recipe.publicated_on<=up_to)
+    if newest_first:
+        query = default_query.order_by(Recipe.average_score.desc())
+    else:
+        query = default_query.order_by(Recipe.average_score.asc())
+    
+    return query.all()[:recipe_number]
+    
 def get_pinned_recipes() -> List[Recipe]:
     """Returns a list of all pinned recipes
     """
