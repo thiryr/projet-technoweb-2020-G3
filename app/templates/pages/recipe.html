@@ -3,23 +3,60 @@
 
 {% block body %}
 <article class="recipe-detail">
-    <div class="row">
+
+    {% if user != None and (recipe.current_user_is_author or user.is_admin) %}
+    <div class="row buttons">
+        <button class="outlined-button" id="make-public">Rendre public</button>
+        <button class="outlined-button" id="delete">Supprimer</button>
+        {% if user.is_admin == true %}
+        <button class="outlined-button" id="pin">Épingler</button>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div class="row top">
         <div class="info">
-            <h1>{{ recipe.title }}</h1>
-            <span>Par <a href="{{ recipe.author_url }}">{{ recipe.author_name }}</a></span>
+            <div class="row">
+                {% if recipe.public == False %}
+                <i class="fa fa-lock margin-right"></i>
+                {% endif %}
+                <h1>{{ recipe.title }}</h1>
+            </div>
+
+            <ul class="tags">
+                {{ macros.as_list(recipe.tags) }}
+            </ul>
 
             <div class="row">
+                <span>Par</span>
+                <a class='author' id='author' href="{{ recipe.author_url }}">{{ recipe.author_name }}</a>
+                {% if recipe.author_is_chef %}
+                <div class="badge">Chef</div>
+                {% endif %}
+            </div>
+
+            <div class="row">
+                {% if recipe.comments|length > 0 %}
                 <span>Note des chefs : </span>
                 {{ macros.rating(recipe.average_rating) }}
+                <span>({{recipe.comments|length}})</span>
+                {% else %}
+                <span>Aucune évaluation</span>
+                {% endif %}
             </div>
 
             <div class="row">
                 <span>Favoris : </span>
                 <div class="fav-number">
                     <span>{{recipe.fav_count}}</span>
-                    <button><i class="{{ 'fa' if recipe.current_user_favorited == True else 'far' }} fa-heart"></i></button>
+                    <button><i
+                            class="{{ 'fa' if recipe.current_user_favorited == True else 'far' }} fa-heart"></i></button>
                 </div>
             </div>
+            <div class="row">
+                <span>Difficulté:</span>
+                {{ macros.difficulty(recipe.difficulty) }}
+            </div>
+            <span>{{ recipe.category }} - pour {{ recipe.target_people }} personnes</span>
 
             <div class="row requirements">
                 <div class="ingredients">
@@ -36,8 +73,8 @@
                 </div>
             </div>
         </div>
-            <img class="cover" src="{{ recipe.picture }}">
-        
+        <img class="cover" src="{{ recipe.picture }}">
+
     </div>
 
     <div class="steps">
@@ -50,27 +87,40 @@
 
 <div class="recipe-comments">
     <h2>Commentaires des chefs</h2>
-<ul id="comments">
-    {% if is_chef and not already_rated %}
-    <li class="comment row editor">
-        <img src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg" alt="avatar" class="avatar">
-        <div class="column bubble">
-            <div class="row all-width">
-                <span class="name expand">Ajouter votre review</span>
-                <ul class="rating" id="rating-input">
-                    <li><button><i class="far fa-star"></i></button></li>
-                    <li><button><i class="far fa-star"></i></button></li>
-                    <li><button><i class="far fa-star"></i></button></li>
-                    <li><button><i class="far fa-star"></i></button></li>
-                    <li><button><i class="far fa-star"></i></button></li>
-                </ul>
+    <ul id="comments">
+        {% if user.is_chef and not recipe.already_rated_by_current_user %}
+        <li class="comment row editor">
+            <img src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg" alt="avatar"
+                class="avatar">
+            <div class="column bubble">
+                <div class="row all-width">
+                    <span class="name expand">Ajouter votre review</span>
+                    <ul class="rating" id="rating-input">
+                        <li><button><i class="far fa-star"></i></button></li>
+                        <li><button><i class="far fa-star"></i></button></li>
+                        <li><button><i class="far fa-star"></i></button></li>
+                        <li><button><i class="far fa-star"></i></button></li>
+                        <li><button><i class="far fa-star"></i></button></li>
+                    </ul>
+                </div>
+                <textarea id="comment-input" placeholder="Comment avez-vous trouvé cette recette ?"></textarea>
+                <button id="submit-rating-button" disabled class="outlined-button">Publier</button>
             </div>
-            <textarea id="comment-input" placeholder="Comment avez-vous trouvé cette recette ?"></textarea>
-            <button id="submit-rating-button" class="outlined-button">Publier</button>
-        </div>
-    </li>
-    {% endif %}
-    <!-- other comments here -->
-</ul>
+        </li>
+        {% endif %}
+        <!-- other comments here -->
+        {% for comment in recipe.comments %}
+        <li class="comment row">
+            <img class="avatar" src="{{comment.avatar_url}}" alt="avatar">
+            <div class="column bubble">
+                <div class="row all-width">
+                    <span class="name expand">{{comment.username}}</span>
+                    {{ macros.rating(comment.rating) }}
+                </div>
+                <span class="message">{{comment.message}}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}

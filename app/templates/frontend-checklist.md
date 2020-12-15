@@ -1,0 +1,137 @@
+# Checklist
+
+Une petite checklist pour rien oublier
+
+## 1. Ce qui doit être sur le site :
+
+- [x] Login
+  - [x] Formulaire
+    - [x] Pseudo ou email
+    - [x] Mdp
+    - [x] Bouton connexion
+    - [x] Bouton inscription
+- [x] Inscription
+  - [x] Formulaire
+    - [x] Pseudo
+    - [x] Mdp
+    - [x] email
+    - [x] prénom
+    - [x] nom
+    - [x] date de naissance
+  - [x] Texte pour indiquer que les chefs peuvent contacter l'admin par mail pour obtenir le rôle de chef
+- [ ] Accueil
+  - [ ] Recettes les mieux notées
+  - [ ] Recettes similaires aux favoris
+  - [ ] Recettes épinglées par l'admin
+- [ ] Abonnements
+  - [ ] Recettes des abonnements dans l'ordre anti chronologique
+- [ ] Favoris
+  - [ ] Recettes favorites  
+  - [ ] Tri par date de création / par score
+- [ ] Mes recettes
+  - [ ] Affiche les recettes d'un utilisateur dans l'ordre anti chronologique
+  - [ ] Bouton "créer une nouvelle recette" si utilisateur = celui actif
+- [ ] Utilisateurs
+  - [ ] Liste des utilisateurs
+  - [ ] Pouvoir changer un utilisateur de groupe
+- [ ] Profil d'un utilisateur
+  - [ ] Affiche les infos publiques
+    - [ ] Photo de profil
+    - [ ] Pseudo
+    - [ ] Nom/Prénom ?
+    - [ ] Date de naissance ?
+    - [ ] Chef ou pas
+    - [ ] Nombre d'abonnés
+    - [ ] Ranking
+  - [ ] Bouton "s'abonner" si utilisateur différent de celui actif
+  - [ ] Bouton pour voir ses recettes publiques
+- [ ] Modifier mon profil
+  - [ ] Formulaire (pouvoir modifier les infos suivantes)
+    - [ ] Pseudo
+    - [ ] Nom
+    - [ ] Prénom
+    - [ ] Date de naissance
+    - [ ] Photo de profil
+    - [ ] Bouton ok
+    - [ ] Bouton annuler
+- [ ] Modifier une recette
+  - [ ] Formulaire
+    - [ ] Liste des ingrédients
+    - [ ] Liste des ustensiles
+    - [ ] Étapes nécessaires
+    - [x] Nombre de personnes visé
+    - [x] Difficulté de 1 à 3
+    - [x] Visibilité
+    - [ ] Tags
+    - [ ] Catégorie prédéfinies
+    - [ ] Bouton OK
+    - [ ] Bouton Annuler
+- [x] Page de visualisation de recette
+  - [x] Nom de la recette
+  - [x] utilisateur qui l'a publiée (lien vers profil)
+  - [x] Moyenne des rating et le nombre
+  - [x] Nombre de favoris
+  - [x] Commentaires des chefs
+  - [x] Bouton privé/public
+  - [x] Bouton supprimer
+  - [x] Bouton épingler (pour l'admin)
+  - [x] Liste des ingrédients
+  - [x] Liste des ustensiles
+  - [x] étapes
+  - [x] nombre de personnes visé
+  - [x] difficulté
+  - [x] privé/public
+  - [x] tags
+  - [x] catégorie
+- [ ] Page de recherche
+  - [ ] Résultats dans l'ordre anti chronologique
+
+## 2. Partie statique et css
+
+- [x] App bar
+  - [x] Nom du site
+  - [x] Barre de recherche
+  - [x] Liens connecté
+    - [x] Accueil
+    - [x] Abonnements
+    - [x] Favoris
+    - [x] Mes recettes
+    - [x] Profil
+    - [x] Utilisateurs
+    - [x] Déconnexion
+  - [x] Liens déconnecté
+    - [x] Accueil
+    - [x] Se connecter
+    - [x] S'inscrire
+- [x] Thumbnail recette
+  - [x] Image
+  - [x] Nom
+  - [x] Auteur
+  - [x] Nombre de favoris
+  - [x] Rating moyen
+  - [x] Label chef
+- [ ] Formulaires
+  - [X] Search bar
+  - [X] Text input
+  - [X] outlined button
+  - [X] filled button
+  - [x] text area
+  - [x] Checkbox
+  - [ ] Liste d'inputs
+  - [ ] input à badges
+  - [ ] dropdown menu
+  - [x] Texte statique
+- [ ] Pages statiques en jinja
+  - [x] Login
+  - [x] Inscription
+  - [x] Visualisation de recette (partie principale)
+  - [ ] Utilisateurs
+  - [ ] Profil
+  - [ ] Modification de profil
+- [ ] Page dynamiques (faire la grosse base et laisser des ids pour modifier en js)
+  - [ ] Accueil
+  - [ ] Abonnements
+  - [ ] Favoris
+  - [ ] Mes recettes
+  - [ ] Page de recherche
+  - [ ] Modification de recette

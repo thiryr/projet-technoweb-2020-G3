@@ -1,4 +1,6 @@
 html {
+    display: flex;
+    flex-direction: column;
     /* Basic properties on the whole html element */
     height: 100%;
     box-sizing: border-box;
@@ -11,7 +13,7 @@ html {
 
 body {
     /* Take the whole viewport */
-    height: 100%;
+    flex-grow: 1;
     width: 100%;
     margin: 0;
     /* Use a more modern font */
@@ -46,7 +48,7 @@ main {
     padding: 1.6rem;
     /* Take as much space as possible */
     width: 100%;
-    flex-grow: 1;
+    height: 100%;
     /* But don't go too wide either */
     max-width: var(--main-max-width);
     /* Apply color theme */
@@ -79,19 +81,23 @@ a:focus {
     touch-action: manipulation;
 }
 
-input[type="search"] {
+input {
+    box-shadow: none;
     border: none;
     background-color: inherit;
-    color: var(--searchbar-fg-color);
     font: inherit;
+    color: inherit;
+    outline: none;
     font-size: 1.4rem;
+}
+
+input[type="search"] {
+    color: var(--searchbar-fg-color);
 }
 
 input[type="search"]::placeholder {
     color: var(--searchbar-placeholder-color);
 }
-
-/* Change the white to any color ;) */
 
 input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
     box-shadow: 0 0 0 3rem var(--searchbar-bg-color) inset !important;
@@ -127,6 +133,10 @@ button {
     -moz-user-select: none;
 }
 
+/* == Define common classes == */
+
+/* Text area */
+
 textarea {
     background-color: var(--textarea-bg-color);
     color: var(--textarea-fg-color);
@@ -150,7 +160,7 @@ textarea::placeholder {
     color: var(--textarea-placeholder-color);
 }
 
-/* Define common classes */
+/* Headers style */
 
 h1 {
     font-size: 3.9rem;
@@ -166,6 +176,15 @@ h2 {
     font-size: 2.2rem;
     text-align: left;
 }
+
+h4 {
+    font-weight: 400;
+    font-size: 1.5rem;
+    text-align: left;
+    margin: 1rem 0;
+}
+
+/* Layout helper classes */
 
 .expand {
     flex-grow: 1;
@@ -209,24 +228,64 @@ h2 {
     flex-wrap: nowrap;
 }
 
+.margin-right {
+    margin-right: 0.8rem;
+}
+
+/* Avatar */
+
 img.avatar {
+    width: var(--appbar-avatar-size);
+    object-fit: cover;
     height: var(--appbar-avatar-size);
     border-radius: 50%;
     border: 0.15rem solid var(--avatar-border-color);
 }
 
-.filled-button {
-    padding: 0.78rem 4rem;
-    min-width: 10rem;
-    color: var(--filled-button-fg-color);
-    background-color: var(--filled-button-bg-color);
-    border-radius: 1rem;
-    margin: 0.7rem;
+/* Buttons */
+
+.outlined-button, .filled-button {
     font-weight: 500;
     letter-spacing: 0.017rem;
     font-size: 1.4rem;
-    line-height: 1.75;
+    line-height: 1.5;
     text-transform: uppercase;
+    padding: 0.65rem 4rem;
+    border-radius: 1.2rem;
+    cursor: pointer;
+    margin: 0.5rem;
+    width: min-content;
+    min-width: 19rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.outlined-button:enabled:focus, .filled-button:enabled:focus {
+    animation-name: button-focus;
+    animation-duration: 0.75s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes button-focus {
+    /* Animation when the button is selected (with tab for example) */
+    from {
+        -webkit-box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+        -moz-box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+        box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+    }
+    to {
+        -webkit-box-shadow: inset 0 0 0 0.3rem var(--outlined-button-hover-border-color);
+        -moz-box-shadow: inset 0 0 0 0.3rem var(--outlined-button-hover-border-color);
+        box-shadow: inset 0 0 0 0.3rem var(--outlined-button-hover-border-color);
+    }
+}
+
+/* Filled button */
+
+.filled-button {
+    color: var(--filled-button-fg-color);
+    background-color: var(--filled-button-bg-color);
     transition: background-color 250ms ease-out;
 }
 
@@ -234,19 +293,228 @@ img.avatar {
     background-color: var(--filled-button-hover-color);
 }
 
+/* Outlined button */
+
 .outlined-button {
-    margin: 0.6rem;
-    padding: 0.6rem 4rem;
-    border: 0.124rem solid var(--outlined-button-border-color);
-    transition: border 200ms ease-in-out;
-    border-radius: 1.2rem;
+    transition: box-shadow 200ms ease-in-out;
+    transition: color 200ms ease-in-out;
+    /* Use box shadow instead of border so it goes towards the inside of the button
+    and when can use it to create some neat animations */
+    -webkit-box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+    -moz-box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+    box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
 }
 
-.outlined-button:hover {
-    border: 0.124rem solid var(--outlined-button-hover-border-color);
+.outlined-button:enabled:hover {
+    -webkit-box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
+    -moz-box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
+    box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
 }
 
-/* App bar */
+.outlined-button:disabled {
+    cursor: default;
+    -webkit-box-shadow: inset 0 0 0 0.124rem var(--button-disabled-color);
+    -moz-box-shadow: inset 0 0 0 0.124rem var(--button-disabled-color);
+    box-shadow: inset 0 0 0 0.124rem var(--button-disabled-color);
+    color: var(--button-disabled-color);
+}
+
+/* Text field */
+
+.text-field {
+    /* Take as much width as possible */
+    width: 100%;
+    /* inherit color theme */
+    color: inherit;
+    margin: 1.3rem 0;
+}
+
+.text-field .field {
+    color: var(--text-field-fg-color);
+    background-color: var(--text-field-bg-color);
+    width: 100%;
+    /* White rounded border */
+    border: 0.1rem solid var(--text-field-border-color);
+    transition: border-color 250ms ease-in-out;
+    border-radius: 1rem;
+    /* Use flex */
+    display: flex;
+    align-items: center;
+    /* Use a text cursor to show that it is editable */
+    cursor: text;
+}
+
+.text-field .field.error {
+    border-color: var(--text-field-error-color);
+}
+
+.text-field:hover {
+    border-color: var(--text-field-hover-border-color);
+}
+
+.text-field input {
+    /* Text style */
+    font-size: 1.5rem;
+    /* Layout */
+    flex-grow: 1;
+    padding: 0.5rem 2.2rem;
+    min-width: 0;
+    border-radius: inherit;
+}
+
+.text-field input::placeholder {
+    color: var(--text-field-placeholder-color);
+}
+
+.text-field .helper-text {
+    color: var(--text-field-helper-text-color);
+    transition: color 250ms ease-in-out;
+    text-align: left;
+    font-size: 1.05rem;
+    font-weight: 400;
+    letter-spacing: 0.028rem;
+    line-height: 1.5;
+    /* Decrease default margins */
+    margin-top: 0.08rem;
+    margin-left: 2.5rem;
+    margin-right: 2rem;
+    margin-bottom: 0.4rem;
+}
+
+.text-field .helper-text.error {
+    color: var(--text-field-error-color);
+}
+
+.text-field label {
+    text-align: left;
+    font-size: 1.2rem;
+    width: 100%;
+    display: block;
+}
+
+/* Checkbox */
+
+.checkbox label {
+    font-size: 1.4rem;
+}
+
+/* Radio list */
+
+ul.radio-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 2.5rem;
+}
+
+ul.radio-list > li {
+    display: block;
+    width: fit-content;
+}
+
+ul.radio-list > li .difficulty {
+    margin-left: 1rem;
+    display: block;
+    float: right;
+}
+
+/* Container */
+
+.small-container {
+    max-width: var(--small-container-width);
+    margin: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* WTForm */
+
+.wtform {
+    text-align: start;
+    width: 100%;
+}
+
+.wtform h2 {
+    width: 100%;
+    text-align: center;
+}
+
+.wtform>span.helper-text {
+    display: block;
+    text-align: justify;
+    margin: 1.5rem 0;
+    font-size: 1.5rem;
+}
+
+/* Badge */
+
+.badge {
+    font-size: 1.1rem;
+    border-radius: 1rem;
+    background-color: var(--badge-bg-color);
+    padding: 0.2rem 1rem;
+    color: var(--badge-fg-color);
+    margin: 0.1rem;
+    user-select: none;
+    -moz-user-select: none;
+}
+
+/* Tags */
+
+ul.tags {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    margin-bottom: 0.7rem;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+ul.tags>li {
+    background-color: #383838;
+    color: white;
+    padding: 0.2rem 1rem;
+    margin: 0.2rem;
+    font-size: 1.3rem;
+    border-radius: 1rem;
+    user-select: none;
+    -moz-user-select: none;
+    font-weight: 400;
+    width: fit-content;
+}
+
+/* Tag input */
+
+
+.tag-input .tags {
+    margin-left: 2rem;
+    margin-right: 2.2rem;
+    margin-bottom: 0;
+    margin-top: 0;
+    align-items: center;
+    flex-direction: row;
+    justify-content: start;
+    width: 100%;
+}
+
+.tag-input .tags li button {
+    padding: 0.1rem;
+    margin: 0 0.1rem;
+}
+
+.tag-input input {
+    padding-left: 0;
+    margin-left: 0.2rem;
+    margin-right: 0;
+}
+
+.tag-input ul.tags>li {
+    background-color: #616161;
+}
+
+/* == App bar == */
 
 #appbar {
     /* Position */
@@ -533,7 +801,7 @@ img.avatar {
 
 /* Rating stars */
 
-ul.rating {
+ul.rating, ul.difficulty {
     float: left;
     list-style: none;
     margin: 0;
@@ -541,7 +809,7 @@ ul.rating {
     user-select: none;
 }
 
-ul.rating>li {
+ul.rating>li, ul.difficulty>li {
     float: left;
     user-select: none;
 }
@@ -552,6 +820,23 @@ ul.rating>li svg[data-prefix="far"] {
 
 ul.rating>li svg[data-prefix="fa"] {
     color: var(--rating-star-color)
+}
+
+/* Difficulty spoon */
+
+ul.difficulty>li:only-child {
+    /* 1 child */
+    color: var(--difficulty-1st-color);
+}
+
+ul.difficulty>li:first-child:nth-last-child(2), ul.difficulty>li:first-child:nth-last-child(2)~li {
+    /* 2 children */
+    color: var(--difficulty-2nd-color);
+}
+
+ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth-last-child(3)~li {
+    /* 3 children */
+    color: var(--difficulty-3rd-color);
 }
 
 /* Favorite number */
@@ -591,12 +876,40 @@ ul.rating>li svg[data-prefix="fa"] {
     font-weight: 300;
 }
 
+/* Buttons at the top */
+
+.recipe-detail .row.buttons {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
 /* Infos at the top */
 
-.recipe-detail>.row {
+.recipe-detail .row.top {
     flex-wrap: wrap-reverse;
     width: 100%;
     justify-content: center;
+}
+
+.recipe-detail .info>.row>.rating {
+    margin-right: 0.4rem;
+}
+
+.recipe-detail .info .row {
+    align-items: center;
+}
+
+.recipe-detail .info>span {
+    display: block;
+}
+
+.recipe-detail .info .row .author {
+    margin: 0 0.7rem;
+}
+
+.recipe-detail .info .row .author:hover {
+    text-decoration: underline;
 }
 
 .recipe-detail .info {
@@ -614,7 +927,7 @@ ul.rating>li svg[data-prefix="fa"] {
     text-align: left;
 }
 
-.recipe-detail .fav-number, .recipe-detail .rating {
+.recipe-detail .fav-number, .recipe-detail .rating, .recipe-detail .difficulty {
     margin-left: 1rem;
 }
 
@@ -716,4 +1029,3 @@ ul.rating>li svg[data-prefix="fa"] {
 .comment.editor .rating svg {
     transition: all 250ms ease-in-out;
 }
-

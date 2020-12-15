@@ -2,18 +2,112 @@
 {% macro rating(number) %}
 <ul class="rating">
     {% for i in range(5) %}
-    {% if i < number %}
-    <li><i class="fa fa-star"></i></li>
-    {% else %}
-    <li><i class="far fa-star"></i></li>
-    {% endif %}
-    {% endfor %}
+    {% if i < number %} <li><i class="fa fa-star"></i></li>
+        {% else %}
+        <li><i class="far fa-star"></i></li>
+        {% endif %}
+        {% endfor %}
 </ul>
 {% endmacro %}
 
 {# Write the given list as a list of <li> #}
-{% macro as_list(list) %}
-{% for line in list %}
+    {% macro as_list(list) %}
+    {% for line in list %}
 <li>{{line | e}}</li>
 {% endfor %}
+{% endmacro %}
+
+{# Render the correct number of stars for the given rating #}
+{% macro difficulty(number) %}
+<ul class="difficulty">
+    {% for i in range(number) %}
+    <li><i class="fa fa-utensil-spoon"></i></li>
+    {% endfor %}
+</ul>
+{% endmacro %}
+
+{# WTForm macro #}
+{% macro wtform(form) %}
+<form class="wtform" method='{{form.method if form.method else "post"}}' {% if form.action %} action="{{form.action}}"
+    {% endif %} novalidate>
+
+    {% if form.title != None %}
+    <h2>{{ form.title }}</h2>
+    {% endif %}
+
+    {{ form.csrf_token }}
+    <!-- {{ form.hidden_tag() }} -->
+    {% for field in form %}
+    {# If it is a StringField or a PasswordField, use the custom macro #}
+
+    {% if 'StringField' in field.__class__.__name__ or 'PasswordField' in field.__class__.__name__ or 'DateField' in
+    field.__class__.__name__ %}
+
+    {% set error_msg = field.errors | join(" ") %}
+    {{ wtf_string_field(field, error=error_msg, autofocus=loop.first) }}
+
+    {# Same for Submit #}
+    {% elif 'SubmitField' in field.__class__.__name__ %}
+    {{ wtf_text_button(field, outlined=form.submit_outlined) }}
+    {# Else use the default rendering #}
+    {% else %}
+    {{ field() }}
+    {% endif %}
+    {% endfor %}
+</form>
+{% endmacro %}
+
+{% macro text_field(id, label, placeholder="", helper_text="", error="", autofocus=false, type='text') %}
+<div class="text-field">
+    <label for="{{id}}">{{label}}</label>
+    <div class="field {{'error' if error != ''}}">
+        <input autocomplete='off' id="{{id}}" type="{{type}}" autofocus={{autofocus}} placeholder="{{placeholder}}">
+    </div>
+    <!-- If there is an error message, display it -->
+    {% if error != "" %}
+    <p class="helper-text error">{{error}}</p>
+    <!-- Else, display the description -->
+    {% elif helper_text != "" %}
+    <p class="helper-text">{{helper_text}}</p>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{# WTForm string field #}
+{% macro wtf_string_field(field, error="", autofocus=false) %}
+<div class="text-field">
+    {{field.label}}
+    <!-- Field part with border. Add error class if error is true -->
+    <div class="field {{'error' if error != ''}}">
+        {{ field(
+        autocomplete='off',
+        autofocus=autofocus
+        ) }}
+    </div>
+
+    <!-- If there is an error message, display it -->
+    {% if error != "" %}
+    <p class="helper-text error">{{error}}</p>
+    <!-- Else, display the description -->
+    {% elif field.description != "" %}
+    <p class="helper-text">{{field.description}}</p>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{# WTForm text button #}
+{% macro wtf_text_button( field, transparent=false, outlined=false ) %}
+{% if outlined == true %}
+{{ field(class="outlined-button") }}
+{% else %}
+{{ field(class="filled-button") }}
+{% endif %}
+{% endmacro%}
+
+{# Checkbox #}
+{% macro checkbox(id, label) %}
+<div class="checkbox">
+    <input type='checkbox' id='{{id}}'>
+    <label for='{{id}}'>{{label}}</label>
+</div>
 {% endmacro %}

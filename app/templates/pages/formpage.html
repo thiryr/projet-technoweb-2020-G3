@@ -1,0 +1,13 @@
+{% extends 'root.html' %}
+{% import 'macros.html' as macros %}
+
+{% block body %}
+
+{# This page will be filled by the form given in parameters #}
+<div class="small-container">
+    {{ macros.wtform(form) }}
+
+
+</div>
+
+{% endblock %}

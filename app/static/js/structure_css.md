@@ -11,7 +11,11 @@ Thumbnail de recette :
     <img src="IMAGE_URL"
         alt="RECIPE_NAME">
     <a class="name" href="RECIPE_URL">RECIPE_NAME</a>
-    <a class="author" href="PROFILE_URL">AUTHOR_NAME</a>
+
+    <div class="row all-width">
+        <a class="author expand" href="PROFILE_URL">AUTHOR_NAME</a>
+        <span class="badge">Chef</span>
+    </div>
     <div class="row all-width">
         <ul class="rating expand">
             <li><i class="fa fa-star"></i></li>
@@ -40,6 +44,8 @@ Facultatif:
   - Il faut 5 li avec des étoiles. 
   - les `fa fa-star` sont pleines et jaunes, les `far fa-star` sont vides. Il faut donc mettre autant de `fa fa-star` que le rating, puis le reste en `far fa-star`.
   - S'il n'y a aucun rating pour cette recette, remplacer tout le bloc `<ul class="rating expand">...</ul>` par un bloc vide `<div class="expand"></div>`
+- Badge "Chef"
+  - Si l'auteur n'est pas un chef, il faut retirer le badge. On peut laisser la row autour, mais elle n'aura pas d'effet.
 
 ## Commentaire
 
@@ -69,3 +75,11 @@ Remplacer:
 - `USER_NAME` par le nom du chef (prénom /nom, pseudo ?)
 - Remplacer l'intérieur de rating pour indiquer le rating sélectionné (même principe qu'au dessus avec les `fa` remplis et les `far` vides)
 - Remplacer `MESSAGE` par le message
+
+## Tag pour l'input de tags
+
+```html
+<li>TEXT <button><li class="fa fa-times"></li></button></li>
+```
+
+Remplacer text par le nom du tag. Définir que lorsqu'on clique sur le bouton le tag est supprimé.

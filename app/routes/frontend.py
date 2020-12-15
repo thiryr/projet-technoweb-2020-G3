@@ -3,7 +3,7 @@ This file contains the definition of the "frontend" blueprint containing
 all the routes related to the frontend (pages).
 """
 
-from app.models.recipe import Recipe
+from app.forms import RegisterForm, SignInForm
 from flask import Blueprint, render_template
 
 # Create blueprint
@@ -15,14 +15,24 @@ def index_page():
     """
     Page d'accueil
     """
-    return render_template('pages/recipe.html', theme='dark', user=True, is_chef=True, already_rated=False, recipe={
+    return render_template('pages/recipe.html', theme='dark', user={
+        "is_chef": True,
+        "is_admin": False,
+    }, recipe={
         "title": "Steak-frite",
         "author_name": "Mamy Dupont",
         "author_url": "/light",
+        "author_is_chef": True,
         "average_rating": 3,
         "fav_count": 45,
+        "difficulty": 1,
+        "target_people": 4,
+        "public": True,
+        "category": "Diner",
+        "tags": ['Steak', 'Frites', 'Mamy'],
+        "current_user_is_author": True,
         "current_user_favorited": True,
-        "ingredients" : [
+        "ingredients": [
             "Steak",
             "250g de frites",
             "1/2 salade",
@@ -52,18 +62,42 @@ def index_page():
             "Oui je sais, dans la photo y'a des tomates. Mais bon à mon âge on n'a pas d'appareil photo hein !",
             "Dégustez ! Et alors elle est bonne ou pas la recette de mamy ?"
         ],
+        "already_rated_by_current_user": False,
+        "comments": [
+            {
+                "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Michel_Cremades.jpg",
+                "username": "Michel Dupont",
+                "rating": 4,
+                "message": "Coucou mamy, merci pour cette bonne recette. Personnellement, j'ajouterais un peu d'ail sur le steak, mais c'est déjà très bon comme ça."
+            },
+            {
+                "avatar_url": "https://img.gentside.com/article/insolite/salustiano-sanchez-blazquez-est-l-homme-le-plus-vieux-du-monde-a-112-ans_9c4b850336f7a8fcdaa784c4ba49719d77633cde.jpg",
+                "username": "Eugène Leblanc",
+                "rating": 2,
+                "message": "C'est un scandale, de mon temps on cuisinait mieux que ça !"
+            }
+        ]
     })
 
 
 @website.route('/light')
 def index_page_light():
-    return render_template('pages/recipe.html', theme='light', user=True)
+    return render_template('pages/index.html', theme='light', user=True)
 
 
+@website.route('/login', methods=['GET', 'POST'])
+def login_page():
+    form = SignInForm()
+    return render_template('pages/formpage.html', theme='dark', user=False, form=form)
 
 
-@website.route('/login')
-def login():
-    return '<h1>Sign in now !</h1>'
+@website.route('/register', methods=['GET', 'POST'])
+def register_page():
+    form = RegisterForm()
+    return render_template('pages/formpage.html', theme='dark', user=False, form=form)
+
+@website.route('/edit-recipe', methods=['GET', 'POST'])
+def edit_recipe_page():
+    return render_template('pages/edit-recipe.html', theme='dark', user=False)
 
 # TODO add routes here with "website" instead of "app"
