@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <!-- Use FontAwesome for icons -->
     {{ fontawesome_js() }}
+    <!-- Additional lines -->
+    {% block head %}
+    {% endblock %}
 </head>
 
 <!-- Body -->
