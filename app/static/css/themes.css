@@ -83,12 +83,21 @@ html.light {
 
     --badge-bg-color: #a333be;
     --badge-fg-color: white;
+    --badge-red-bg-color: #d44d4d;
 
     --dropdown-menu-options-bg: #ffffff;
     --dropdown-menu-options-hover-bg: #f5f5f5;
     --dropdown-menu-options-fg: black;
     --dropdown-menu-options-selected-bg: #e0d9d9;
     --dropdown-menu-options-selected-fg: #0a0a0a;
+
+    --subscribe-button-bg-color: #2e477e;
+    --subscribe-button-hover-bg-color: #3c5894;
+    --subscribe-button-subscribed-bg-color: #626263;
+    --subscribe-button-subscribed-hover-bg-color: #5f6063;
+    --subscribe-button-fg-color: #ffffff;
+    --subscribe-button-count-fg-color: #000000;
+    --subscribe-button-count-bg-color: #d8dfe7;
 }
 
 
@@ -154,11 +163,20 @@ html.dark {
 
     --badge-bg-color: #a333be;
     --badge-fg-color: white;
+    --badge-red-bg-color: #d44d4d;
 
     --dropdown-menu-options-bg: #222222;
     --dropdown-menu-options-hover-bg: #272727;
     --dropdown-menu-options-fg: #ffffff;
     --dropdown-menu-options-selected-bg: #28292c;
     --dropdown-menu-options-selected-fg: white;
+
+    --subscribe-button-bg-color: #3f648f;
+    --subscribe-button-hover-bg-color: #5077a5;
+    --subscribe-button-subscribed-bg-color: #45474b;
+    --subscribe-button-subscribed-hover-bg-color: #5f6063;
+    --subscribe-button-fg-color: #ffffff;
+    --subscribe-button-count-fg-color: #000000;
+    --subscribe-button-count-bg-color: #e6e6e6;
 
 }

@@ -36,11 +36,11 @@ Une petite checklist pour rien oublier
   - [ ] Pouvoir changer un utilisateur de groupe
 - [ ] Profil d'un utilisateur
   - [ ] Affiche les infos publiques
-    - [ ] Photo de profil
-    - [ ] Pseudo
-    - [ ] Nom/Prénom ?
-    - [ ] Date de naissance ?
-    - [ ] Chef ou pas
+    - [x] Photo de profil
+    - [x] Pseudo
+    - [x] Nom/Prénom ?
+    - [x] Date de naissance ?
+    - [x] Chef ou pas
     - [ ] Nombre d'abonnés
     - [ ] Ranking
   - [ ] Bouton "s'abonner" si utilisateur différent de celui actif
@@ -54,18 +54,18 @@ Une petite checklist pour rien oublier
     - [ ] Photo de profil
     - [ ] Bouton ok
     - [ ] Bouton annuler
-- [ ] Modifier une recette
-  - [ ] Formulaire
-    - [ ] Liste des ingrédients
-    - [ ] Liste des ustensiles
-    - [ ] Étapes nécessaires
+- [x] Modifier une recette
+  - [x] Formulaire
+    - [x] Liste des ingrédients
+    - [x] Liste des ustensiles
+    - [x] Étapes nécessaires
     - [x] Nombre de personnes visé
     - [x] Difficulté de 1 à 3
     - [x] Visibilité
     - [x] Tags
     - [x] Catégorie prédéfinies
-    - [ ] Bouton OK
-    - [ ] Bouton Annuler
+    - [x] Bouton OK
+    - [x] Bouton Annuler
 - [x] Page de visualisation de recette
   - [x] Nom de la recette
   - [x] utilisateur qui l'a publiée (lien vers profil)
@@ -110,14 +110,14 @@ Une petite checklist pour rien oublier
   - [x] Nombre de favoris
   - [x] Rating moyen
   - [x] Label chef
-- [ ] Formulaires
+- [x] Formulaires
   - [X] Search bar
   - [X] Text input
   - [X] outlined button
   - [X] filled button
   - [x] text area
   - [x] Checkbox
-  - [ ] Liste d'inputs
+  - [x] Liste d'inputs
   - [x] input à badges
   - [x] dropdown menu
   - [x] Texte statique
@@ -134,4 +134,4 @@ Une petite checklist pour rien oublier
   - [ ] Favoris
   - [ ] Mes recettes
   - [ ] Page de recherche
-  - [ ] Modification de recette
+  - [x] Modification de recette

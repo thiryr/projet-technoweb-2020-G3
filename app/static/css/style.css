@@ -477,6 +477,10 @@ ul.radio-list>li .difficulty {
     -moz-user-select: none;
 }
 
+.badge.red {
+    background-color: var(--badge-red-bg-color);
+}
+
 /* Tags */
 
 ul.tags {
@@ -1133,4 +1137,92 @@ ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth
 
 .comment.editor .rating svg {
     transition: all 250ms ease-in-out;
+}
+
+/* == Profile == */
+
+#profile .avatar {
+    width: 100%;
+    height: auto;
+    max-width: 22rem;
+    max-height: 22rem;
+    margin: 4rem;
+}
+
+#profile .info {
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+#profile .info > .column {
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#profile .info .badge {
+    font-size: 1.4rem;
+    margin: 0 0.5rem;
+}
+
+#profile h1 {
+    margin-bottom: 0.2rem;
+}
+
+#profile .alias {
+    margin-top: 1.5rem;
+    margin-bottom: 0.3rem;
+}
+#profile .alias i {
+    margin-right: 0.2rem;
+}
+
+#profile .birthday {
+    align-items: baseline;
+    margin: 1rem 0;
+}
+
+#profile .birthday svg {
+    margin-right: 0.7rem;
+}
+
+#profile .subscribe-button {
+    border-radius: 0.7rem;
+    border-top-left-radius: 0.9rem;
+    border-bottom-left-radius: 0.9rem;
+    display: flex;
+    align-items: baseline;
+    background-color: var(--subscribe-button-count-bg-color);
+}
+
+#profile .subscribe-button button:hover {
+    background-color: var(--subscribe-button-hover-bg-color);
+}
+
+#profile .subscribe-button button {
+    background-color: var(--subscribe-button-bg-color);
+    color: var(--subscribe-button-fg-color);
+    transition: background-color 189ms ease-in-out;
+    padding: 0.4rem 1.4rem;
+    border-top-left-radius: 0.7rem;
+    border-bottom-left-radius: 0.7rem;
+    margin: 0;
+    height: 100%;
+    display: inline-block;
+}
+
+#profile .subscribe-button.subscribed button {
+    background-color: var(--subscribe-button-subscribed-bg-color);
+}
+
+#profile .subscribe-button.subscribed button:hover {
+    background-color: var(--subscribe-button-subscribed-hover-bg-color);
+}
+
+#profile .subscribe-button .count {
+    margin: 0;
+    padding: 0 1rem;
+    padding-left: 0.7rem;
+    color: var(--subscribe-button-count-fg-color);
 }

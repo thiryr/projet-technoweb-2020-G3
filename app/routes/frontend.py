@@ -18,6 +18,7 @@ def index_page():
     return render_template('pages/recipe.html', theme='dark', user={
         "is_chef": True,
         "is_admin": False,
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
     }, recipe={
         "title": "Steak-frite",
         "author_name": "Mamy Dupont",
@@ -99,5 +100,21 @@ def register_page():
 @website.route('/edit-recipe', methods=['GET', 'POST'])
 def edit_recipe_page():
     return render_template('pages/edit-recipe.html', theme='dark', user=True)
+
+@website.route('/profile', methods=['GET', 'POST'])
+def profile_page():
+    return render_template('pages/profile.html', theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, viewed_user={
+        "pseudo": "MichelDupont24",
+        "name": "Michel Dupont",
+        "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Michel_Cremades.jpg",
+        "birthday": "15 février 1968",
+        "is_chef": True,
+        "is_admin": False,
+        "nb_subscribers": 42,
+        "current_user_is_subscribed": False
+    })
+
 
 # TODO add routes here with "website" instead of "app"
