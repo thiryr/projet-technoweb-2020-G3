@@ -1,115 +1,33 @@
 {% extends 'root.html' %}
 
+{# to be filled with js #}
 
 {% block body %}
-<ul class="recipe-list">
-    <li>
-        <!-- TODO temp remove -->
-        <div class="recipe">
-            <img src="https://cdn.pratico-pratiques.com/app/uploads/sites/4/2018/08/30183348/steak-frite-sauce-dijonnaise.jpeg"
-                alt="Steak frite">
-            <a class="name" href="/light">Steak-frite de mamy</a>
 
+<h1>Le coin des chefs</h1>
+<div id="featured">
+    <h2>Recettes mise en avant</h2>
+    <div class="center">
+        <ul class="recipe-list" id="featured-list">
+        </ul>
+    </div>
+</div>
 
-            <div class="row all-width">
-                <a class="author expand" href="/light">Mamy Dupont</a>
-                <span class="badge">Chef</span>
-            </div>
+<div id="trending">
+    <h2>Populaires</h2>
+    <div class="center">
+        <ul class="recipe-list" id="trending-list">
+        </ul>
+    </div>
+    <!-- More button -->
+    <button id="more-trending" class="icon-button"><i class="fa fa-plus"></i></button>
+</div>
 
-            <div class="row all-width">
-                <ul class="rating expand">
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                </ul>
-                <div class="fav-number">
-                    <span>45</span>
-                    <button><i class="fa fa-heart"></i></button>
-                </div>
-            </div>
-        </div>
-    </li>
-    <li>
-        <div class="recipe">
-            <img src="https://assets.afcdn.com/recipe/20160419/14652_w1024h576c1cx2420cy1872.webp" alt="Steak frite">
-            <span class="name">Spaghettis bolognèse</span>
-            <span class="author">Thierry Latour</span>
-            <div class="row all-width">
-                <div class="expand"></div>
-                <div class="fav-number">
-                    <span>3</span>
-                    <button><i class="far fa-heart"></i></button>
-                </div>
-            </div>
-        </div>
-    </li>
-    <li>
-        <div class="recipe">
-            <img src="https://media.eggs.ca/assets/RecipePhotos/_resampled/FillWyIxMjgwIiwiNzIwIl0/Scrambled-Eggs-v1.jpg"
-                alt="Steak frite">
-            <span class="name">Oeuf brouillé au fromage</span>
-            <span class="author">Thomas Dufour</span>
-            <div class="row all-width">
-                <div class="expand"></div>
-                <div class="fav-number">
-                    <span>6</span>
-                    <button><i class="far fa-heart"></i></button>
-                </div>
-            </div>
-        </div>
-    </li>
-    <li>
-        <div class="recipe">
-            <img src="https://assets.afcdn.com/recipe/20190529/93106_w1024h1024c1cx3744cy2104.jpg" alt="Steak frite">
-            <span class="name">Gateau au chocolat</span>
-            <span class="author">Christelle Dupuis</span>
-            <div class="row all-width">
-                <div class="expand"></div>
-                <div class="fav-number">
-                    <span>9</span>
-                    <button><i class="far fa-heart"></i></button>
-                </div>
-            </div>
-        </div>
-    </li>
-    <li>
-        <div class="recipe">
-            <img src="https://img.cuisineaz.com/610x610/2013-12-20/i37832-blanquette-de-veau-a-l-ancienne.jpeg"
-                alt="Steak frite">
-            <span class="name">Blanquette de veau</span>
-            <span class="author">Michel Dupont</span>
-            <div class="row all-width">
-                <ul class="rating expand">
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="fa fa-star"></i></li>
-                    <li><i class="far fa-star"></i></li>
-                </ul>
-                <div class="fav-number">
-                    <span>58</span>
-                    <button><i class="fa fa-heart"></i></button>
-                </div>
-            </div>
-        </div>
-    </li>
-    <li>
-        <div class="recipe">
-            <img src="https://img.hellofresh.com/f_auto,fl_lossy,q_auto,w_1200/hellofresh_s3/image/zelfgemaakte-hamburger-met-friet-15264608.jpg"
-                alt="Steak frite">
-            <span class="name">Burger maison</span>
-            <span class="author">Éleonore Latoile</span>
-            <div class="row all-width">
-                <div class="expand"></div>
-                <div class="fav-number">
-                    <span>18</span>
-                    <button><i class="fa fa-heart"></i></button>
-                </div>
-            </div>
-
-        </div>
-    </li>
-</ul>
+<div id="recommended">
+    <h2>Recettes recommandées</h2>
+    <div class="center">
+        <ul  class="recipe-list" id="recommended-list">
+        </ul>
+    </div>
+</div>
 {% endblock %}

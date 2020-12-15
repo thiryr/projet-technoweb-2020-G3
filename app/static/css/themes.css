@@ -73,6 +73,9 @@ html.light {
     --outlined-button-border-color:  #acacac;
     --outlined-button-hover-border-color:  white;
 
+    --icon-button-bg-color: #879397;
+    --icon-button-hover-bg-color: #5b6468;
+
     --text-field-border-color: #c9c9c9;
     --text-field-error-color:  #f8605e;
     --text-field-hover-border-color: #868686;
@@ -152,6 +155,9 @@ html.dark {
     --outlined-button-border-color:  #acacac;
     --outlined-button-hover-border-color:  white;
     --button-disabled-color: #808080;
+
+    --icon-button-bg-color: #31393d;
+    --icon-button-hover-bg-color: #4b5357;
 
     --text-field-border-color: transparent;
     --text-field-error-color:  #f8605e;

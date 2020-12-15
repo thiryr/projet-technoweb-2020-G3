@@ -83,7 +83,7 @@ def index_page():
 
 @website.route('/light')
 def index_page_light():
-    return render_template('pages/index.html', theme='light', user=True)
+    return render_template('pages/index.html', theme='dark', user=True)
 
 
 @website.route('/login', methods=['GET', 'POST'])

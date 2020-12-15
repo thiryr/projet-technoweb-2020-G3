@@ -62,19 +62,21 @@
 
     <!-- Recettes de l'utilisateur -->
     <h2>Les recettes de {{viewed_user.name if viewed_user.name else viewed_user.pseudo }}</h2>
-    <ul id="my-recipes" class="recipe-list">
-        {% for recipe in viewed_user.recipes %}
-            <li>
-                {{ macros.recipe_thumbnail(
-                    name=recipe.name,
-                    url=recipe.url,
-                    picture=recipe.picture,
-                    nb_favorites=recipe.nb_favorites,
-                    current_user_favorited=recipe.current_user_favorited,
-                    average_rating=recipe.average_rating
-                ) }}
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="center">
+        <ul id="my-recipes" class="recipe-list">
+            {% for recipe in viewed_user.recipes %}
+                <li>
+                    {{ macros.recipe_thumbnail(
+                        name=recipe.name,
+                        url=recipe.url,
+                        picture=recipe.picture,
+                        nb_favorites=recipe.nb_favorites,
+                        current_user_favorited=recipe.current_user_favorited,
+                        average_rating=recipe.average_rating
+                    ) }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}
