@@ -34,17 +34,17 @@ Une petite checklist pour rien oublier
 - [ ] Utilisateurs
   - [ ] Liste des utilisateurs
   - [ ] Pouvoir changer un utilisateur de groupe
-- [ ] Profil d'un utilisateur
-  - [ ] Affiche les infos publiques
+- [x] Profil d'un utilisateur
+  - [x] Affiche les infos publiques
     - [x] Photo de profil
     - [x] Pseudo
     - [x] Nom/Prénom ?
     - [x] Date de naissance ?
     - [x] Chef ou pas
-    - [ ] Nombre d'abonnés
-    - [ ] Ranking
-  - [ ] Bouton "s'abonner" si utilisateur différent de celui actif
-  - [ ] Bouton pour voir ses recettes publiques
+    - [x] Nombre d'abonnés
+    - [x] Ranking
+  - [x] Bouton "s'abonner" si utilisateur différent de celui actif
+  - ~~Bouton pour voir ses recettes publiques~~
 - [ ] Modifier mon profil
   - [ ] Formulaire (pouvoir modifier les infos suivantes)
     - [ ] Pseudo
@@ -126,7 +126,7 @@ Une petite checklist pour rien oublier
   - [x] Inscription
   - [x] Visualisation de recette (partie principale)
   - [ ] Utilisateurs
-  - [ ] Profil
+  - [x] Profil
   - [ ] Modification de profil
 - [ ] Page dynamiques (faire la grosse base et laisser des ids pour modifier en js)
   - [ ] Accueil

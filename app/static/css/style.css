@@ -1187,6 +1187,14 @@ ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth
     margin-right: 0.7rem;
 }
 
+#profile .ranking {
+    margin-bottom: 1.2rem;
+}
+
+#profile .ranking span {
+    margin-right: 0.7rem;
+}
+
 #profile .subscribe-button {
     border-radius: 0.7rem;
     border-top-left-radius: 0.9rem;

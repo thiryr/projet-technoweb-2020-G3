@@ -1,6 +1,6 @@
 {# Render the correct number of stars for the given rating #}
-{% macro rating(number) %}
-<ul class="rating">
+{% macro rating(number, expand=false) %}
+<ul class="rating {{'expand' if expand}}">
     {% for i in range(5) %}
     {% if i < number %} <li><i class="fa fa-star"></i></li>
         {% else %}
@@ -171,5 +171,37 @@
     {% elif helper_text != "" %}
     <p class="helper-text">{{helper_text}}</p>
     {% endif %}
+</div>
+{% endmacro %}
+
+{# Recipe thumbnail #}
+{% macro recipe_thumbnail(name, url, picture, nb_favorites, current_user_favorited=false, author_name="", author_profile_url="", author_is_chef=false, average_rating=none) %}
+<div class="recipe">
+    <img src="{{picture}}"
+        alt="{{name}}">
+    <a class="name" href="{{url}}">{{name}}</a>
+
+    {% if author_name != "" %}
+    <!-- Author -->
+    <div class="row all-width">
+        <a class="author expand" href="{{author_profile_url}}">{{author_name}}</a>
+        {% if author_is_chef %}
+        <span class="badge">Chef</span>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    <div class="row all-width">
+        <!-- Rating and favorites -->
+        {% if average_rating %}
+        {{ rating(average_rating, expand=true) }}
+        {% else %}
+        <div class="expand"></div>
+        {% endif %}
+        <div class="fav-number">
+            <span>{{nb_favorites}}</span>
+            <button><i class="{{'fa' if current_user_favorited else 'far'}} fa-heart"></i></button>
+        </div>
+    </div>
 </div>
 {% endmacro %}

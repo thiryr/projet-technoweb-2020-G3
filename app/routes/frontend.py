@@ -97,9 +97,11 @@ def register_page():
     form = RegisterForm()
     return render_template('pages/formpage.html', theme='dark', user=False, form=form)
 
+
 @website.route('/edit-recipe', methods=['GET', 'POST'])
 def edit_recipe_page():
     return render_template('pages/edit-recipe.html', theme='dark', user=True)
+
 
 @website.route('/profile', methods=['GET', 'POST'])
 def profile_page():
@@ -107,13 +109,56 @@ def profile_page():
         "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
     }, viewed_user={
         "pseudo": "MichelDupont24",
+        "ranking": 4,
         "name": "Michel Dupont",
         "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Michel_Cremades.jpg",
         "birthday": "15 février 1968",
         "is_chef": True,
         "is_admin": False,
         "nb_subscribers": 42,
-        "current_user_is_subscribed": False
+        "current_user_is_subscribed": False,
+        "recipes": [
+            {
+                "name": "Quiche namuroise",
+                "average_rating": 4,
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 89,
+                "current_user_favorited": True,
+            },
+            {
+                "name": "Quiche namuroise v2",
+                "average_rating": 4,
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 3,
+                "current_user_favorited": False,
+            },
+            {
+                "name": "Quiche namuroise v3",
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 17,
+                "current_user_favorited": False,
+                "average_rating": None
+            },
+            {
+                "name": "Quiche namuroise v3 final",
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 1,
+                "current_user_favorited": False,
+                "average_rating": None
+            },
+            {
+                "name": "Quiche namuroise final le vrai",
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 158,
+                "current_user_favorited": True,
+                "average_rating": 5
+            }
+        ]
     })
 
 
