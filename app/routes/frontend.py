@@ -98,6 +98,6 @@ def register_page():
 
 @website.route('/edit-recipe', methods=['GET', 'POST'])
 def edit_recipe_page():
-    return render_template('pages/edit-recipe.html', theme='dark', user=False)
+    return render_template('pages/edit-recipe.html', theme='dark', user=True)
 
 # TODO add routes here with "website" instead of "app"

@@ -111,3 +111,31 @@
     <label for='{{id}}'>{{label}}</label>
 </div>
 {% endmacro %}
+
+{# Dropdown menu #}
+{% macro dropdown_menu(id, label, placeholder, options, helper_text="", error="") %}
+<div class="dropdown-menu" id="{{id}}">
+    <label>{{label}}</label>
+    <div class="field">
+        <button class="current-value">
+            <span class="expand placeholder">{{placeholder}}</span>
+            <i class="fa fa-angle-down"></i>
+        </button>
+    </div>
+    <ul class="options">
+        {% for option in options %}
+        <li>
+            <button id="{{id}}_{{loop.index}}" value="{{option.value}}">{{option.name}}</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- If there is an error message, display it -->
+    {% if error != "" %}
+    <p class="helper-text error">{{error}}</p>
+    <!-- Else, display the description -->
+    {% elif helper_text != "" %}
+    <p class="helper-text">{{helper_text}}</p>
+    {% endif %}
+</div>
+{% endmacro %}

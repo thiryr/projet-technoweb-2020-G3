@@ -38,18 +38,42 @@
             </li>
         </ul>
 
+        <!-- Catégorie -->
+        {{macros.dropdown_menu(
+            id='category-input',
+            label='Catégorie',
+            placeholder='Sélectionnez une catégorie',
+            options=[{
+                'name': 'Entrée', 
+                'value': 'entree'
+            }, {
+                'name': 'Plat',
+                'value': 'main'
+            }, {
+                'name': 'Dessert',
+                'value': 'dessert'
+            }, {
+                'name': 'Goûter',
+                'value': 'gouter'
+            }, {
+                'name': 'Pâtisserie',
+                'value': 'pastry'
+            }, {
+                'name': 'Divers',
+                'value': 'misc'
+            }]
+        )}}
+
         <!-- Tags -->
         <div class="text-field tag-input">
-            <label for="tags">Entrez des tags pour cette recette</label>
-
+            <label for="tags">Tags</label>
             <div class="field">
                 <ul class="tags" id='tags'>
-                    
                     <input autocomplete='off' type="text" id="tags-input" placeholder="Entrez un tag" value="">
                 </ul>
             </div>
+            <span class="helper-text">Entrez un tag et appuyez sur Enter pour l'ajouter</span>
         </div>
-
 
         <!-- Should the recipe be set as public -->
         {{macros.checkbox(

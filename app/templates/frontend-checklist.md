@@ -62,8 +62,8 @@ Une petite checklist pour rien oublier
     - [x] Nombre de personnes visé
     - [x] Difficulté de 1 à 3
     - [x] Visibilité
-    - [ ] Tags
-    - [ ] Catégorie prédéfinies
+    - [x] Tags
+    - [x] Catégorie prédéfinies
     - [ ] Bouton OK
     - [ ] Bouton Annuler
 - [x] Page de visualisation de recette
@@ -118,8 +118,8 @@ Une petite checklist pour rien oublier
   - [x] text area
   - [x] Checkbox
   - [ ] Liste d'inputs
-  - [ ] input à badges
-  - [ ] dropdown menu
+  - [x] input à badges
+  - [x] dropdown menu
   - [x] Texte statique
 - [ ] Pages statiques en jinja
   - [x] Login

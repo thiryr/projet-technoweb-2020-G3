@@ -133,6 +133,18 @@ button {
     -moz-user-select: none;
 }
 
+select {
+    color: inherit;
+    background-color: inherit;
+    border: 0;
+    outline: 0;
+    box-shadow: 0;
+    font-style: normal;
+    text-decoration: none;
+    /* Use a hand pointer to show that it is clickable */
+    cursor: pointer;
+}
+
 /* == Define common classes == */
 
 /* Text area */
@@ -321,7 +333,7 @@ img.avatar {
 
 /* Text field */
 
-.text-field {
+.text-field, .dropdown-menu {
     /* Take as much width as possible */
     width: 100%;
     /* inherit color theme */
@@ -329,7 +341,7 @@ img.avatar {
     margin: 1.3rem 0;
 }
 
-.text-field .field {
+.text-field .field, .dropdown-menu .field {
     color: var(--text-field-fg-color);
     background-color: var(--text-field-bg-color);
     width: 100%;
@@ -344,11 +356,11 @@ img.avatar {
     cursor: text;
 }
 
-.text-field .field.error {
+.text-field .field.error, .dropdown-menu .field.error {
     border-color: var(--text-field-error-color);
 }
 
-.text-field:hover {
+.text-field:hover, .dropdown-menu:hover {
     border-color: var(--text-field-hover-border-color);
 }
 
@@ -366,7 +378,7 @@ img.avatar {
     color: var(--text-field-placeholder-color);
 }
 
-.text-field .helper-text {
+.text-field .helper-text, .dropdown-menu .helper-text {
     color: var(--text-field-helper-text-color);
     transition: color 250ms ease-in-out;
     text-align: left;
@@ -381,11 +393,11 @@ img.avatar {
     margin-bottom: 0.4rem;
 }
 
-.text-field .helper-text.error {
+.text-field .helper-text.error, .dropdown-menu .helper-text.error {
     color: var(--text-field-error-color);
 }
 
-.text-field label {
+.text-field label, .dropdown-menu label {
     text-align: left;
     font-size: 1.2rem;
     width: 100%;
@@ -406,12 +418,12 @@ ul.radio-list {
     margin: 1rem 2.5rem;
 }
 
-ul.radio-list > li {
+ul.radio-list>li {
     display: block;
     width: fit-content;
 }
 
-ul.radio-list > li .difficulty {
+ul.radio-list>li .difficulty {
     margin-left: 1rem;
     display: block;
     float: right;
@@ -487,7 +499,6 @@ ul.tags>li {
 
 /* Tag input */
 
-
 .tag-input .tags {
     margin-left: 2rem;
     margin-right: 2.2rem;
@@ -513,6 +524,78 @@ ul.tags>li {
 .tag-input ul.tags>li {
     background-color: #616161;
 }
+
+/* Dropdown menu */
+
+.dropdown-menu {
+    position: relative;
+}
+
+.dropdown-menu .current-value {
+    /* Text style */
+    font-size: 1.5rem;
+    /* Layout */
+    flex-grow: 1;
+    padding: 0.5rem 2.2rem;
+    min-width: 0;
+    border-radius: inherit;
+    display: flex;
+    text-align: start;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+
+.dropdown-menu .current-value .placeholder {
+    color: var(--text-field-placeholder-color)
+}
+
+.dropdown-menu .options.opened {
+    
+    max-height: 50rem;
+}
+
+.dropdown-menu .options {
+    /* position */
+    position: absolute;
+    left: 0;
+    right: 0;
+    max-height: 0;
+    transition: max-height 0.4s ease-in-out;
+    /* layout */
+    float: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* style */
+    list-style: none;
+    border-radius: 1rem;
+    box-shadow: var(--elevation-box-shadow);
+}
+
+.dropdown-menu .options li {
+    float: none;
+    background-color: var(--dropdown-menu-options-bg);
+    color: var(--dropdown-menu-options-fg);
+    width: 100%;
+    display: block;
+}
+
+.dropdown-menu .options button {
+    padding: 0.4rem 2rem;
+    width: 100%;
+}
+
+.dropdown-menu .options button.selected {
+    background-color: var(--dropdown-menu-options-selected-bg);
+    color: var(--dropdown-menu-options-selected-fg);
+}
+
+.dropdown-menu .options button:hover {
+    background-color: var(--dropdown-menu-options-hover-bg);
+}
+
+
 
 /* == App bar == */
 
@@ -701,16 +784,13 @@ ul.tags>li {
         width: 100%;
         background-color: var(--appbar-mobile-nav-bg);
         color: var(--appbar-mobile-nav-fg);
-        box-shadow: var(--elevation-box-shadow)
+        box-shadow: var(--elevation-box-shadow);
+        transition: max-height 0.6s ease-in-out;
+        max-height: 0;
     }
     #appbar nav a[selected] {
         background-color: var(--appbar-mobile-nav-selected-bg);
         color: var(--appbar-mobile-nav-selected-fg)
-    }
-    #appbar nav>ul {
-        float: none;
-        transition: max-height 0.6s ease-in-out;
-        max-height: 0;
     }
     #appbar nav>ul>li {
         float: none;
