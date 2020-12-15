@@ -113,12 +113,22 @@
 {% endmacro %}
 
 {# Dropdown menu #}
-{% macro dropdown_menu(id, label, placeholder, options, helper_text="", error="") %}
+{% macro dropdown_menu(id, label, options, placeholder="", default="", helper_text="", error="") %}
 <div class="dropdown-menu" id="{{id}}">
     <label>{{label}}</label>
     <div class="field {{'error' if error != ''}}">
         <button class="current-value">
-            <span class="expand placeholder">{{placeholder}}</span>
+            <span class="expand {{'placeholder' if default == ''}}">
+            {% if default == "" %}
+            {{placeholder}}
+            {% else %}
+                {% for option in options %}
+                    {% if option.value == default %}
+                        {{ option.name }}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}   
+            </span>
             <i class="fa fa-angle-down"></i>
         </button>
     </div>

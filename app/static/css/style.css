@@ -576,6 +576,7 @@ ul.tags>li {
 
 .dropdown-menu {
     position: relative;
+    z-index: 0;
     text-align: start;
 }
 
@@ -666,6 +667,7 @@ ul.tags>li {
 #appbar {
     /* Position */
     position: fixed;
+    z-index: 10;
     /* Layout */
     width: 100%;
     height: var(--appbar-height);
@@ -788,6 +790,10 @@ ul.tags>li {
     padding: calc((var(--appbar-height) - var(--appbar-button-font-size) * var(--link-line-height)) / 2) 1rem;
 }
 
+#appbar nav a:hover{
+    text-decoration: underline;
+}
+
 #appbar nav a[selected] {
     background-color: var(--appbar-button-selected-bg-color);
 }
@@ -808,7 +814,8 @@ ul.tags>li {
     max-height: 0rem;
     transition: max-height 0.6s ease-in-out;
     transform: translate(calc(3rem + var(--appbar-avatar-size) - var(--appbar-usermenu-width)), 0);
-    box-shadow: var(--elevation-box-shadow)
+    box-shadow: var(--elevation-box-shadow);
+    z-index: 10;
 }
 
 #appbar nav .user-menu>li {
@@ -1309,4 +1316,17 @@ ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth
     #profile .info > .column {
         align-items: center;
     }
+}
+
+#sorted > .row, #my-recipes > .row {
+    width: 100%;
+}
+
+#sorted > .row .dropdown-menu {
+    max-width: 25rem;
+}
+
+#my-recipes .outlined-button {
+    max-width: 80rem;
+    width: auto;
 }

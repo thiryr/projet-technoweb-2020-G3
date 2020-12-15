@@ -47,16 +47,23 @@
                     <!-- TODO mettre les vrais liens -->
                     {% if user %}
                     <ul>
-                        <li><a selected href="/light">Accueil</a></li>
-                        <li><a>Abonnements</a></li>
-                        <li><a>Favoris</a></li>
-                        <li><a>Mes recettes</a></li>
+                        <li><a {{'selected' if page == 'home' }} href="/">Accueil</a></li>
+                        <li><a {{'selected' if page == 'subscriptions' }} href="/subscriptions">Abonnements</a></li>
+                        <li><a {{'selected' if page == 'favorites' }} href="/favorites">Favoris</a></li>
+                        <li><a {{'selected' if page == 'my-recipes' }} href="/my-recipes">Mes recettes</a></li>
                         <li><button class="my-account" type="button">
-                                <img class="avatar" src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+                                <img class="avatar" src="{{user.avatar_url}}"
                                     alt="avatar">
                             </button>
 
                             <ul class="user-menu">
+                                <li><a>
+                                {% if theme == 'dark' %}
+                                Passer vers le thème blanc
+                                {% else %}
+                                Passer vers le thème sombre
+                                {% endif %}
+                                </a></li>
                                 <li><a>Mon profil</a></li>
                                 <li><a>Utilisateurs</a></li>
                                 <li><a>Déconnexion</a></li>

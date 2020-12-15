@@ -19,18 +19,18 @@ Une petite checklist pour rien oublier
     - [x] nom
     - [x] date de naissance
   - [x] Texte pour indiquer que les chefs peuvent contacter l'admin par mail pour obtenir le rôle de chef
-- [ ] Accueil
-  - [ ] Recettes les mieux notées
-  - [ ] Recettes similaires aux favoris
-  - [ ] Recettes épinglées par l'admin
-- [ ] Abonnements
-  - [ ] Recettes des abonnements dans l'ordre anti chronologique
-- [ ] Favoris
-  - [ ] Recettes favorites  
-  - [ ] Tri par date de création / par score
-- [ ] Mes recettes
-  - [ ] Affiche les recettes d'un utilisateur dans l'ordre anti chronologique
-  - [ ] Bouton "créer une nouvelle recette" si utilisateur = celui actif
+- [x] Accueil
+  - [x] Recettes les mieux notées
+  - [x] Recettes similaires aux favoris
+  - [x] Recettes épinglées par l'admin
+- [x] Abonnements
+  - [x] Recettes des abonnements dans l'ordre anti chronologique
+- [x] Favoris
+  - [x] Recettes favorites  
+  - [x] Tri par date de création / par score
+- [x] Mes recettes
+  - [x] Affiche les recettes d'un utilisateur dans l'ordre anti chronologique
+  - [x] Bouton "créer une nouvelle recette" si utilisateur = celui actif
 - [ ] Utilisateurs
   - [ ] Liste des utilisateurs
   - [ ] Pouvoir changer un utilisateur de groupe
@@ -83,8 +83,8 @@ Une petite checklist pour rien oublier
   - [x] privé/public
   - [x] tags
   - [x] catégorie
-- [ ] Page de recherche
-  - [ ] Résultats dans l'ordre anti chronologique
+- [x] Page de recherche
+  - [x] Résultats dans l'ordre anti chronologique
 
 ## 2. Partie statique et css
 
@@ -128,10 +128,10 @@ Une petite checklist pour rien oublier
   - [ ] Utilisateurs
   - [x] Profil
   - [ ] Modification de profil
-- [ ] Page dynamiques (faire la grosse base et laisser des ids pour modifier en js)
-  - [ ] Accueil
-  - [ ] Abonnements
-  - [ ] Favoris
-  - [ ] Mes recettes
-  - [ ] Page de recherche
+- [x] Page dynamiques (faire la grosse base et laisser des ids pour modifier en js)
+  - [x] Accueil
+  - [x] Abonnements
+  - [x] Favoris
+  - [x] Mes recettes
+  - [x] Page de recherche
   - [x] Modification de recette

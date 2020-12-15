@@ -10,10 +10,18 @@ from flask import Blueprint, render_template
 website = Blueprint('frontend', __name__, url_prefix='/')
 
 
-@website.route('/')
-def index_page():
+@website.route('/', methods=['GET', 'POST'])
+def home_page():
+    return render_template('pages/index.html', page='home', theme='dark', user={
+        "is_chef": True,
+        "is_admin": False,
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    })
+
+@website.route('/recipe')
+def recipe_page():
     """
-    Page d'accueil
+    Page de recettes
     """
     return render_template('pages/recipe.html', theme='dark', user={
         "is_chef": True,
@@ -81,11 +89,6 @@ def index_page():
     })
 
 
-@website.route('/light')
-def index_page_light():
-    return render_template('pages/index.html', theme='dark', user=True)
-
-
 @website.route('/login', methods=['GET', 'POST'])
 def login_page():
     form = SignInForm()
@@ -100,7 +103,9 @@ def register_page():
 
 @website.route('/edit-recipe', methods=['GET', 'POST'])
 def edit_recipe_page():
-    return render_template('pages/edit-recipe.html', theme='dark', user=True)
+    return render_template('pages/edit-recipe.html', theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    })
 
 
 @website.route('/profile', methods=['GET', 'POST'])
@@ -161,5 +166,28 @@ def profile_page():
         ]
     })
 
+@website.route('/my-recipes')
+def my_recipes_page():
+    return render_template('pages/my-recipes.html', page='my-recipes', title="Mes recettes", theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    })
+
+@website.route('/subscriptions')
+def subscriptions_page():
+    return render_template('pages/sorted.html', page='subscriptions', title="Abonnements", theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    })
+
+@website.route('/favorites')
+def favorites_page():
+    return render_template('pages/sorted.html', page='favorites', theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, title="Recettes favorites")
+
+@website.route('/search')
+def search_page():
+    return render_template('pages/sorted.html', theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, title="Résultat de la recherche")
 
 # TODO add routes here with "website" instead of "app"
