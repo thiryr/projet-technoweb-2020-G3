@@ -116,7 +116,7 @@
 {% macro dropdown_menu(id, label, placeholder, options, helper_text="", error="") %}
 <div class="dropdown-menu" id="{{id}}">
     <label>{{label}}</label>
-    <div class="field">
+    <div class="field {{'error' if error != ''}}">
         <button class="current-value">
             <span class="expand placeholder">{{placeholder}}</span>
             <i class="fa fa-angle-down"></i>
@@ -134,6 +134,40 @@
     {% if error != "" %}
     <p class="helper-text error">{{error}}</p>
     <!-- Else, display the description -->
+    {% elif helper_text != "" %}
+    <p class="helper-text">{{helper_text}}</p>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{# List input last field #}
+{% macro list_input_last_field(placeholder="", error="") %}
+<li>
+    <div class="field add-line {{'error' if error != ''}}">
+        <input autocomplete="off" type="text" placeholder="{{placeholder}}">
+        <i class="fa fa-plus"></i>
+    </div>
+</li>
+{% endmacro %}
+
+{# List input #}
+{% macro list_input(id, label, placeholder="", helper_text="", error="", ordered=false) %}
+<div class="input-list" , id="{{id}}">
+    <label>{{label}}</label>
+    {% if ordered %}
+    <ol class="list">
+        {{ list_input_last_field(placeholder, error) }}
+    </ol>
+    {% else %}
+    <ul class="list">
+        {{ list_input_last_field(placeholder, error) }}
+    </ul>
+    {% endif %}
+
+    {# If there is an error message, display it #}
+    {% if error != "" %}
+    <p class="helper-text error">{{error}}</p>
+    {# Else, display the description #}
     {% elif helper_text != "" %}
     <p class="helper-text">{{helper_text}}</p>
     {% endif %}

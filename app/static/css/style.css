@@ -265,7 +265,7 @@ img.avatar {
     padding: 0.65rem 4rem;
     border-radius: 1.2rem;
     cursor: pointer;
-    margin: 0.5rem;
+    margin: 0.8rem 0.5rem;
     width: min-content;
     min-width: 19rem;
     display: inline-block;
@@ -333,7 +333,7 @@ img.avatar {
 
 /* Text field */
 
-.text-field, .dropdown-menu {
+.text-field, .dropdown-menu, .input-list {
     /* Take as much width as possible */
     width: 100%;
     /* inherit color theme */
@@ -341,7 +341,7 @@ img.avatar {
     margin: 1.3rem 0;
 }
 
-.text-field .field, .dropdown-menu .field {
+.text-field .field, .dropdown-menu .field, .input-list .field {
     color: var(--text-field-fg-color);
     background-color: var(--text-field-bg-color);
     width: 100%;
@@ -356,7 +356,7 @@ img.avatar {
     cursor: text;
 }
 
-.text-field .field.error, .dropdown-menu .field.error {
+.text-field .field.error, .dropdown-menu .field.error, .input-list .field.error {
     border-color: var(--text-field-error-color);
 }
 
@@ -364,7 +364,7 @@ img.avatar {
     border-color: var(--text-field-hover-border-color);
 }
 
-.text-field input {
+.text-field input, .input-list input {
     /* Text style */
     font-size: 1.5rem;
     /* Layout */
@@ -374,11 +374,11 @@ img.avatar {
     border-radius: inherit;
 }
 
-.text-field input::placeholder {
+.text-field input::placeholder, .input-list input::placeholder {
     color: var(--text-field-placeholder-color);
 }
 
-.text-field .helper-text, .dropdown-menu .helper-text {
+.text-field .helper-text, .dropdown-menu .helper-text, .input-list .helper-text {
     color: var(--text-field-helper-text-color);
     transition: color 250ms ease-in-out;
     text-align: left;
@@ -393,11 +393,11 @@ img.avatar {
     margin-bottom: 0.4rem;
 }
 
-.text-field .helper-text.error, .dropdown-menu .helper-text.error {
+.text-field .helper-text.error, .dropdown-menu .helper-text.error, .input-list .helper-text.error {
     color: var(--text-field-error-color);
 }
 
-.text-field label, .dropdown-menu label {
+.text-field label, .dropdown-menu label, .input-list label {
     text-align: left;
     font-size: 1.2rem;
     width: 100%;
@@ -405,6 +405,11 @@ img.avatar {
 }
 
 /* Checkbox */
+
+.checkbox {
+    margin: 0.8rem 0;
+    text-align: start;
+}
 
 .checkbox label {
     font-size: 1.4rem;
@@ -444,7 +449,6 @@ ul.radio-list>li .difficulty {
 /* WTForm */
 
 .wtform {
-    text-align: start;
     width: 100%;
 }
 
@@ -499,6 +503,10 @@ ul.tags>li {
 
 /* Tag input */
 
+.tag-input {
+    text-align: start;
+}
+
 .tag-input .tags {
     margin-left: 2rem;
     margin-right: 2.2rem;
@@ -529,6 +537,7 @@ ul.tags>li {
 
 .dropdown-menu {
     position: relative;
+    text-align: start;
 }
 
 .dropdown-menu .current-value {
@@ -551,7 +560,6 @@ ul.tags>li {
 }
 
 .dropdown-menu .options.opened {
-    
     max-height: 50rem;
 }
 
@@ -595,7 +603,24 @@ ul.tags>li {
     background-color: var(--dropdown-menu-options-hover-bg);
 }
 
+/* Input list */
 
+.input-list .list {
+    margin: 0;
+    margin-left: 3rem;
+    padding: 0;
+}
+
+.input-list .field {
+    margin: 0.4rem 0;
+}
+
+.input-list .field svg {
+    margin: 0 0.9rem;
+    height: 100%;
+    vertical-align: middle;
+    line-height: 1;
+}
 
 /* == App bar == */
 
