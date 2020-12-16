@@ -16,7 +16,9 @@
         id='nb-people',
         label='Nombre de personnes visé',
         placeholder='4',
-        type='number'
+        value=4,
+        type='number',
+        min=0
         )}}
         <!-- Difficulty -->
         <h4>Difficulté</h4>
@@ -40,28 +42,28 @@
 
         <!-- Catégorie -->
         {{macros.dropdown_menu(
-        id='category-input',
-        label='Catégorie',
-        placeholder='Sélectionnez une catégorie',
-        options=[{
-        'name': 'Entrée',
-        'value': 'entree'
-        }, {
-        'name': 'Plat',
-        'value': 'main'
-        }, {
-        'name': 'Dessert',
-        'value': 'dessert'
-        }, {
-        'name': 'Goûter',
-        'value': 'gouter'
-        }, {
-        'name': 'Pâtisserie',
-        'value': 'pastry'
-        }, {
-        'name': 'Divers',
-        'value': 'misc'
-        }]
+            id='category-input',
+            label='Catégorie',
+            placeholder='Sélectionnez une catégorie',
+            options=[{
+                'name': 'Entrée',
+                'value': 'entree'
+            }, {
+                'name': 'Plat',
+                'value': 'main'
+            }, {
+                'name': 'Dessert',
+                'value': 'dessert'
+            }, {
+                'name': 'Goûter',
+                'value': 'gouter'
+            }, {
+                'name': 'Pâtisserie',
+                'value': 'pastry'
+            }, {
+                'name': 'Divers',
+                'value': 'misc'
+            }]
         )}}
 
         <!-- Tags -->

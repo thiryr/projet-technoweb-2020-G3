@@ -6,16 +6,30 @@
 
     {% if user != None and (recipe.current_user_is_author or user.is_admin) %}
     <div class="row buttons">
-        <button class="outlined-button" id="make-public">Rendre public</button>
-        <button class="outlined-button" id="delete">Supprimer</button> {% if user.is_admin == true %}
-        <button class="outlined-button" id="pin">Épingler</button> {% endif %}
+        {# visibility button #}
+        {% if recipe.is_public %}
+            <button class="outlined-button" id="visibility" value="public">Rendre privé</button>
+        {% else %}
+            <button class="outlined-button" id="visibility" value="private">Rendre public</button>
+        {% endif %}
+        {# delete button #}
+        <button class="outlined-button" id="delete">Supprimer</button>
+        {# pin button #}
+        {% if user.is_admin == true %}
+            {% if recipe.is_pinned %}
+                <button class="outlined-button" id="pin" value="pinned">Désépingler</button> 
+            {% else %}
+                <button class="outlined-button" id="pin" value="unpinned">Épingler</button> 
+            {% endif %}
+        {% endif %}
     </div>
     {% endif %}
     <div class="row top">
         <div class="info">
             <div class="row">
-                {% if recipe.public == False %}
-                <i class="fa fa-lock margin-right"></i> {% endif %}
+                {% if recipe.is_public == False %}
+                <i class="fa fa-lock margin-right"></i> 
+                {% endif %}
                 <h1>{{ recipe.title }}</h1>
             </div>
 

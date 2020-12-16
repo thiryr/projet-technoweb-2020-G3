@@ -79,11 +79,13 @@
 {% endmacro %}
 
 {# Text field (no wtform) #}
-{% macro text_field(id, label, placeholder="", helper_text="", error="", autofocus=false, type='text') %}
+{% macro text_field(id, label, placeholder="", helper_text="", error="", autofocus=false, type='text', min=none, value=none) %}
 <div class="text-field">
     <label for="{{id}}">{{label}}</label>
     <div class="field {{'error' if error != ''}}">
-        <input autocomplete='off' id="{{id}}" type="{{type}}" autofocus={{autofocus}} placeholder="{{placeholder}}">
+        <input autocomplete='off' id="{{id}}" type="{{type}}" autofocus={{autofocus}} placeholder="{{placeholder}}"
+        {% if min != none %} min={{min}} {% endif %}
+        {% if value != none %} value={{value}} {% endif %}>
     </div>
     <!-- If there is an error message, display it -->
     {% if error != "" %}
