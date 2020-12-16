@@ -22,6 +22,8 @@ class User(UserMixin, db.Model): #type: ignore
     password_hash = Column(st.String(128), nullable=False)
     mail = Column(st.String(255), unique=True, nullable=False)
 
+    avatar_url = Column(st.String(255), nullable=False)
+
     #foreign key
     user_group = Column(st.Integer, ForeignKey('usergroup.id'), nullable=False)
     
@@ -38,11 +40,13 @@ class User(UserMixin, db.Model): #type: ignore
 
 
     # Init
-    def __init__(self, username: str, password: str, mail: str, usergroup="regular"):
+    def __init__(self, username: str, password: str, mail: str, usergroup="regular", avatar_url="https://i.stack.imgur.com/l60Hf.png"):
         self.username = username
         self.password_hash = generate_password_hash(password)
         self.mail = mail
         self.set_user_group(usergroup)
+
+        self.avatar_url = avatar_url
 
         #defaults
         self.dark_mode = True
