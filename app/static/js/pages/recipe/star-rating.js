@@ -1,5 +1,4 @@
 //STAR-RATING
-
 var current_rating = 0
 
 $(window).on("load", function() {
@@ -7,7 +6,10 @@ $(window).on("load", function() {
 
     var rating_input = $("#rating-input")
         //retrieve the stars
-    var star_buttons = $(rating_input).children('li').find('button')
+    var list_elements = $(rating_input).children('li')
+    var star_buttons = $.map($(list_elements), function(li, ind1) {
+        return $(li).children('button')
+    });
 
     //clear stars when user leaves rating input
     $(rating_input).mouseleave(function() {
@@ -28,30 +30,34 @@ $(window).on("load", function() {
     $.each(star_buttons, function(ind_h, hovered_button) {
 
         //select the score
-        $(hovered_button).mouseenter(function() {
-
+        $(hovered_button).on("mouseenter", () => {
 
             var stars = get_staricons(star_buttons)
 
             //set all to empty when moving to another star
             $(stars).each(function(reset_index, star) {
-                $(star).attr('data-prefix', 'far');
+                if (reset_index > ind_h && $(star).attr('data-prefix') === 'fa')
+                    $(star).attr('data-prefix', 'far');
             });
 
-            //set the right ones to full
+            stars = get_staricons(star_buttons)
+                //set the right ones to full
             $(stars).each(function(fill_index, star) {
+
                 if ($(star).attr('data-prefix') === 'far') {
                     $(star).attr('data-prefix', 'fa');
                 }
                 //break out when reached last star
-                if (ind_h === fill_index)
+                if (ind_h === fill_index) {
                     return false
+                }
             });
+
         });
 
 
         //click to set the score
-        $(hovered_button).click(function() {
+        $(hovered_button).on("click", function(e) {
             current_rating = ind_h + 1
 
             //unlock the submit button

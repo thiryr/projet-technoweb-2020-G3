@@ -9,7 +9,7 @@ $(document).ready(function() {
         $.each($(fields_li), function(indexInArray, field_li) {
             if ($(field_li).children(".field").hasClass("add-line")) {
                 add_field_li = $(field_li)
-                return 0
+                return false
             }
         });
         var add_field = add_field_li.children(".field")
