@@ -1,68 +1,35 @@
-{% extends 'root.html' %}
-{% import 'macros.html' as macros %}
+{% extends 'root.html' %} {% import 'macros.html' as macros %} {% block head %}
 
-{% block body %}
+<script src="{{url_for('static',filename='js/forms/drop-down.js')}}"></script>
+
+{% endblock %} {% block body %}
 <div class="small-container">
     <h2>Créer une recette</h2>
     <form novalidate class="wtform">
         <!-- Name of the recipe -->
-        {{macros.text_field(
-        id='title',
-        label='Nom de la recette',
-        placeholder='Spaghettis bolognèse',
-        )}}
+        {{macros.text_field( id='title', label='Nom de la recette', placeholder='Spaghettis bolognèse', )}}
         <!-- Target people -->
-        {{macros.text_field(
-        id='nb-people',
-        label='Nombre de personnes visé',
-        placeholder='4',
-        type='number'
-        )}}
+        {{macros.text_field( id='nb-people', label='Nombre de personnes visé', placeholder='4', type='number' )}}
         <!-- Difficulty -->
         <h4>Difficulté</h4>
         <ul class='radio-list'>
             <li>
                 <input type="radio" name="difficulty" id='diff1'>
-                <label for='diff1'>Facile</label>
-                {{ macros.difficulty(1) }}
+                <label for='diff1'>Facile</label> {{ macros.difficulty(1) }}
             </li>
             <li>
                 <input type="radio" name="difficulty" id='diff2'>
-                <label for='diff2'>Moyen</label>
-                {{ macros.difficulty(2) }}
+                <label for='diff2'>Moyen</label> {{ macros.difficulty(2) }}
             </li>
             <li>
                 <input type="radio" name="difficulty" id='diff3'>
-                <label for='diff3'>Difficile</label>
-                {{ macros.difficulty(3) }}
+                <label for='diff3'>Difficile</label> {{ macros.difficulty(3) }}
             </li>
         </ul>
 
         <!-- Catégorie -->
-        {{macros.dropdown_menu(
-        id='category-input',
-        label='Catégorie',
-        placeholder='Sélectionnez une catégorie',
-        options=[{
-        'name': 'Entrée',
-        'value': 'entree'
-        }, {
-        'name': 'Plat',
-        'value': 'main'
-        }, {
-        'name': 'Dessert',
-        'value': 'dessert'
-        }, {
-        'name': 'Goûter',
-        'value': 'gouter'
-        }, {
-        'name': 'Pâtisserie',
-        'value': 'pastry'
-        }, {
-        'name': 'Divers',
-        'value': 'misc'
-        }]
-        )}}
+        {{macros.dropdown_menu( id='category-input', label='Catégorie', placeholder='Sélectionnez une catégorie', options=[{ 'name': 'Entrée', 'value': 'entree' }, { 'name': 'Plat', 'value': 'main' }, { 'name': 'Dessert', 'value': 'dessert' }, { 'name': 'Goûter',
+        'value': 'gouter' }, { 'name': 'Pâtisserie', 'value': 'pastry' }, { 'name': 'Divers', 'value': 'misc' }] )}}
 
         <!-- Tags -->
         <div class="text-field tag-input">
@@ -78,34 +45,18 @@
 
 
         <!-- Ingrédients -->
-        {{macros.list_input(
-            id="ingredients-input",
-            label="Ingrédients",
-            placeholder="Ajouter un ingrédient"
-        )}}
+        {{macros.list_input( id="ingredients-input", label="Ingrédients", placeholder="Ajouter un ingrédient" )}}
 
         <!-- Ustensiles -->
-        {{macros.list_input(
-            id="utensils-input",
-            label="Ustensiles",
-            placeholder="Ajouter un ustensile"
-        )}}
+        {{macros.list_input( id="utensils-input", label="Ustensiles", placeholder="Ajouter un ustensile" )}}
 
         <!-- Steps -->
-        {{macros.list_input(
-            id="steps-input",
-            label="Étapes",
-            placeholder="Ajouter une étape",
-            ordered=true
-        )}}
+        {{macros.list_input( id="steps-input", label="Étapes", placeholder="Ajouter une étape", ordered=true )}}
 
 
 
         <!-- Should the recipe be set as public -->
-        {{macros.checkbox(
-        id='public',
-        label='Rendre cette recette publique'
-        )}}
+        {{macros.checkbox( id='public', label='Rendre cette recette publique' )}}
 
         <!-- Buttons -->
         <button class="filled-button">Ajouter</button>
