@@ -6,7 +6,7 @@ from app.models.user import User
 
 
     
-def add_user(username: str, password: str, mail: str, usergroup='regular', avatar_url = "https://i.stack.imgur.com/l60Hf.png"):
+def add_user(username: str, password: str, mail: str, usergroup='regular', avatar_url = "https://i.stack.imgur.com/l60Hf.png")->User:
     if find_user_by_username(username) is not None:
         raise ValueError('A user already uses that username')
     if find_user_by_mail(mail) is not None:
@@ -16,6 +16,7 @@ def add_user(username: str, password: str, mail: str, usergroup='regular', avata
     # Add it to the database
     db.session.add(new_user)
     db.session.commit()
+    return User
 
 # Tell login_manager that it can use this function as loader
 @login_manager.user_loader
