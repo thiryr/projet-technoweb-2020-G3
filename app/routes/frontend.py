@@ -3,21 +3,30 @@ This file contains the definition of the "frontend" blueprint containing
 all the routes related to the frontend (pages).
 """
 
-from app.forms import RegisterForm, SignInForm
+from app.forms import EditProfileForm, RegisterForm, SignInForm
 from flask import Blueprint, render_template
 
 # Create blueprint
 website = Blueprint('frontend', __name__, url_prefix='/')
 
 
-@website.route('/')
-def index_page():
+@website.route('/', methods=['GET', 'POST'])
+def home_page():
+    return render_template('pages/index.html', page='home', theme='dark', user={
+        "is_chef": True,
+        "is_admin": True,
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    })
+
+@website.route('/recipe')
+def recipe_page():
     """
-    Page d'accueil
+    Page de recettes
     """
     return render_template('pages/recipe.html', theme='dark', user={
         "is_chef": True,
         "is_admin": False,
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
     }, recipe={
         "title": "Steak-frite",
         "author_name": "Mamy Dupont",
@@ -80,11 +89,6 @@ def index_page():
     })
 
 
-@website.route('/light')
-def index_page_light():
-    return render_template('pages/index.html', theme='light', user=True)
-
-
 @website.route('/login', methods=['GET', 'POST'])
 def login_page():
     form = SignInForm()
@@ -96,8 +100,164 @@ def register_page():
     form = RegisterForm()
     return render_template('pages/formpage.html', theme='dark', user=False, form=form)
 
+@website.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile_page():
+    form = EditProfileForm()
+    return render_template('pages/formpage.html', theme='dark', user={
+        "is_chef": True,
+        "is_admin": False,
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, form=form)
+
+
 @website.route('/edit-recipe', methods=['GET', 'POST'])
 def edit_recipe_page():
-    return render_template('pages/edit-recipe.html', theme='dark', user=False)
+    return render_template('pages/edit-recipe.html', theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    })
+
+@website.route('/users', methods=['GET', 'POST'])
+def users():
+    return render_template('pages/users.html', theme='dark', page='users', user={
+        "is_chef": True,
+        "is_admin": True,
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, users=[
+        {
+            "pseudo": "MichelDupont24",
+            "ranking": 4,
+            "name": "Michel Dupont",
+            "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Michel_Cremades.jpg",
+            "usergroup": "chef",
+            "profile_url": "/profile"
+        },
+        {
+            "pseudo": "Eugène22",
+            "ranking": None,
+            "name": "Eugène Leblanc",
+            "avatar_url": "https://img.gentside.com/article/insolite/salustiano-sanchez-blazquez-est-l-homme-le-plus-vieux-du-monde-a-112-ans_9c4b850336f7a8fcdaa784c4ba49719d77633cde.jpg",
+            "usergroup": "chef",
+            "profile_url": "/profile"
+        },
+        {
+            "pseudo": "admin",
+            "ranking": 5,
+            "name": "Le boss",
+            "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg",
+            "usergroup": "admin",
+            "profile_url": "/profile"
+        },
+        {
+            "pseudo": "Mamy",
+            "ranking": 3,
+            "name": "Mamy Dupont",
+            "avatar_url": "https://img.over-blog.com/350x191/4/37/29/52/15---DIVERS/DOSSIER-1/Mamy.jpg",
+            "usergroup": "chef",
+            "profile_url": "/profile"
+        }
+    ], groups = [
+        {
+            "name": "Utilisateur standard",
+            "value": "default"
+        },
+        {
+            "name": "Chef cuisinier",
+            "value": "chef"
+        },
+        {
+            "name": "Administrateur",
+            "value": "admin"
+        },
+        {
+            "name": "Muet",
+            "value": "muted"
+        },
+        {
+            "name": "Banni",
+            "value": "banned"
+        }
+    ])
+
+@website.route('/profile', methods=['GET', 'POST'])
+def profile_page():
+    return render_template('pages/profile.html', theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, viewed_user={
+        "pseudo": "MichelDupont24",
+        "ranking": 4,
+        "name": "Michel Dupont",
+        "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Michel_Cremades.jpg",
+        "birthday": "15 février 1968",
+        "is_chef": True,
+        "is_admin": False,
+        "nb_subscribers": 42,
+        "current_user_is_subscribed": False,
+        "recipes": [
+            {
+                "name": "Quiche namuroise",
+                "average_rating": 4,
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 89,
+                "current_user_favorited": True,
+            },
+            {
+                "name": "Quiche namuroise v2",
+                "average_rating": 4,
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 3,
+                "current_user_favorited": False,
+            },
+            {
+                "name": "Quiche namuroise v3",
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 17,
+                "current_user_favorited": False,
+                "average_rating": None
+            },
+            {
+                "name": "Quiche namuroise v3 final",
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 1,
+                "current_user_favorited": False,
+                "average_rating": None
+            },
+            {
+                "name": "Quiche namuroise final le vrai",
+                "picture": "https://ds1.static.rtbf.be/article/image/1248x702/5/3/4/bc6fe82635b1429d3e886eec0fc34f49-1515748913.jpg",
+                "url": "/light",
+                "nb_favorites": 158,
+                "current_user_favorited": True,
+                "average_rating": 5
+            }
+        ]
+    })
+
+@website.route('/my-recipes')
+def my_recipes_page():
+    return render_template('pages/my-recipes.html', page='my-recipes', title="Mes recettes", theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    })
+
+@website.route('/subscriptions')
+def subscriptions_page():
+    return render_template('pages/sorted.html', page='subscriptions', title="Abonnements", theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    })
+
+@website.route('/favorites')
+def favorites_page():
+    return render_template('pages/sorted.html', page='favorites', theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, title="Recettes favorites")
+
+@website.route('/search')
+def search_page():
+    return render_template('pages/sorted.html', theme='dark', user={
+        "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+    }, title="Résultat de la recherche")
 
 # TODO add routes here with "website" instead of "app"

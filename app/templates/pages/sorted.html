@@ -1,0 +1,34 @@
+{% extends 'root.html' %}
+{% import 'macros.html' as macros %}
+
+{# to be filled with js #}
+
+{% block body %}
+
+<div id="sorted">
+    <div class="row expand">
+        <h2 class="expand">{{title}}</h2>
+
+        {{ macros.dropdown_menu(
+        id="sort-input",
+        label="Trier",
+        options=[
+            {
+                "name": "Les plus récentes d'abord",
+                "value": "recent"
+            },
+            {
+                "name": "Les plus populaires",
+                "value": "trending"
+            }
+        ],
+        default="recent"
+        ) }}
+        
+    </div>
+    <div class="center">
+        <ul class="recipe-list" id="sorted-list">
+        </ul>
+    </div>
+</div>
+{% endblock %}

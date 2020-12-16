@@ -70,11 +70,16 @@ a {
     -webkit-tap-highlight-color: #ffffff20;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
 p {
     text-align: justify;
 }
 
 a:focus {
+    text-decoration: underline;
     -webkit-tap-highlight-color: transparent;
     outline: none;
     -ms-touch-action: manipulation;
@@ -133,6 +138,37 @@ button {
     -moz-user-select: none;
 }
 
+select {
+    color: inherit;
+    background-color: inherit;
+    border: 0;
+    outline: 0;
+    box-shadow: 0;
+    font-style: normal;
+    text-decoration: none;
+    /* Use a hand pointer to show that it is clickable */
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border: 0;
+    border-spacing: 0;
+}
+
+tbody tr {
+    background-color: var(--table-odd-row-bg-color);
+}
+
+tbody tr:nth-child(2n) {
+    background-color: var(--table-even-row-bg-color);
+}
+
+td {
+    border: 0;
+    padding: 0.1rem 1rem;
+}
+
 /* == Define common classes == */
 
 /* Text area */
@@ -160,6 +196,36 @@ textarea::placeholder {
     color: var(--textarea-placeholder-color);
 }
 
+::-webkit-file-upload-button {
+    outline: none;
+    border: none;
+    font-weight: 500;
+    letter-spacing: 0.017rem;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+    padding: 0.3rem 2rem;
+    border-radius: 0.7rem;
+    cursor: pointer;
+    margin: 0.8rem 0.5rem;
+    margin-right: 1rem;
+    width: min-content;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: inherit;
+    color: inherit;
+    -webkit-box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+    -moz-box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+    box-shadow: inset 0 0 0 0.124rem var(--outlined-button-border-color);
+}
+
+
+::-webkit-file-upload-button:hover {
+    -webkit-box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
+    -moz-box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
+    box-shadow: inset 0 0 0 0.14rem var(--outlined-button-hover-border-color);
+}
+
 /* Headers style */
 
 h1 {
@@ -185,6 +251,13 @@ h4 {
 }
 
 /* Layout helper classes */
+
+.center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
 
 .expand {
     flex-grow: 1;
@@ -253,7 +326,7 @@ img.avatar {
     padding: 0.65rem 4rem;
     border-radius: 1.2rem;
     cursor: pointer;
-    margin: 0.5rem;
+    margin: 0.8rem 0.5rem;
     width: min-content;
     min-width: 19rem;
     display: inline-block;
@@ -319,9 +392,36 @@ img.avatar {
     color: var(--button-disabled-color);
 }
 
+/* Icon button */
+
+.icon-button {
+    border-radius: 50%;
+    width: 3.5rem;
+    height: 3.5rem;
+    background-color: var(--icon-button-bg-color);
+    transition: background-color 200ms ease-in-out;
+    color: white;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    margin: auto;
+}
+
+.icon-button:hover, .icon-button:focus {
+    background-color: var(--icon-button-hover-bg-color);
+}
+
+.icon-button svg {
+    margin: 0;
+    padding: 0;
+}
+
 /* Text field */
 
-.text-field {
+.text-field, .dropdown-menu, .input-list, .file-field {
     /* Take as much width as possible */
     width: 100%;
     /* inherit color theme */
@@ -329,7 +429,7 @@ img.avatar {
     margin: 1.3rem 0;
 }
 
-.text-field .field {
+.text-field .field, .dropdown-menu .field, .input-list .field {
     color: var(--text-field-fg-color);
     background-color: var(--text-field-bg-color);
     width: 100%;
@@ -344,15 +444,15 @@ img.avatar {
     cursor: text;
 }
 
-.text-field .field.error {
+.text-field .field.error, .dropdown-menu .field.error, .input-list .field.error {
     border-color: var(--text-field-error-color);
 }
 
-.text-field:hover {
+.text-field:hover, .dropdown-menu:hover {
     border-color: var(--text-field-hover-border-color);
 }
 
-.text-field input {
+.text-field input, .input-list input {
     /* Text style */
     font-size: 1.5rem;
     /* Layout */
@@ -362,11 +462,11 @@ img.avatar {
     border-radius: inherit;
 }
 
-.text-field input::placeholder {
+.text-field input::placeholder, .input-list input::placeholder {
     color: var(--text-field-placeholder-color);
 }
 
-.text-field .helper-text {
+.text-field .helper-text, .dropdown-menu .helper-text, .input-list .helper-text, .file-field .helper-text {
     color: var(--text-field-helper-text-color);
     transition: color 250ms ease-in-out;
     text-align: left;
@@ -381,11 +481,11 @@ img.avatar {
     margin-bottom: 0.4rem;
 }
 
-.text-field .helper-text.error {
+.text-field .helper-text.error, .dropdown-menu .helper-text.error, .input-list .helper-text.error, .file-field .helper-text.error {
     color: var(--text-field-error-color);
 }
 
-.text-field label {
+.text-field label, .dropdown-menu label, .input-list label, .file-field label {
     text-align: left;
     font-size: 1.2rem;
     width: 100%;
@@ -393,6 +493,11 @@ img.avatar {
 }
 
 /* Checkbox */
+
+.checkbox {
+    margin: 0.8rem 0;
+    text-align: start;
+}
 
 .checkbox label {
     font-size: 1.4rem;
@@ -406,12 +511,12 @@ ul.radio-list {
     margin: 1rem 2.5rem;
 }
 
-ul.radio-list > li {
+ul.radio-list>li {
     display: block;
     width: fit-content;
 }
 
-ul.radio-list > li .difficulty {
+ul.radio-list>li .difficulty {
     margin-left: 1rem;
     display: block;
     float: right;
@@ -432,7 +537,6 @@ ul.radio-list > li .difficulty {
 /* WTForm */
 
 .wtform {
-    text-align: start;
     width: 100%;
 }
 
@@ -461,6 +565,10 @@ ul.radio-list > li .difficulty {
     -moz-user-select: none;
 }
 
+.badge.red {
+    background-color: var(--badge-red-bg-color);
+}
+
 /* Tags */
 
 ul.tags {
@@ -487,6 +595,9 @@ ul.tags>li {
 
 /* Tag input */
 
+.tag-input {
+    text-align: start;
+}
 
 .tag-input .tags {
     margin-left: 2rem;
@@ -514,11 +625,110 @@ ul.tags>li {
     background-color: #616161;
 }
 
+/* Dropdown menu */
+
+.dropdown-menu {
+    position: relative;
+    text-align: start;
+}
+
+.dropdown-menu .current-value {
+    /* Text style */
+    font-size: 1.5rem;
+    /* Layout */
+    flex-grow: 1;
+    padding: 0.5rem 2.2rem;
+    min-width: 0;
+    border-radius: inherit;
+    display: flex;
+    text-align: start;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+
+.dropdown-menu .current-value .placeholder {
+    color: var(--text-field-placeholder-color)
+}
+
+.dropdown-menu .options.opened {
+    max-height: 50rem;
+}
+
+.dropdown-menu .options {
+    /* position */
+    position: absolute;
+    left: 0;
+    right: 0;
+    max-height: 0;
+    transition: max-height 0.4s ease-in-out;
+    /* layout */
+    float: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    z-index: 5;
+    /* style */
+    list-style: none;
+    border-radius: 1rem;
+    box-shadow: var(--elevation-box-shadow);
+}
+
+.dropdown-menu .options li {
+    float: none;
+    background-color: var(--dropdown-menu-options-bg);
+    color: var(--dropdown-menu-options-fg);
+    width: 100%;
+    display: block;
+}
+
+.dropdown-menu .options button {
+    padding: 0.4rem 2rem;
+    width: 100%;
+}
+
+.dropdown-menu .options button.selected {
+    background-color: var(--dropdown-menu-options-selected-bg);
+    color: var(--dropdown-menu-options-selected-fg);
+}
+
+.dropdown-menu .options button:hover {
+    background-color: var(--dropdown-menu-options-hover-bg);
+}
+
+/* Input list */
+
+.input-list .list {
+    margin: 0;
+    margin-left: 3rem;
+    padding: 0;
+}
+
+.input-list .field {
+    margin: 0.4rem 0;
+}
+
+.input-list .field svg {
+    margin: 0 0.9rem;
+    height: 100%;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+/* File field */
+
+.file-field {
+    text-align: left;
+}
+
+
+
 /* == App bar == */
 
 #appbar {
     /* Position */
     position: fixed;
+    z-index: 10;
     /* Layout */
     width: 100%;
     height: var(--appbar-height);
@@ -641,6 +851,8 @@ ul.tags>li {
     padding: calc((var(--appbar-height) - var(--appbar-button-font-size) * var(--link-line-height)) / 2) 1rem;
 }
 
+
+
 #appbar nav a[selected] {
     background-color: var(--appbar-button-selected-bg-color);
 }
@@ -661,7 +873,8 @@ ul.tags>li {
     max-height: 0rem;
     transition: max-height 0.6s ease-in-out;
     transform: translate(calc(3rem + var(--appbar-avatar-size) - var(--appbar-usermenu-width)), 0);
-    box-shadow: var(--elevation-box-shadow)
+    box-shadow: var(--elevation-box-shadow);
+    z-index: 10;
 }
 
 #appbar nav .user-menu>li {
@@ -701,16 +914,13 @@ ul.tags>li {
         width: 100%;
         background-color: var(--appbar-mobile-nav-bg);
         color: var(--appbar-mobile-nav-fg);
-        box-shadow: var(--elevation-box-shadow)
+        box-shadow: var(--elevation-box-shadow);
+        transition: max-height 0.6s ease-in-out;
+        max-height: 0;
     }
     #appbar nav a[selected] {
         background-color: var(--appbar-mobile-nav-selected-bg);
         color: var(--appbar-mobile-nav-selected-fg)
-    }
-    #appbar nav>ul {
-        float: none;
-        transition: max-height 0.6s ease-in-out;
-        max-height: 0;
     }
     #appbar nav>ul>li {
         float: none;
@@ -733,11 +943,14 @@ ul.tags>li {
 /* Recipe list */
 
 .recipe-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(23rem, max-content));
-    justify-content: center;
+    display: flex;
+    /* grid-template-columns: repeat(auto-fit, minmax(23rem, max-content)); */
+    justify-content: start;
     padding: 0;
     margin: 0;
+    width: max-content;
+    flex-wrap: wrap;
+    flex-basis: calc(23rem * 5);
 }
 
 .recipe-list>li {
@@ -797,6 +1010,31 @@ ul.tags>li {
     object-fit: cover;
     -webkit-user-drag: none;
     user-select: none;
+}
+
+@media (max-width: calc(120rem * 0.625)) {
+    .recipe img {
+        width: 100%;
+        max-width: calc(25vw - 4.25rem);
+    }
+}
+
+@media (max-width: calc(97rem * 0.625)) {
+    .recipe img {
+        max-width: calc(33.33vw - 4.65rem);
+    }
+}
+
+@media (max-width: calc(74rem * 0.625)) {
+    .recipe img {
+        max-width: calc(50vw - 5.5rem);
+    }
+}
+
+@media (max-width: calc(51em * 0.625)) {
+    .recipe img {
+        max-width: unset;
+    }
 }
 
 /* Rating stars */
@@ -1028,4 +1266,134 @@ ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth
 
 .comment.editor .rating svg {
     transition: all 250ms ease-in-out;
+}
+
+/* == Profile == */
+
+#profile .avatar {
+    width: 100%;
+    height: auto;
+    max-width: 22rem;
+    max-height: 22rem;
+    margin: 1rem 4rem;
+}
+
+#profile .toolbar {
+    width: 100%;
+    justify-content: flex-end;
+}
+
+#profile .toolbar .outlined-button {
+    width: auto;
+}
+
+#profile .info {
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: start;
+    width: 100%;
+}
+
+#profile .info>.column {
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#profile .info .badge {
+    font-size: 1.4rem;
+    margin: 0 0.5rem;
+}
+
+#profile h1 {
+    margin-bottom: 0.2rem;
+}
+
+#profile .alias {
+    margin-top: 1.5rem;
+    margin-bottom: 0.3rem;
+}
+
+#profile .alias i {
+    margin-right: 0.2rem;
+}
+
+#profile .birthday {
+    align-items: baseline;
+    margin: 1rem 0;
+}
+
+#profile .birthday svg {
+    margin-right: 0.7rem;
+}
+
+#profile .ranking {
+    margin-bottom: 1.2rem;
+}
+
+#profile .ranking span {
+    margin-right: 0.7rem;
+}
+
+#profile .subscribe-button {
+    border-radius: 0.7rem;
+    border-top-left-radius: 0.9rem;
+    border-bottom-left-radius: 0.9rem;
+    display: flex;
+    align-items: baseline;
+    background-color: var(--subscribe-button-count-bg-color);
+}
+
+#profile .subscribe-button button:hover {
+    background-color: var(--subscribe-button-hover-bg-color);
+}
+
+#profile .subscribe-button button {
+    background-color: var(--subscribe-button-bg-color);
+    color: var(--subscribe-button-fg-color);
+    transition: background-color 189ms ease-in-out;
+    padding: 0.4rem 1.4rem;
+    border-top-left-radius: 0.7rem;
+    border-bottom-left-radius: 0.7rem;
+    margin: 0;
+    height: 100%;
+    display: inline-block;
+}
+
+#profile .subscribe-button.subscribed button {
+    background-color: var(--subscribe-button-subscribed-bg-color);
+}
+
+#profile .subscribe-button.subscribed button:hover {
+    background-color: var(--subscribe-button-subscribed-hover-bg-color);
+}
+
+#profile .subscribe-button .count {
+    margin: 0;
+    padding: 0 1rem;
+    padding-left: 0.7rem;
+    color: var(--subscribe-button-count-fg-color);
+}
+
+@media (max-width: calc(60.2em * 0.625)) {
+    #profile .info {
+        justify-content: center;
+    }
+    #profile .info>.column {
+        align-items: center;
+    }
+}
+
+/* == Other pages == */
+
+#sorted>.row, #my-recipes>.row {
+    width: 100%;
+}
+
+#sorted>.row .dropdown-menu {
+    max-width: 25rem;
+}
+
+#my-recipes .outlined-button {
+    max-width: 80rem;
+    width: auto;
 }

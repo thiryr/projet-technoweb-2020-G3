@@ -18,6 +18,8 @@ html {
     --comment-width: 80rem;
 
     --small-container-width: 50rem;
+
+    --field-height: 3.3rem;
 }
 
 /* Light theme */
@@ -53,7 +55,7 @@ html.light {
     --rating-star-color: #f1c40f;
     --favorite-heart-color: #e74c3c;
     --difficulty-1st-color: #72c44c;
-    --difficulty-2nd-color: #e9e96b;
+    --difficulty-2nd-color: #ffba60;
     --difficulty-3rd-color: #e74c3c;
     
     --comment-bg-color: #466172;
@@ -71,16 +73,37 @@ html.light {
     --outlined-button-border-color:  #acacac;
     --outlined-button-hover-border-color:  white;
 
+    --icon-button-bg-color: #879397;
+    --icon-button-hover-bg-color: #5b6468;
+
     --text-field-border-color: #c9c9c9;
     --text-field-error-color:  #f8605e;
     --text-field-hover-border-color: #868686;
-    --text-field-bg-color: #d4dcdd;
+    --text-field-bg-color: #f5f9fa;
     --text-field-fg-color: black;
     --text-field-placeholder-color: #5a5a5a;
     --text-field-helper-text-color: #444444;
 
     --badge-bg-color: #a333be;
     --badge-fg-color: white;
+    --badge-red-bg-color: #d44d4d;
+
+    --dropdown-menu-options-bg: #ffffff;
+    --dropdown-menu-options-hover-bg: #f5f5f5;
+    --dropdown-menu-options-fg: black;
+    --dropdown-menu-options-selected-bg: #e0d9d9;
+    --dropdown-menu-options-selected-fg: #0a0a0a;
+
+    --subscribe-button-bg-color: #2e477e;
+    --subscribe-button-hover-bg-color: #3c5894;
+    --subscribe-button-subscribed-bg-color: #626263;
+    --subscribe-button-subscribed-hover-bg-color: #5f6063;
+    --subscribe-button-fg-color: #ffffff;
+    --subscribe-button-count-fg-color: #000000;
+    --subscribe-button-count-bg-color: #d8dfe7;
+
+    --table-odd-row-bg-color: #edeff3;
+    --table-even-row-bg-color: #d0d3da;
 }
 
 
@@ -136,6 +159,9 @@ html.dark {
     --outlined-button-hover-border-color:  white;
     --button-disabled-color: #808080;
 
+    --icon-button-bg-color: #31393d;
+    --icon-button-hover-bg-color: #4b5357;
+
     --text-field-border-color: transparent;
     --text-field-error-color:  #f8605e;
     --text-field-hover-border-color: #cacaca;
@@ -146,5 +172,22 @@ html.dark {
 
     --badge-bg-color: #a333be;
     --badge-fg-color: white;
+    --badge-red-bg-color: #d44d4d;
 
+    --dropdown-menu-options-bg: #222222;
+    --dropdown-menu-options-hover-bg: #272727;
+    --dropdown-menu-options-fg: #ffffff;
+    --dropdown-menu-options-selected-bg: #28292c;
+    --dropdown-menu-options-selected-fg: white;
+
+    --subscribe-button-bg-color: #3f648f;
+    --subscribe-button-hover-bg-color: #5077a5;
+    --subscribe-button-subscribed-bg-color: #45474b;
+    --subscribe-button-subscribed-hover-bg-color: #5f6063;
+    --subscribe-button-fg-color: #ffffff;
+    --subscribe-button-count-fg-color: #000000;
+    --subscribe-button-count-bg-color: #e6e6e6;
+
+    --table-odd-row-bg-color: #1c1c1c;
+    --table-even-row-bg-color: #222222;
 }

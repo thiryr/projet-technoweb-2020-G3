@@ -82,7 +82,7 @@
     <ul id="comments">
         {% if user.is_chef and not recipe.already_rated_by_current_user %}
         <li class="comment row editor">
-            <img src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg" alt="avatar" class="avatar">
+            <img src="{{user.avatar_url}}" alt="avatar" class="avatar">
             <div class="column bubble">
                 <div class="row all-width">
                     <span class="name expand">Ajouter votre review</span>
