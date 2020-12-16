@@ -30,23 +30,23 @@ $(window).on("load", function() {
         //select the score
         $(hovered_button).mouseenter(function() {
 
+
             var stars = get_staricons(star_buttons)
 
             //set all to empty when moving to another star
-            $(stars).each(function(index, star) {
+            $(stars).each(function(reset_index, star) {
                 $(star).attr('data-prefix', 'far');
             });
 
             //set the right ones to full
-            $(stars).each(function(index, star) {
+            $(stars).each(function(fill_index, star) {
                 if ($(star).attr('data-prefix') === 'far') {
                     $(star).attr('data-prefix', 'fa');
                 }
                 //break out when reached last star
-                if (ind_h === index)
+                if (ind_h === fill_index)
                     return false
             });
-
         });
 
 
