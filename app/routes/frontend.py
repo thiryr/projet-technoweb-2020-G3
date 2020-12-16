@@ -25,7 +25,7 @@ def recipe_page():
     """
     return render_template('pages/recipe.html', theme='dark', user={
         "is_chef": True,
-        "is_admin": False,
+        "is_admin": True,
         "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
     }, recipe={
         "title": "Steak-frite",
@@ -36,7 +36,8 @@ def recipe_page():
         "fav_count": 45,
         "difficulty": 1,
         "target_people": 4,
-        "public": True,
+        "is_public": False,
+        "is_pinned": False,
         "category": "Diner",
         "tags": ['Steak', 'Frites', 'Mamy'],
         "current_user_is_author": True,
