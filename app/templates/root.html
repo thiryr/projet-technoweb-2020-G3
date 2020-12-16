@@ -16,6 +16,9 @@
 
     <!-- JQUERY from host -->
     <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
+
+    <!-- js valid in all pages -->
+    <script src="{{ url_for('static', filename='js/generic.js') }}"></script>
     <!-- Use FontAwesome for icons -->
     {{ fontawesome_js() }}
     <!-- Additional lines -->
@@ -46,10 +49,10 @@
                     <!-- TODO mettre les vrais liens -->
                     {% if user %}
                     <ul>
-                        <li><a {{'selected' if page == 'home' }} href="/">Accueil</a></li>
-                        <li><a {{'selected' if page == 'subscriptions' }} href="/subscriptions">Abonnements</a></li>
-                        <li><a {{'selected' if page == 'favorites' }} href="/favorites">Favoris</a></li>
-                        <li><a {{'selected' if page == 'my-recipes' }} href="/my-recipes">Mes recettes</a></li>
+                        <li><a {{ 'selected' if page=='home' }} href="/">Accueil</a></li>
+                        <li><a {{ 'selected' if page=='subscriptions' }} href="/subscriptions">Abonnements</a></li>
+                        <li><a {{ 'selected' if page=='favorites' }} href="/favorites">Favoris</a></li>
+                        <li><a {{ 'selected' if page=='my-recipes' }} href="/my-recipes">Mes recettes</a></li>
                         <li><button class="my-account" type="button">
                                 <img class="avatar" src="{{user.avatar_url}}"
                                     alt="avatar">
@@ -65,7 +68,7 @@
                                 </a></li>
                                 <li><a>Mon profil</a></li>
                                 {% if user.is_admin %}
-                                <li><a {{'selected' if page == 'users' }} href='/users'>Utilisateurs</a></li>
+                                <li><a {{ 'selected' if page=='users' }} href='/users'>Utilisateurs</a></li>
                                 {% endif %}
                                 <li><a>Déconnexion</a></li>
                             </ul>

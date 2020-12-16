@@ -1,4 +1,6 @@
 $(document).ready(function() {
+
+
     $.each($(".input-list"), function(ind, input_list) {
         var list = $(input_list).children(".list")
             //set the first add_field
@@ -12,7 +14,7 @@ $(document).ready(function() {
         });
         var add_field = add_field_li.children(".field")
 
-        function set_remove_on_empty() {
+        function set_line_events() {
             //sets an event on all fields when empty
             $.each($(list).find("li"), function(ind_input, li) {
                 //unless add-line
@@ -20,12 +22,18 @@ $(document).ready(function() {
                 if (!$(field).hasClass("add-line")) {
                     input = $(field).children("input")
                         //remove previously binded event
-                    $(input).off("keyup")
-                        //add event
-                    $(input).on("keyup", () => {
-                        console.log($(input).val().trim())
+                    $(input).off("focusout")
+                        //add event to remove unused
+                    $(input).on("focusout", () => {
                         if ($(input).val().trim() === "") {
                             $(li).remove()
+                        }
+                    })
+
+                    // add event to add a new element
+                    $(input).on("keypress", function(e) {
+                        if (e.which == 13) {
+                            $(add_field).children("input").focus()
                         }
                     })
                 }
@@ -33,7 +41,7 @@ $(document).ready(function() {
 
         }
 
-        set_remove_on_empty()
+        set_line_events()
 
         set_new_line_event()
 
@@ -61,9 +69,12 @@ $(document).ready(function() {
                     add_field = $(new_field)
 
                     //make sure every field has the remove event
-                    set_remove_on_empty()
+                    set_line_events()
 
+                    //set an event to make a new add-field when this one gets overriden
                     set_new_line_event()
+
+
                 }
 
             });
