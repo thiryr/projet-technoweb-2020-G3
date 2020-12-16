@@ -108,8 +108,8 @@ def remove_recipe(recipeid: int) -> None:
 
     db.session.delete(recipe)
     
-    #TODO FINISH THIS
-    
+    db.session.commit()
+
 
 def pin_recipe(recipeid: int) -> None:
     """Sets a recipe as pinned to the front page
@@ -134,6 +134,26 @@ def unpin_recipe(recipeid: int) -> None:
     else:
         recipe.pinned = False
         db.session.commit()
+
+def switch_recipe_visibility(recipeid: int, set_public: bool) -> bool:
+    """Modifies visibility of the recipe ("private"/"public")
+
+    Args:
+        recipeid (int): valid receipe id
+        set_public (bool): whether to set public or not
+    
+    Returns:
+        new status
+    """
+
+    recipe = get_recipe_from_id(recipeid)
+    if recipe is None:
+        raise ValueError(f"Tried to switch visibility of non-existant recipe {recipeid}")
+    
+    recipe.is_public = set_public
+    db.session.commit()
+
+    return recipe.is_public
 
 #GET
 #recipe

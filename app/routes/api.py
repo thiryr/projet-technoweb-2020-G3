@@ -11,6 +11,7 @@ import app.repositories.recipe_elements.utensils as uten_rep
 import app.repositories.recipe_elements.steps as step_rep
 import app.repositories.users as user_rep
 import app.repositories.subscriptions as sub_rep
+import app.repositories.usergroups as group_rep
 
 
 
@@ -159,6 +160,63 @@ def remove_subscription():
 
 
 #Recipe-related routes
+
+@api.route('/recipe/update_visibility', methods=['POST'])
+@login_required
+def update_recipe_visibility():
+    """Switches visibility between public and private
+
+    Arguments:
+        Expects fields 'recipe_id':int and 'public':bool
+
+    Returns:
+        json {'public':bool}, http 200
+    """
+    current_id = current_user.id
+
+
+    req_content = request.form
+    
+
+    #recipe_id field
+    recipe_id_field = req_content.get('recipe_id')
+    if recipe_id_field is None:
+        return 'Missing recipe_id field',400
+    #convert to int
+    try:
+        recipe_id = int(recipe_id_field)
+    except Exception:
+        return 'recipe_id should be integer',400
+    
+    #check recipe validity and user permissions
+    recipe = recipe_rep.get_recipe_from_id(recipe_id)
+    if recipe is None:
+        return 'No such recipe',400
+    
+    if recipe.author != current_id and not group_rep.find_group_by_id(current_user.user_group).is_admin:
+        return 'Insufficient permissions',400
+
+
+    #visibility field
+    public_field = req_content.get('public')
+    if public_field is None:
+        return 'Missing "public" field',400
+    
+    try:
+        set_public = bool(recipe_id_field)
+    except Exception:
+        return '"public" should be a boolean',400
+    
+    try:
+        status = recipe_rep.switch_recipe_visibility(recipe_id, set_public)
+    except ValueError:
+        return 'Invalid input of some sort',400
+    except Exception:
+        return 'Could not satisfy request',400
+    
+    return json.dumps({'public':status}),200
+
+
 
 @api.route('/recipe/user_recipes', methods=['POST'])
 @login_required
