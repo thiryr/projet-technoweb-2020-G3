@@ -14,19 +14,27 @@ $(document).ready(function() {
 
         //append to this tag-input
         function add_tag_from_input() {
+            /*
+             @returns true if added, false otherwide
+            */
             //get value
-            value = $(input_field).val()
-                //reset field
+            value = $(input_field).val().trim()
+            if (value === "") {
+                return false
+            }
+            //reset field
             $(input_field).val("")
                 //append tag
             $(list).append(`<li>${value} <button><i class='fa fa-times'></i></button></li>`)
+            return true
         }
 
 
         $(input_field).on("keypress", function(e) {
             if (e.which == 13) {
-                add_tag_from_input()
-                update_event_handlers()
+                //try to add, update if necessary
+                if (add_tag_from_input())
+                    update_event_handlers()
             }
         });
 

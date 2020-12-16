@@ -37,8 +37,11 @@ $(document).ready(function() {
 
             });
 
-            $(field).click(function() {
-                $(button).children("span").val(`${$(field).val()}`)
+            $(field).on("click", function(e) {
+                e.preventDefault();
+
+                $(button).children("span").html(`${$(field).html()}`)
+                $(button).val(`${$(field).val()}`)
 
                 $.each(fields, function(clear_index, cleared_field) {
                     $(cleared_field).removeClass("selected")
@@ -46,8 +49,22 @@ $(document).ready(function() {
 
                 $(field).addClass("selected")
 
+                //close on select
+                $(menu).children(".options").removeClass("opened")
+                has_been_entered = false
+                    //has to be set to 1, likely because the mouse doesn't "leave" the field
+                hovered_field_nb = 1
+                console.log(hovered_field_nb)
+
             });
         });
 
     });
 });
+
+
+/*
+get value through
+
+$(`#${drop_down_id}`).children('div.field').children('button').val()
+*/

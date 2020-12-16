@@ -18,9 +18,9 @@ $(document).ready(function() {
             //sets an event on all fields when empty
             $.each($(list).find("li"), function(ind_input, li) {
                 //unless add-line
-                field = $(li).children(".field")
+                var field = $(li).children(".field")
                 if (!$(field).hasClass("add-line")) {
-                    input = $(field).children("input")
+                    var input = $(field).children("input")
                         //remove previously binded event
                     $(input).off("focusout")
                         //add event to remove unused
@@ -84,3 +84,12 @@ $(document).ready(function() {
 
 
 //not my cleanest work
+
+
+/*
+get values with
+    var list_elements = $("#ingredients-input").children("ul.list").children("li")
+    var values = $.map($(list_elements), function(list_element, ind) {
+        return $(list_element).children("div.field").val()
+    });
+*/
