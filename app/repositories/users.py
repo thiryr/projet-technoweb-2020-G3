@@ -6,13 +6,18 @@ from app.models.user import User
 
 
     
-def add_user(username: str, password: str, mail: str, usergroup='regular', avatar_url = "https://i.stack.imgur.com/l60Hf.png")->User:
+def add_user(username: str, password: str, mail: str, usergroup='regular', avatar_url = "https://i.stack.imgur.com/l60Hf.png", birthdate=None, first_name=None, last_name=None):
     if find_user_by_username(username) is not None:
         raise ValueError('A user already uses that username')
     if find_user_by_mail(mail) is not None:
         raise ValueError('A user already uses that mail address')
     # Create a new user
     new_user = User(username, password, mail, usergroup, avatar_url)
+
+    new_user.birthdate = birthdate
+    new_user.first_name = first_name
+    new_user.last_name = last_name
+
     # Add it to the database
     db.session.add(new_user)
     db.session.commit()
