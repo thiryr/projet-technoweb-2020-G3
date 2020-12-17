@@ -314,7 +314,7 @@ def retrieve_user_recipes():
 
 @api.route('/recipe/get_popular', methods=['GET'])
 @login_required
-def retrieve_sorted_subs():
+def retrieve_popular_recipes():
     """Returns all the information necessary to display the user's subscription recipes
 
     Argument: 
