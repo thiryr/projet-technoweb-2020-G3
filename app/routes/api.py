@@ -311,6 +311,53 @@ def retrieve_user_recipes():
     return json.dumps({'recipes_info':recipe_jsons})
 
 
+
+@api.route('/recipe/get_popular', methods=['GET'])
+@login_required
+def retrieve_sorted_subs():
+    """Returns all the information necessary to display the user's subscription recipes
+
+    Argument: 
+        Expects sorting mode '
+
+    Returns: json {'recipes_info':
+    [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
+    """
+    current_id = current_user.id
+
+    request_content = request.args
+
+    sorting_mode = request_content.get('sorting_mode')
+
+    recipes_query = recipe_model.Recipe.query.join(sub_model.Subscription, sub_model.Subscription.subscriber_id == current_id 
+    and sub_model.Subscription.subscribed_id==recipe_model.Recipe.author
+    and (recipe_model.Recipe.is_public or recipe_model.Recipe.author == current_id))
+
+    if sorting_mode is not None and sorting_mode == 'trending':
+        recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
+    else:
+        recipes = recipes_query.order_by(recipe_model.Recipe.publicated_on.desc()).all()
+        
+    recipe_jsons = []
+
+    for recipe in recipes:
+        #get key elements
+        author = user_rep.find_user_by_id(recipe.author)
+        ratings_average = rating_rep.get_average_rating_for(recipe.id)
+        favorite_number = fav_rep.get_favorites_number_to(recipe.id)
+        current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
+
+
+        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+         'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
+         'img_url': recipe.image_url})
+
+
+
+    return json.dumps({'recipes_info':recipe_jsons})
+
 @api.route('/recipe/subscription_sorted', methods=['GET'])
 @login_required
 def retrieve_sorted_subs():
@@ -329,7 +376,9 @@ def retrieve_sorted_subs():
 
     sorting_mode = request_content.get('sorting_mode')
 
-    recipes_query = recipe_model.Recipe.query.join(sub_model.Subscription, sub_model.Subscription.subscriber_id == current_id and sub_model.Subscription.subscribed_id==recipe_model.Recipe.author)
+    recipes_query = recipe_model.Recipe.query.join(sub_model.Subscription, sub_model.Subscription.subscriber_id == current_id 
+    and sub_model.Subscription.subscribed_id==recipe_model.Recipe.author
+    and (recipe_model.Recipe.is_public or recipe_model.Recipe.author == current_id))
 
     if sorting_mode is not None and sorting_mode == 'trending':
         recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
@@ -406,7 +455,7 @@ def retrieve_sorted_search():
 @api.route('/recipe/favorites_sorted', methods=['GET'])
 @login_required
 def retrieve_sorted_favs():
-    """Returns all the information necessary to display the user's subscription recipes
+    """Returns all the information necessary to display the user's favorite recipes
 
     Argument: 
         Expects sorting mode 'trending'/'recent', assumes current_user
@@ -421,7 +470,7 @@ def retrieve_sorted_favs():
 
     sorting_mode = request_content.get('sorting_mode')
 
-    recipes_query = recipe_model.Recipe.query.join(fav_model.Favorite, fav_model.Favorite.user_id == current_id and recipe_model.Recipe.id==fav_model.Favorite.recipe_id)
+    recipes_query = recipe_model.Recipe.query.join(fav_model.Favorite, fav_model.Favorite.user_id == current_id and recipe_model.Recipe.id==fav_model.Favorite.recipe_id and recipe_model.Recipe.is_public)
 
     if sorting_mode is not None and sorting_mode == 'trending':
         recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()

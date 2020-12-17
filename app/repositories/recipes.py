@@ -4,6 +4,7 @@
 from datetime import date
 from typing import List
 
+import random as rd
 
 from sqlalchemy import or_
 
@@ -23,6 +24,7 @@ import app.repositories.taglinks as taglink_rep
 
 import app.repositories.favorites as fav_rep
 import app.repositories.ratings as rating_rep
+import app.repositories.users as user_rep
 
 import app.repositories.recipe_elements.ingredients as ing_rep
 import app.repositories.recipe_elements.utensils as uten_rep
@@ -45,8 +47,19 @@ def search(word: str):
             recipe_model.Recipe.name.like(f"%{word}%"),
             tag_model.Tag.name.like(f"%{word}%"),
             ingredient_model.Ingredient.text.like(f"%{word}%"),
-            cat_model.Category.name.like(f"%{word}%"))).distinct()
+            cat_model.Category.name.like(f"%{word}%"))).filter(recipe_model.Recipe.is_public).distinct()
+
+
+
+def recommend_random_recipe_to(userid: int)->recipe_model.Recipe:
+    random_recipe = rd.choice(get_recipe_from_user(userid))
+    random_tag = rd.choice(taglink_rep.get_recipe_tags(random_recipe.id))
+    random_recommendation = find_random_recipe_with_tag(random_tag)
+    return random_recommendation
     
+
+def find_random_recipe_with_tag(tag:str)->recipe_model.Recipe:
+    return rd.choice(recipe_model.Recipe.join(taglink_model.TagLink, taglink_model.TagLink.tag_id == tag_rep.name_to_tag(tag)).all())
 
 def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 
 is_public:bool, category_id:int, image_url=None)->recipe_model.Recipe:

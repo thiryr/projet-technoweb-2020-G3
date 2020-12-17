@@ -50,6 +50,7 @@ $(document).ready(function() {
             $(field).on("click", function(e) {
                 e.preventDefault();
 
+                $(button).children("span").removeClass("placeholder")
                 $(button).children("span").html(`${$(field).html()}`)
                 $(button).val(`${$(field).val()}`)
 

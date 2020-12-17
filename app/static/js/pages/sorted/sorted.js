@@ -154,7 +154,7 @@ function retrieve_recipes() {
         $($("#sort-input").find("button")[0]).parent().before($(new_error))
 
         setTimeout(() => {
-            $("html").find(".helper-text error").remove()
+            $("html").find(".helper-text.error").remove()
         }, 2000)
 
     })
