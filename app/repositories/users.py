@@ -80,3 +80,37 @@ def set_user_darkmode(userid:int, darkmode=True) -> None:
     user.dark_mode = darkmode
     
     db.session.commit()
+    
+def edit_profile(username, password, email, first_name, last_name, birthday, picture, user_id):
+
+    user = find_user_by_id(user_id)
+
+    # username check
+    if find_user_by_username(username) != None and user.username != username:
+        raise ValueError('Ce pseudo est déjà utilisé.')
+    else:
+        user.username = username
+
+    # password check
+    if password != '':
+        user.set_password(password)
+
+    # email
+    if find_user_by_mail(email) != None and user.mail != email:
+        raise ValueError('Cette adresse email est déjà utilisée.')
+    else:
+        user.mail = email
+
+    # first name
+    user.first_name = first_name
+
+    # last name
+    user.last_name = last_name
+
+    # birthday
+    user.birthdate = birthday
+
+    # picture
+    user.avatar_url = picture
+
+    db.session.commit()
