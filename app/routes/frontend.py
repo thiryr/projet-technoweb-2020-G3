@@ -117,11 +117,11 @@ def edit_profile_page():
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=get_user_infos(current_user), form=form)
 
 # Users
-# A MODIFIER
-@website.route('/users', methods=['GET', 'POST'])
+# MODIFIER SI BESOIN -> AJOUTER LA FCT get_all_group_infos
+@website.route('/users')
 @login_required
 def users_page():
-    return render_template()
+    return render_template('pages/users.html', theme=get_theme(current_user), page='users', user=get_user_infos(current_user), users=get_all_users_infos(), groups=get_all_group_infos())
 
 # Subscriptions
 # OK POUR MOI, MODIFIER SI BESOIN
@@ -251,6 +251,50 @@ def get_user_infos(user):
         return dict
 
     return False
+
+# A FAIRE
+#def get_all_group_infos():
+
+def get_all_users_infos():
+    # function which returns a list of dictionaries containing all user infos
+
+    dict_list = []
+
+    users = User.query.all()
+
+    for u in users:
+        user_dict = {}
+
+        # username
+        user_dict['pseudo'] = u.username
+
+        # ranking
+        user_dict['ranking'] = rep.ratings.get_ratings_from(u.id)
+
+        # full name
+        # A VERIFIER SI NOM VIDE EST NONE OU ''
+        if u.first_name == None:
+            fn = ''
+        else:
+            fn = u.first_name
+        if u.last_name == None:
+            ln = ''
+        else:
+            ln = u.last_name
+        user_dict['name'] = '%s %s'%(fn, ln)
+
+        # avatar url
+        user_dict['avatar_url'] = u.avatar_url
+
+        # usergroup
+        user_dict['usergroup'] = rep.usergroups.find_group_by_id(u.user_group).name
+
+        # profile url
+        user_dict['profile_url'] = '/profile/%d'%u.id
+
+        dict_list.append(user_dict)
+
+    return dict_list
 
 # OK POUR MOI, MODIFIER SI BESOIN
 def get_viewed_user_infos(user, id):
