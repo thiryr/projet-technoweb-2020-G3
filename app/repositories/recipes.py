@@ -34,6 +34,8 @@ import app.repositories.recipe_elements.steps as step_rep
 def search(word: str):
     """
     Should return all recipes matching some search term (look up tags and categories too..)
+
+    Returns a query, that needs to be completed by the user (giving freedom to enhance it)
     """
     return recipe_model.Recipe.query.join(cat_model.Category, 
     cat_model.Category.id == recipe_model.Recipe.category_id).join(ingredient_model.Ingredient,
@@ -43,7 +45,7 @@ def search(word: str):
             recipe_model.Recipe.name.like(f"%{word}%"),
             tag_model.Tag.name.like(f"%{word}%"),
             ingredient_model.Ingredient.text.like(f"%{word}%"),
-            cat_model.Category.name.like(f"%{word}%"))).distinct().all()
+            cat_model.Category.name.like(f"%{word}%"))).distinct()
     
 
 def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 

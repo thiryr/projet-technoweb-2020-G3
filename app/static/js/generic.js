@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     //disable default redirects for forms
-    $(document).on('keypress', function(e) {
+    $("input").not(".searchbar").on('keypress', function(e) {
         if (e.which == 13)
             e.preventDefault();
     })
@@ -37,13 +37,17 @@ $(document).ready(function() {
                     $(heart).attr("data-prefix", "fa")
                     $(counter).html(`${parseInt($(counter).html())+1}`)
 
+                    console.log("added")
+
                 } else if (new_state === false && $(heart).attr("data-prefix") === "fa") {
                     $(heart).attr("data-prefix", "far")
                     $(counter).html(`${parseInt($(counter).html())-1}`)
+                    console.log("removed")
                 }
             }).fail(function() {
                 //do nothing for now
             })
         }
     })
+
 })
