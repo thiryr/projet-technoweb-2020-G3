@@ -7,10 +7,20 @@ $(document).ready(function() {
         var hovered_field_nb = 0
         var has_been_entered = false
 
-
+        //open on hover
         $(button).mouseenter(function() {
             $(menu).children(".options").addClass("opened")
         });
+
+        //close on click
+        $('html').click(function(e) {
+            $(menu).children(".options").removeClass("opened");
+        });
+
+        //disable main button click
+        $(button).on("click", function(e) {
+            e.preventDefault();
+        })
 
 
 

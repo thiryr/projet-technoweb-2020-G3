@@ -9,8 +9,6 @@ $(document).ready(function() {
         var list_items = $(list).children("li")
         var input_field = $(list).children("input")
 
-        console.log()
-
 
         //append to this tag-input
         function add_tag_from_input() {
