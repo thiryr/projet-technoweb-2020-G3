@@ -24,8 +24,9 @@ def recipe_page():
     Page de recettes
     """
     return render_template('pages/recipe.html', theme='dark', user={
+        "user_id": 0,
         "is_chef": True,
-        "is_admin": True,
+        "is_admin": False,
         "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
     }, recipe={
         "title": "Steak-frite",
@@ -75,12 +76,16 @@ def recipe_page():
         "already_rated_by_current_user": False,
         "comments": [
             {
+                "user_id": 0,
+                "comment_id": 0,
                 "avatar_url": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Michel_Cremades.jpg",
                 "username": "Michel Dupont",
                 "rating": 4,
                 "message": "Coucou mamy, merci pour cette bonne recette. Personnellement, j'ajouterais un peu d'ail sur le steak, mais c'est déjà très bon comme ça."
             },
             {
+                "user_id": 2,
+                "comment_id": 1,
                 "avatar_url": "https://img.gentside.com/article/insolite/salustiano-sanchez-blazquez-est-l-homme-le-plus-vieux-du-monde-a-112-ans_9c4b850336f7a8fcdaa784c4ba49719d77633cde.jpg",
                 "username": "Eugène Leblanc",
                 "rating": 2,
