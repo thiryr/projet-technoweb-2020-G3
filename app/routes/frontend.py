@@ -81,7 +81,7 @@ def register_page():
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=False, form=form)
 
 # Recipe
-# OK POUR MOI, MODIFIER SI BESOIN -> FONCTION get_recipe_infos INCOMPLETE !
+# OK POUR MOI, MODIFIER SI BESOIN
 @website.route('/recipe/<int:id>')
 def recipe_page(id):
     return render_template('pages/recipe.html', theme=get_theme(current_user), user=get_user_infos(current_user), recipe=get_recipe_infos(current_user, id))
@@ -95,10 +95,9 @@ def my_recipes_page():
 
 # Edit recipe
 # A MODIFIER
-@website.route('/edit-recipe/<int:id>', methods=['GET', 'POST'])
+@website.route('/edit-recipe', methods=['GET', 'POST'])
 @login_required
-def edit_recipe_page(id):
-
+def edit_recipe_page():
     return render_template('pages/edit-recipe.html', theme=get_theme(current_user), user=get_user_infos(current_user))
 
 # Profile
