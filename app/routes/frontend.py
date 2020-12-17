@@ -152,7 +152,6 @@ def error_page(*args, **kwargs):
 
 # FUNCTIONS #
 
-# OK POUR MOI, MODIFIER SI BESOIN
 def get_theme(user):
     # function which returns the current user's theme ; Returns dark theme by default if no user is logged in
     
@@ -163,7 +162,6 @@ def get_theme(user):
             return 'light'
     return 'dark'
 
-# OK POUR MOI, MODIFIER SI BESOIN
 def get_user_infos(user):
     # function which returns a dictionary containing the current user's basic infos, or False if the user is not authenticated
 
@@ -186,8 +184,21 @@ def get_user_infos(user):
 
     return False
 
-# A FAIRE
-#def get_all_group_infos():
+def get_all_group_infos():
+    # function which returns a list of dictionaries containing all group infos
+
+    group_list = []
+    usergroups = UserGroup.query.all()
+
+    for group in usergroups:
+        group_dict = {}
+
+        group_dict['name'] = group.name
+        group_dict['value'] = group.id
+
+        group_list.append(group_dict)
+
+    return group_list
 
 def get_all_users_infos():
     # function which returns a list of dictionaries containing all user infos
@@ -230,7 +241,6 @@ def get_all_users_infos():
 
     return dict_list
 
-# OK POUR MOI, MODIFIER SI BESOIN
 def get_viewed_user_infos(user, id):
     # function which returns a dictionary containing the viewed user's profile infos
     viewed_user = rep.users.find_user_by_id(id)
@@ -299,7 +309,6 @@ def get_viewed_user_infos(user, id):
 
     return dict
 
-# OK POUR MOI, MODIFIER SI BESOIN
 def get_recipe_infos(user, id):
     # function which returns a dictionary containing the viewed recipe's infos
 
