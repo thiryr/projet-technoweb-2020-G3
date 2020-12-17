@@ -60,11 +60,6 @@ def login():
     return redirect('/')
 
 
-@api.route('/logout', methods=['POST'])
-@login_required
-def logout():
-    logout_user()
-
 
 # example for extracting data from the url path
 @api.route('/new/<int:name>')

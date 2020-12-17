@@ -56,7 +56,7 @@ def login_page():
 
 # Log out
 # OK POUR MOI, MODIFIER SI BESOIN
-@app.route('/logout')
+@website.route('/logout')
 @login_required
 def logout():
     logout_user()
@@ -120,7 +120,7 @@ def edit_profile_page():
 # A MODIFIER
 @website.route('/users', methods=['GET', 'POST'])
 @login_required
-def users():
+def users_page():
     return render_template()
 
 # Subscriptions
