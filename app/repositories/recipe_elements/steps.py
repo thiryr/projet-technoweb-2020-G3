@@ -9,9 +9,9 @@ from typing import List
 
 
 
-def get_ingredients_as_string_of(recipeid: int) -> List[str]:
+def get_steps_as_string_of(recipeid: int) -> List[str]:
     """
-    Returns a list of all the ingredients as strings, if they exist
+    Returns a list of all the steps as strings, if they exist
 
     Raises:
     can pass ValueError from get_ingredients_of if invalid recipeid
