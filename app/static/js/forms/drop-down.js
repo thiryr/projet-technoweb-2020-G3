@@ -22,8 +22,6 @@ jQuery(function () {
         mainButton.on("blur", function (e) {
             mainFocused = false;
             $(menu).children(".options").removeClass("opened");
-            
-            console.log("focusout !");
         });
 
         // Disable main button click
@@ -35,23 +33,19 @@ jQuery(function () {
         // Keep track of the mouse position
         mainButton.on("mouseenter", function(e){
             buttonEntered = true;
-            console.log("entered main button");
         })
         mainButton.on("mouseleave", function(e){
             buttonEntered = false;
-            console.log("left main button");
             handleMouseLeave(e);
         })
         optionList.on("mouseenter", function(e){
             optionsEntered = true;
-            console.log("entered options");
         })
         optionList.on("mouseleave", function(e){
             optionsEntered = false;
-            console.log("left options");
             handleMouseLeave(e);
         })
-
+        /** Close the dropdown if the mouse left both regions after some time */
         function handleMouseLeave(e) {
             setTimeout(function() {
                 if (mainFocused && !buttonEntered && !optionsEntered) {
