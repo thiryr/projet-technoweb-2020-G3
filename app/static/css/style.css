@@ -305,6 +305,11 @@ h4 {
     margin-right: 0.8rem;
 }
 
+.center-content {
+    justify-content: center;
+    align-items: center;
+}
+
 /* Avatar */
 
 img.avatar {

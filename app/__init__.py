@@ -7,6 +7,7 @@ Author: Martin Danhier
 from locale import LC_TIME, setlocale
 
 from flask import Flask
+from flask.templating import render_template
 from flask_fontawesome import FontAwesome
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy

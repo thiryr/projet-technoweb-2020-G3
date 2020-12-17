@@ -145,9 +145,10 @@ def search_page():
 
 # 404 error
 # OK POUR MOI, MODIFIER SI BESOIN
-@website.errorhandler(404)
-def error_page(error):
-    return render_template('404.html'), 404
+@website.route("/<path:invalid_path>")
+def error_page(*args, **kwargs):
+    # TODO get color theme and user
+    return render_template('pages/404.html', theme='dark', user=None), 404
 
 # TODO add routes here with "website" instead of "app"
 
