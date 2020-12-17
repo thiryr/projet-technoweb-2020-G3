@@ -2,7 +2,7 @@
 
 # Import Column and types directly from sqlalchemy because pylint
 # doesn't detect them if we imported them via the "db" object
-from sqlalchemy.sql.schema import Column, ForeignKey
+from sqlalchemy.sql.schema import Column, ForeignKey, UniqueConstraint
 import sqlalchemy.sql.sqltypes as st
 
 from app import db
@@ -15,6 +15,7 @@ class Favorite(db.Model): #type: ignore
     
     user_id = Column(st.Integer, ForeignKey('user.id'), nullable=False)
     recipe_id =  Column(st.Integer, ForeignKey('recipe.id'), nullable=False)
+    UniqueConstraint('user_id', 'recipe_id', name='oneFavorite')
 
 
 
