@@ -3,10 +3,11 @@ This file contains the definition of the "frontend" blueprint containing
 all the routes related to the frontend (pages).
 """
 
-from app.forms import EditProfileForm, RegisterForm, SignInForm
+from app.forms import RegisterForm, SignInForm, ValidationError
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
-import app.repositories as rep
+
+import app.repositories.users as user_rep
 
 # Create blueprint
 website = Blueprint('frontend', __name__, url_prefix='/')
@@ -28,10 +29,10 @@ def login_page():
 
     form = SignInForm()
     if form.validate_on_submit():
-        if find_user_by_username(form.username.data) != None:
-            user = find_user_by_username(form.username.data)
-        elif find_user_by_mail(form.username.data) != None:
-            user = find_user_by_mail(form.username.data)
+        if user_rep.find_user_by_username(form.username.data) != None:
+            user = user_rep.find_user_by_username(form.username.data)
+        elif user_rep.find_user_by_mail(form.username.data) != None:
+            user = user_rep.find_user_by_mail(form.username.data)
         else:
             user = None
 
@@ -71,7 +72,8 @@ def register_page():
     form = RegisterForm()
     if form.validate_on_submit():
         try:
-            new_user = add_user(username=form.username.data, password=form.password.data, mail=form.mail.data, birthdate=form.birthdate.data, first_name=form.first_name.data, last_name=form.last_name.data)
+            new_user = user_rep.add_user(username=form.username.data, password=form.password.data, 
+            mail=form.mail.data, birthdate=form.birthdate.data, first_name=form.first_name.data, last_name=form.last_name.data)
             return redirect(url_for('login'))
         except ValidationError as e:
             form.username.errors.append(e)
