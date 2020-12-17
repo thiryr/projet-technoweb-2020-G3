@@ -12,6 +12,7 @@ import app.repositories.recipe_elements.steps as step_rep
 import app.repositories.users as user_rep
 import app.repositories.subscriptions as sub_rep
 import app.repositories.usergroups as group_rep
+import app.repositories.categories as cat_rep
 
 
 
@@ -161,6 +162,56 @@ def remove_subscription():
 
 #Recipe-related routes
 
+@api.route('/recipe/new', methods=['POST'])
+@login_required
+def new_recipe():
+    """Adds a recipe
+
+    Arguments:
+    expects {'title':str, 'people':int, 'difficulty':int, 'public':bool, 'category':str,
+    'ingredients':[str], 'utensils':[str], 'steps':[str], 'tags':[str] }
+    """
+    current_id = current_user.id
+    req_content = request.json
+
+    try:
+        title = str(req_content.get('title'))
+        people = int(req_content.get('people'))
+        difficulty = int(req_content.get('difficulty'))
+        public = bool(req_content.get('public'))
+        category = str(req_content.get('category'))
+
+        print(req_content.get('ingredients'))
+        
+        ingredients = [str(i) for i in req_content.get('ingredients')]
+        utensils = [str(i) for i in req_content.get('utensils')]
+        steps = [str(i) for i in req_content.get('steps')]
+        tags = [str(i) for i in req_content.get('tags')]
+    except Exception:
+        return "could not type-cast some of the values",410
+    category = cat_rep.name_to_category(category)
+    if category is None:
+        return 'Category does not exist',411
+    
+    category = category.id
+    
+    try:
+        recipe = recipe_rep.add_recipe(title,current_id,people,difficulty,public,category)
+    except ValueError:
+        return 'One of the main inputs was invalid in some way other than type',413
+    except Exception:
+        return 'Could not add the recipe',510
+    try:
+        recipe_rep.compile_recipe(recipe, ingredients, utensils, steps, tags)
+    except ValueError:
+        return 'One of the elements of the recipe or its tags were invalid',414
+    except Exception:
+        #remove pre-compile recipe from db
+        recipe_rep.remove_recipe(recipe.id)
+        return 'Could not compile the recipe',511
+    
+    return 'ok',200
+    
 @api.route('/recipe/update_visibility', methods=['POST'])
 @login_required
 def update_recipe_visibility():

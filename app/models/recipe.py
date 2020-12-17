@@ -36,14 +36,16 @@ class Recipe(db.Model):  # type: ignore
     # Init
     # By default, permissions are that of a regular user
     def __init__(self, name: str, author_id: int,  portion_number: int, difficulty: int, 
-    is_public: bool, publicated_on: str, category_id: int, image_url=None):
+    is_public: bool, category_id: int, image_url=None):
         self.name = name
 
         self.portion_number = portion_number
         self.difficulty = difficulty
         self.is_public = is_public
 
-        self.publicated_on = parse_date(publicated_on)
+
+        #always created when being created..
+        self.publicated_on = datetime.date.today()
 
         self.image_url = image_url
 

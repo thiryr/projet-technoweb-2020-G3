@@ -4,6 +4,11 @@ $(document).ready(function() {
 
     $(submit).on("click", function(e) {
         e.preventDefault();
+
+        if ($(submit).attr("disabled") === true) {
+            return;
+        }
+
         var error_occured = false
 
         clear_errors()
@@ -60,11 +65,33 @@ $(document).ready(function() {
         if (error_occured) {
             append_error("Correct the form before resubmitting", $(submit))
         } else {
-            $.post("/api/recipe/add", { 'title': title, 'category': cat }).done(function() {
 
+            $.ajax({
+                    type: "POST",
+                    url: "/api/recipe/new",
+                    data: JSON.stringify({
+                        'title': title,
+                        'category': cat,
+                        'people': people,
+                        'difficulty': diff,
+                        'public': public,
+                        'ingredients': ingredients,
+                        'utensils': utensils,
+                        'steps': steps,
+                        'tags': tags
+                    }),
+                    contentType: "application/json"
+                }).done(function() {
+                    window.location.href = "./edit-recipe"
                 })
                 .fail(function() {
-                    append_error("An error occured when trying to submit your post", $(submit))
+                    //append error and disable for two seconds
+                    append_error("An error occured when trying to submit your post, make sure all your inputs look fine and try again in a few seconds", $(submit))
+                    $(submit).prop("disabled", true)
+                    setTimeout(() => {
+                        $(submit).prop("disabled", false)
+                        clear_errors()
+                    }, 2000)
                 })
         }
 
@@ -179,9 +206,10 @@ function check_category(category) {
 function get_list_menu_values(menu_id) {
     var list_elements = $(`#${menu_id}`).children(".list").children("li")
     var values = $.map($(list_elements), function(list_element, ind) {
-        return $(list_element).children("div.field").val()
+        return $(list_element).children(".field").children('input').val()
     });
-
+    //remove the add-field
+    values.pop()
     return values
 }
 
@@ -202,7 +230,7 @@ function get_steps() {
 function check_ingredients(ingredients) {
     if (ingredients === null)
         return false
-    if (ingredients.length <= 1)
+    if (ingredients.length < 1)
         return false
     return true
 }
@@ -210,7 +238,7 @@ function check_ingredients(ingredients) {
 function check_utensils(utensils) {
     if (utensils === null)
         return false
-    if (utensils.length <= 1)
+    if (utensils.length < 1)
         return false
     return true
 }
@@ -218,7 +246,7 @@ function check_utensils(utensils) {
 function check_steps(steps) {
     if (steps === null)
         return false
-    if (steps.length <= 1)
+    if (steps.length < 1)
         return false
     return true
 }

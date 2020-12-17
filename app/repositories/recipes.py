@@ -31,12 +31,12 @@ def search(word: str):
     #TODO
 
 def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 
-is_public:bool, publicated_on:str, category_id:int, image_url=None)->Recipe:
+is_public:bool, category_id:int, image_url=None)->Recipe:
     """
     Adds a recipe to the table
     @Returns the recipe added
     """
-    new_recipe = Recipe(name, author_id, portion_number, difficulty, is_public, publicated_on, category_id, image_url)
+    new_recipe = Recipe(name, author_id, portion_number, difficulty, is_public, category_id, image_url)
     
     db.session.add(new_recipe)
     

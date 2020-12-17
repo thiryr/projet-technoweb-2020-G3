@@ -126,7 +126,7 @@ var submit_button_disabled = false
 
 function switch_submit_button_state(disabled) {
     submit_button_disabled = disabled
-    $("#submit-rating-button").attr("disabled", submit_button_disabled)
+    $("#submit-rating-button").prop("disabled", submit_button_disabled)
 
     //clear display if can submit again
     if (!submit_button_disabled)

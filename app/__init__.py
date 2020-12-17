@@ -94,18 +94,29 @@ except ValueError:
 
 #categories
 try:
-    add_category('Lunch')
+    add_category('entree')
 except ValueError:
     pass
 try:
-    add_category('Breakfast')
+    add_category('main')
 except ValueError:
     pass
 try:
-    add_category('Dinner')
+    add_category('dessert')
 except ValueError:
     pass
-
+try:
+    add_category('gouter')
+except ValueError:
+    pass
+try:
+    add_category('pastry')
+except ValueError:
+    pass
+try:
+    add_category('misc')
+except ValueError:
+    pass
 
 
 
@@ -114,18 +125,9 @@ except ValueError:
 
 # cat_test.run_all_tests()
 
-<<<<<<< HEAD
-# #test recipe
-# cat = CategoryRepository.name_to_category('Lunch').id
-# reci = RecipeRepository.add_recipe("Steak Frite", 4, 1, True, "2020-12-05", cat)
-
-# RecipeRepository.compile_recipe(reci, ingredients=["4 Steaks","1Kg pomme de terres"], 
-# utensils=["1 grand couteau","une poelle"], steps=["Do the thing"], tags= ["simple","saveur"])
-=======
 #test recipe
-cat = name_to_category('Lunch').id
-reci = add_recipe("Steak Frite", author_id=1, portion_number=4, difficulty=1, is_public=True, publicated_on="2020-12-05", category_id=cat)
+cat = name_to_category('main').id
+reci = add_recipe("Steak Frite", author_id=1, portion_number=4, difficulty=1, is_public=True, category_id=cat)
 
 compile_recipe(reci, ingredients=["4 Steaks","1Kg pomme de terres"], 
 utensils=["1 grand couteau","une poelle"], steps=["Do the thing"], tags= ["simple","saveur"])
->>>>>>> main

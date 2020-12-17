@@ -3,19 +3,13 @@ This file contains the definition of the "frontend" blueprint containing
 all the routes related to the frontend (pages).
 """
 
-<<<<<<< HEAD
 from app.forms import EditProfileForm, RegisterForm, SignInForm
 from flask import Blueprint, render_template
-=======
-from flask import Blueprint, render_template_string
-import app.repositories.users as user_rep
->>>>>>> main
 
 # Create blueprint
 website = Blueprint('frontend', __name__, url_prefix='/')
 
 
-<<<<<<< HEAD
 @website.route('/', methods=['GET', 'POST'])
 def home_page():
     return render_template('pages/index.html', page='home', theme='dark', user={
@@ -23,12 +17,6 @@ def home_page():
         "is_admin": True,
         "avatar_url": "https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
     })
-=======
-@website.route('/')
-def ping():
-    user = user_rep.find_user_by_id(1)
-    return render_template_string('<h1>Hello {{name}}</h1> <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script><script>$.post("/api/recipe/user_recipes", {recipe_id:1},console.log,"json")</script>', name=user.username)
->>>>>>> main
 
 @website.route('/recipe')
 def recipe_page():
