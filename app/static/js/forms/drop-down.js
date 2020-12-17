@@ -1,79 +1,84 @@
-$(document).ready(function() {
+jQuery(function () {
 
-    $.each($(".dropdown-menu"), function(ind, menu) {
-        var button = $(menu).children(".field").children("button")
-        var fields = $(menu).children(".options").find("button")
+    $.each($(".dropdown-menu"), function (ind, menu) {
+        /** Main button */
+        let mainButton = $(menu).children(".field").children("button");
+        /** Options */
+        let optionList = $(menu).children(".options");
+        let options = optionList.find("button");
 
-        var hovered_field_nb = 0
-        var has_been_entered = false
+        // Keep track of the mouse position
+        let buttonEntered = false;
+        let optionsEntered = false;
+        let mainFocused = false;
 
-        //open on hover
-        $(button).mouseenter(function() {
-            $(menu).children(".options").addClass("opened")
+        // Open on focus
+        mainButton.on("focus", function () {
+            mainFocused = true;
+            $(menu).children(".options").addClass("opened");
         });
 
-        //close on click
-        $('html').click(function(e) {
+        // Close on lose focus
+        mainButton.on("blur", function (e) {
+            mainFocused = false;
             $(menu).children(".options").removeClass("opened");
+            
+            console.log("focusout !");
         });
 
-        //disable main button click
-        $(button).on("click", function(e) {
+        // Disable main button click
+        mainButton.on("click", function (e) {
             e.preventDefault();
+        });
+
+
+        // Keep track of the mouse position
+        mainButton.on("mouseenter", function(e){
+            buttonEntered = true;
+            console.log("entered main button");
+        })
+        mainButton.on("mouseleave", function(e){
+            buttonEntered = false;
+            console.log("left main button");
+            handleMouseLeave(e);
+        })
+        optionList.on("mouseenter", function(e){
+            optionsEntered = true;
+            console.log("entered options");
+        })
+        optionList.on("mouseleave", function(e){
+            optionsEntered = false;
+            console.log("left options");
+            handleMouseLeave(e);
         })
 
+        function handleMouseLeave(e) {
+            setTimeout(function() {
+                if (mainFocused && !buttonEntered && !optionsEntered) {
+                    mainButton.trigger("blur");
+                }
+            }, 5);
+        }
 
-
-        $.each(fields, function(field_index, field) {
-
-            //add a field
-            $(field).mouseenter(function(e) {
-                hovered_field_nb += 1
-                has_been_entered = true
-
-            });
-
-            //if no field has been entered, close after 0.005 seconds
-            $(field).mouseout(function(e) {
-                hovered_field_nb -= 1
-
-                setTimeout(() => {
-                    if (hovered_field_nb === 0) {
-                        $(menu).children(".options").removeClass("opened")
-                        has_been_entered = false
-                        hovered_field_nb = 0
-                    }
-                }, 5)
-
-            });
-
-            $(field).on("click", function(e) {
+        $.each(options, function (i, option) {
+            $(option).on("click", function (e) {
+                // Don't reload page
                 e.preventDefault();
 
-                $(button).children("span").removeClass("placeholder")
-                $(button).children("span").html(`${$(field).html()}`)
-                $(button).val(`${$(field).val()}`)
+                // Update main button
+                mainButton.children("span").removeClass("placeholder");
+                mainButton.children("span").text($(option).text());
+                mainButton.val($(option).val());
 
-                $.each(fields, function(clear_index, cleared_field) {
-                    $(cleared_field).removeClass("selected")
+                // Deselect every option
+                $.each(options, function (i, optionToDeselect) {
+                    $(optionToDeselect).removeClass("selected");
                 });
 
-                $(field).addClass("selected")
-
-                //close on select
-                $(menu).children(".options").removeClass("opened")
-                has_been_entered = false
-                    //has to be set to 1, likely because the mouse doesn't "leave" the field
-                hovered_field_nb = 1
+                // Select the clicked option
+                $(option).addClass("selected");
             });
         });
 
     });
 });
-
-
-/*
-get value through
-
-$(`#${drop_down_id}`).children('div.field').children('button').val()
-*/
