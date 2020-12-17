@@ -42,15 +42,15 @@ function get_recipe_element(img_url, recipe_id, recipe_name, author_id, author_n
     var empty_stars = ''
 
     for (var i = 0; i < 5; i++) {
-        if (i < fav_number)
+        if (i < rating)
             full_stars += full_star
         else
             empty_stars += empty_star
     }
 
     var heart = ''
-    var full_heart = '<button><i class="far fa-heart"></i></button>\n'
-    var empty_heart = '<button><i class="fa fa-heart"></i></button>\n'
+    var full_heart = '<button><i class="fa fa-heart"></i></button>\n'
+    var empty_heart = '<button><i class="far fa-heart"></i></button>\n'
     if (is_fav)
         heart = full_heart
     else

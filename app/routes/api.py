@@ -573,16 +573,12 @@ def switch_favorite():
     fav = fav_rep.get_specific_favorite(current_id, recipe_id)
     #if none, add it
     if fav is None:
-        try:
-            fav_rep.add_favorite(current_id, recipe_id)
-        except Exception:
-            return 'Could not add a favorite',500
+        
+        fav_rep.add_favorite(current_id, recipe_id)
         is_favorite = True
     else:
-        try:
-            fav_rep.remove_favorite(fav.id)
-        except Exception:
-            return 'Could not remove this favorite',500
+        
+        fav_rep.remove_favorite(fav.id)
         is_favorite = False
     
     return json.dumps({'is_favorite':is_favorite}),200
