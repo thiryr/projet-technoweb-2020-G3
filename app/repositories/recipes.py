@@ -4,11 +4,18 @@
 from datetime import date
 from typing import List
 
+
+from sqlalchemy import or_
+
 from app import db
 import app.models.recipe as recipe_model
 import app.models.recipe_elements.ingredient as ingredient_model
 import app.models.recipe_elements.step as step_model
 import app.models.recipe_elements.utensil as utensil_model
+
+import app.models.category as cat_model
+import app.models.taglink as taglink_model
+import app.models.tag as tag_model
 
 import app.repositories.tags as tag_rep
 import app.repositories.taglinks as taglink_rep
@@ -28,6 +35,15 @@ def search(word: str):
     """
     Should return all recipes matching some search term (look up tags and categories too..)
     """
+    return recipe_model.Recipe.query.join(cat_model.Category, 
+    cat_model.Category.id == recipe_model.Recipe.category_id).join(ingredient_model.Ingredient,
+            recipe_model.Recipe.id == ingredient_model.Ingredient.recipe_id).join(taglink_model.TagLink,
+                recipe_model.Recipe.id == taglink_model.TagLink.recipe_id).join(tag_model.Tag,
+                    taglink_model.TagLink.id == tag_model.Tag.id).filter(or_(
+            recipe_model.Recipe.name.like(f"%{word}%"),
+            tag_model.Tag.name.like(f"%{word}%"),
+            ingredient_model.Ingredient.text.like(f"%{word}%"),
+            cat_model.Category.name.like(f"%{word}%"))).distinct().all()
     
 
 def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 
