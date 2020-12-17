@@ -167,6 +167,8 @@ def get_user_infos(user):
 
     if user.is_authenticated:
         dict = {}
+        
+        dict['user_id'] = user.id
 
         # Check if user is chef
         if user.user_group.name == 'chef':
@@ -384,6 +386,8 @@ def get_recipe_infos(user, id):
     comments = rep.ratings.get_ratings_to(recipe.id)
     for c in comments:
         current_comment = {}
+        current_comment['user_id'] = c.user_id
+        current_comment['comment_id'] = c.id
         current_comment['avatar_url'] = rep.users.find_user_by_id(c.user_id).avatar_url
         current_comment['username'] = rep.users.find_user_by_id(c.user_id).username
         current_comment['rating'] = c.value
