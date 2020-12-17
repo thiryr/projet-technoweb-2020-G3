@@ -6,6 +6,8 @@ $(document).ready(function() {
             e.preventDefault();
     })
 
+
+    //like/dislike
     $("body").on("click", ".fa-heart", function(e) {
         e.preventDefault();
 
@@ -18,7 +20,7 @@ $(document).ready(function() {
             heart = $(container)
             container = $(container).parent()
         }
-
+        var counter = $(container).parent().children("span")
         if ($(container).is("button")) {
 
 
@@ -33,8 +35,11 @@ $(document).ready(function() {
                 //switch
                 if (new_state === true && $(heart).attr("data-prefix") === "far") {
                     $(heart).attr("data-prefix", "fa")
+                    $(counter).html(`${parseInt($(counter).html())+1}`)
+
                 } else if (new_state === false && $(heart).attr("data-prefix") === "fa") {
                     $(heart).attr("data-prefix", "far")
+                    $(counter).html(`${parseInt($(counter).html())-1}`)
                 }
             }).fail(function() {
                 //do nothing for now
