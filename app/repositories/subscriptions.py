@@ -12,13 +12,13 @@ def get_subscriptions_from(userid: int) -> List[sub_model.Subscription]:
     """
     Returns a list of subscription from that user id or None
     """
-    return sub_model.Subscription.query.filter_by(subscriber=userid).all()
+    return sub_model.Subscription.query.filter_by(subscriber_id=userid).all()
 
 def get_subscriptions_to(userid: int) -> List[sub_model.Subscription]:
     """
     Returns a list of subscriptions to that user id or None
     """
-    return sub_model.Subscription.query.filter_by(subscriber=userid).all()
+    return sub_model.Subscription.query.filter_by(subscribed_id=userid).all()
 
 
 def get_specific_subscription(subscriber_id: int, subscribed_id:int) -> sub_model.Subscription:

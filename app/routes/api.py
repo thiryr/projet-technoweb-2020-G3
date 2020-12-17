@@ -328,13 +328,10 @@ def retrieve_sorted_recipes():
 
     sorting_mode = request_content.get('sorting_mode')
 
-    subscriptions = sub_rep.get_subscriptions_from(current_id)
-    subscribed_ids = list(map(lambda sub: sub.subscribed_id, subscriptions))
-    subscribed_users = user_model.User.query.filter_by(user_model.User.id in subscribed_ids).all()
-    recipes_query = recipe_model.Recipe.query.filter_by(recipe_model.Recipe.author in subscribed_users)
+    recipes_query = recipe_model.Recipe.query.join(sub_model.Subscription, sub_model.Subscription.subscriber_id == current_id and sub_model.Subscription.subscribed_id==recipe_model.Recipe.author)
 
     if sorting_mode is not None and sorting_mode == 'trending':
-        recipes = recipes_query.filter_by(recipe_model.Recipe.publicated_on < datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
+        recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
     else:
         recipes = recipes_query.order_by(recipe_model.Recipe.publicated_on.desc()).all()
         
@@ -349,8 +346,21 @@ def retrieve_sorted_recipes():
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'average_rating': ratings_average, 
-        'favorites': favorite_number, 'is_favorite': current_favorite, 'img_url': recipe.image_url})
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+         'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
+         'img_url': recipe.image_url})
+
+
+    recipe_jsons.append({'recipe_id': 1, 'recipe_name': "test", 'author_nick': "test", 
+    'author_first': "first", 'author_last': "last", 'author_id':1, 'average_rating': 3, 'author_chef': True,
+    'favorites': 12, 'is_favorite': True, 
+    'img_url': "https://i2.wp.com/www.foodrepublic.com/wp-content/uploads/2012/05/testkitchen_argentinesteak.jpg?resize=1280%2C%20560&ssl=1"})
+
+    recipe_jsons.append({'recipe_id': 1, 'recipe_name': "test", 'author_nick': "test", 
+    'author_first': "first", 'author_last': "last", 'author_id':1, 'average_rating': 3, 'author_chef': True,
+    'favorites': 12, 'is_favorite': True, 
+    'img_url': "https://i2.wp.com/www.foodrepublic.com/wp-content/uploads/2012/05/testkitchen_argentinesteak.jpg?resize=1280%2C%20560&ssl=1"})
+
 
     return json.dumps({'recipes_info':recipe_jsons})
 

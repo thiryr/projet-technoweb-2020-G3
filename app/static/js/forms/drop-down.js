@@ -64,8 +64,6 @@ $(document).ready(function() {
                 has_been_entered = false
                     //has to be set to 1, likely because the mouse doesn't "leave" the field
                 hovered_field_nb = 1
-                console.log(hovered_field_nb)
-
             });
         });
 
