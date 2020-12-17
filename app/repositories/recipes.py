@@ -28,7 +28,7 @@ def search(word: str):
     """
     Should return all recipes matching some search term (look up tags and categories too..)
     """
-    #TODO
+    
 
 def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 
 is_public:bool, category_id:int, image_url=None)->recipe_model.Recipe:
