@@ -255,8 +255,7 @@ def get_user_infos(user):
 # OK POUR MOI, MODIFIER SI BESOIN
 def get_viewed_user_infos(user, id):
     # function which returns a dictionary containing the viewed user's profile infos
-    
-    viewed_user = find_user_by_id(id)
+    viewed_user = rep.users.find_user_by_id(id)
     dict = {}
 
     # username
@@ -264,7 +263,7 @@ def get_viewed_user_infos(user, id):
 
     # ranking
     # A VERIFIER
-    dict['ranking'] = get_ratings_from(viewed_user.id)
+    dict['ranking'] = rep.ratings.get_ratings_from(viewed_user.id)
 
     # full name
     # A VERIFIER SI NOM VIDE EST NONE OU ''
@@ -322,49 +321,87 @@ def get_viewed_user_infos(user, id):
 
     return dict
 
-# FONCTION INCOMPLETE!
+# OK POUR MOI, MODIFIER SI BESOIN
 def get_recipe_infos(user, id):
     # function which returns a dictionary containing the viewed recipe's infos
 
-    recipe = Recipe.query.get(id)
+    recipe = rep.recipes.get_recipe_from_id(id)
     author = recipe.author
     dict = {}
 
+    # title
     dict['title'] = recipe.name
-    dict['author_name'] = author.name
-    dict['author_url'] = '/profile/%d'%author.id # ?
+
+    # author name
+    dict['author_name'] = author.username
+
+    # author url
+    dict['author_url'] = '/profile/%d'%author.id
+
+    # is chef
     if author.user_group.name == 'chef':
         dict['author_is_chef'] = True
     else:
         dict['author_is_chef'] = False
+
+    # average rating
     dict['average_rating'] = recipe.average_score
+
+    # fav count
     dict['fav_count'] = recipe.follow_number
+
+    # difficulty
     dict['difficulty'] = recipe.difficulty
+
+    # target people -> C'EST BIEN PORTION NUMBER ?
     dict['target_people'] = recipe.portion_number
+
+    # is public
     dict['is_public'] = recipe.is_public
+
+    # is pinned
     dict['is_pinned'] = recipe.pinned
+
+    # category -> ID OU NOM DE LA CATEGORIE ?
     dict['category'] = recipe.category_id
-    # dict['tags'] = ?
+
+    # tags
+    dict['tags'] = rep.taglink.get_recipe_tags(recipe.id)
+
+    # user is author
     if user == author:
         dict['current_user_is_author'] = True
     else:
         dict['current_user_is_author'] = False
 
-    # dict['current_user_favorited'] = ?
-    # dict['ingredients'] = Ingredient.query.filter_by(recipe.id) ?
-    # dict['ustensiles'] = ?
+    # user has favorite
+    dict['current_user_favorited'] = rep.favorites.user_has_favorite(user.id, recipe.id)
+
+    # ingredients
+    dict['ingredients'] = rep.recipe_elements.ingredients.get_ingredients_as_string_of(recipe.id)
+
+    # utensils
+    dict['ustensiles'] = rep.recipe_elements.utensils.get_utensils_as_string_of(recipe.id)
+
+    # picture
     dict['picture'] = recipe.image_url
-    # dict['steps'] = ?
-    #dict['already_rated_by_current_user'] = ?
-    """
-    dict['comments']: [
-        {
-            'avatar_url': ,
-            'username': ,
-            'rating': ,
-            'message':
-        },
-    ]
-    """
+
+    # steps
+    dict['steps'] = rep.recipe_elements.steps.get_steps_as_string_of(recipe.id)
+
+    # rated by user
+    dict['already_rated_by_current_user'] = rep.ratings.user_has_rating(user.id, recipe.id)
+
+    # comments
+    dict['comments'] = []
+    comments = rep.ratings.get_ratings_to(recipe.id)
+    for c in comments:
+        current_comment = {}
+        current_comment['avatar_url'] = rep.users.find_user_by_id(c.user_id).avatar_url
+        current_comment['username'] = rep.users.find_user_by_id(c.user_id).username
+        current_comment['rating'] = c.value
+        current_comment['message'] = c.comment
+
+        dict['comments'].append(current_comment)
 
     return dict
