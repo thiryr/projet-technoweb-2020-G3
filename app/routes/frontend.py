@@ -108,11 +108,32 @@ def profile_page(id):
     return render_template('pages/profile.html', theme=get_theme(current_user), user=get_user_infos(current_user), viewed_user=viewed_user_infos(current_user, id))
 
 # Edit profile
-# A MODIFIER
+# OK POUR MOI, MODIFIER SI BESOIN
 @website.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile_page():
     form = EditProfileForm()
+
+    if form.validate_on_submit():
+        try:
+            rep.users.edit_profile(form.username.value, form.password.value, form.email.value, form.first_name.value, form.last_name.value, form.birthday.value, form.picture.value, current_user.id)
+
+            return redirect(url_for('profile/%d'%current_user.id))
+        except ValueError as e:
+            if 'pseudo' in str(e):
+                form.username.errors.append(e)
+            elif 'email' in str(e):
+                form.email.errors.append(e)
+
+    else:
+        # Fill form with existing data
+        form.username.value = current_user.username
+        form.email.value = current_user.mail
+        form.first_name.value = current_user.first_name
+        form.last_name.value = current_user.last_name
+        form.birthday.value = current_user.birthdate
+        form.picture.value = current_user.avatar_url
+
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=get_user_infos(current_user), form=form)
 
 # Users
