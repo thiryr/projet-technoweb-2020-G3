@@ -2,7 +2,7 @@
 
 from app import db, login_manager
 
-from app.models.user import User
+import app.models.user as user_model
 
 
     
@@ -12,7 +12,7 @@ def add_user(username: str, password: str, mail: str, usergroup='regular', avata
     if find_user_by_mail(mail) is not None:
         raise ValueError('A user already uses that mail address')
     # Create a new user
-    new_user = User(username, password, mail, usergroup, avatar_url)
+    new_user = user_model.User(username, password, mail, usergroup, avatar_url)
 
     new_user.birthdate = birthdate
     new_user.first_name = first_name
@@ -21,15 +21,15 @@ def add_user(username: str, password: str, mail: str, usergroup='regular', avata
     # Add it to the database
     db.session.add(new_user)
     db.session.commit()
-    return User
+    return user_model.User
 
 # Tell login_manager that it can use this function as loader
 @login_manager.user_loader
-def find_user_by_str_id(id: str) -> User:
+def find_user_by_str_id(id: str) -> user_model.User:
     """Finds a user in the list by a str id. (used by login_manager)"""
     return find_user_by_id(int(id))
 
-def find_user_by_id(id: int) -> User:
+def find_user_by_id(id: int) -> user_model.User:
     """Finds a user in the list by id
     Args:
         id (str): Id of the user (string repr of an int)
@@ -38,9 +38,9 @@ def find_user_by_id(id: int) -> User:
         None: otherwise
     """
     # Find the id user in the database, else return None
-    return User.query.get(id)
+    return user_model.User.query.get(id)
 
-def find_user_by_username(username: str) -> User:
+def find_user_by_username(username: str) -> user_model.User:
     """Finds a user in the list by username
     Args:
         username (str): The name of the user
@@ -49,9 +49,9 @@ def find_user_by_username(username: str) -> User:
         None: otherwise
     """
     # Find user with this username, or None if there isn't any
-    return User.query.filter_by(username=username).first()
+    return user_model.User.query.filter_by(username=username).first()
 
-def find_user_by_mail(mail: str) -> User:
+def find_user_by_mail(mail: str) -> user_model.User:
     """Finds a user in the list by username
     Args:
         mail (str): The mail address of the user
@@ -60,7 +60,7 @@ def find_user_by_mail(mail: str) -> User:
         None: otherwise
     """
     # Find user with this username, or None if there isn't any
-    return User.query.filter_by(mail=mail).first()
+    return user_model.User.query.filter_by(mail=mail).first()
 
 def set_user_darkmode(userid:int, darkmode=True) -> None:
     """sets the specified user's visual mode

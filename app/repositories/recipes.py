@@ -5,10 +5,10 @@ from datetime import date
 from typing import List
 
 from app import db
-from app.models.recipe import Recipe
-from app.models.recipe_elements.ingredient import Ingredient
-from app.models.recipe_elements.step import Step
-from app.models.recipe_elements.utensil import Utensil
+import app.models.recipe as recipe_model
+import app.models.recipe_elements.ingredient as ingredient_model
+import app.models.recipe_elements.step as step_model
+import app.models.recipe_elements.utensil as utensil_model
 
 import app.repositories.tags as tag_rep
 import app.repositories.taglinks as taglink_rep
@@ -31,12 +31,12 @@ def search(word: str):
     #TODO
 
 def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 
-is_public:bool, category_id:int, image_url=None)->Recipe:
+is_public:bool, category_id:int, image_url=None)->recipe_model.Recipe:
     """
     Adds a recipe to the table
     @Returns the recipe added
     """
-    new_recipe = Recipe(name, author_id, portion_number, difficulty, is_public, category_id, image_url)
+    new_recipe = recipe_model.Recipe(name, author_id, portion_number, difficulty, is_public, category_id, image_url)
     
     db.session.add(new_recipe)
     
@@ -45,7 +45,7 @@ is_public:bool, category_id:int, image_url=None)->Recipe:
     return new_recipe
 
 
-def compile_recipe(recipe: Recipe, ingredients: List[str], utensils: List[str], steps: List[str], tags: List[str]):
+def compile_recipe(recipe: recipe_model.Recipe, ingredients: List[str], utensils: List[str], steps: List[str], tags: List[str]):
     """Adds components of the recipe in the tables
     Args:
         recipe (Recipe): The recipe to be compiled with
@@ -56,13 +56,13 @@ def compile_recipe(recipe: Recipe, ingredients: List[str], utensils: List[str], 
     """
     #create and add the elements
     for ingredient_text in ingredients:
-        additional_ingredient = Ingredient(ingredient_text, recipe.id)
+        additional_ingredient = ingredient_model.Ingredient(ingredient_text, recipe.id)
         db.session.add(additional_ingredient)
     for utensil_text in utensils:
-        additional_utensil = Utensil(utensil_text, recipe.id)
+        additional_utensil = utensil_model.Utensil(utensil_text, recipe.id)
         db.session.add(additional_utensil)
     for step_number, step_text in enumerate(steps):
-        additional_step = Step(step_text, step_number, recipe.id)
+        additional_step = step_model.Step(step_text, step_number, recipe.id)
         db.session.add(additional_step)
     for tag_text in tags:
         #get the tag
@@ -158,30 +158,30 @@ def switch_recipe_visibility(recipeid: int, set_public: bool) -> bool:
 #GET
 #recipe
 
-def get_recipe_from_id(recipe_id: int) -> Recipe:
+def get_recipe_from_id(recipe_id: int) -> recipe_model.Recipe:
     """Returns the recipe based on the id, or None
     """
-    return Recipe.query.get(recipe_id)
+    return recipe_model.Recipe.query.get(recipe_id)
 
 
 
 
-def get_recipe_from_user(user_id: int) -> List[Recipe]:
+def get_recipe_from_user(user_id: int) -> List[recipe_model.Recipe]:
     """Returns all the recipes written by a user, ordered by date
     """
-    return Recipe.query.filter_by(author=user_id).order_by(Recipe.publicated_on.desc()).all()
+    return recipe_model.Recipe.query.filter_by(author=user_id).order_by(recipe_model.Recipe.publicated_on.desc()).all()
 
 
 
-def get_top_recipes(recipe_number = 20, up_to=date.today().replace(day=1)) -> List[Recipe]:
+def get_top_recipes(recipe_number = 20, up_to=date.today().replace(day=1)) -> List[recipe_model.Recipe]:
     """Returns a list of the recipes in order of their score
     Args:
         number (int, optional): the number of recipes to fetch. Defaults to 20.
         up_to (date, optional): the maximum date for a recipe. Defaults to the first day of the current month.
     """
-    return Recipe.query.filter(Recipe.publicated_on<=up_to).order_by(Recipe.average_score.desc(), Recipe.follow_number.desc()).all()[:recipe_number]
+    return recipe_model.Recipe.query.filter(recipe_model.Recipe.publicated_on<=up_to).order_by(recipe_model.Recipe.average_score.desc(), recipe_model.Recipe.follow_number.desc()).all()[:recipe_number]
 
-def get_n_recipes(recipe_number = 20, up_to=date(2020,1,1), newest_first=False) -> List[Recipe]:
+def get_n_recipes(recipe_number = 20, up_to=date(2020,1,1), newest_first=False) -> List[recipe_model.Recipe]:
     """Gives all recipes to to some date (first day of 2020 by default)
 
     Args:
@@ -192,15 +192,15 @@ def get_n_recipes(recipe_number = 20, up_to=date(2020,1,1), newest_first=False) 
     Returns:
         List[Recipe]: list of recipe in order of date
     """
-    default_query = Recipe.query.filter(Recipe.publicated_on<=up_to)
+    default_query = recipe_model.Recipe.query.filter(recipe_model.Recipe.publicated_on<=up_to)
     if newest_first:
-        query = default_query.order_by(Recipe.average_score.desc())
+        query = default_query.order_by(recipe_model.Recipe.average_score.desc())
     else:
-        query = default_query.order_by(Recipe.average_score.asc())
+        query = default_query.order_by(recipe_model.Recipe.average_score.asc())
     
     return query.all()[:recipe_number]
     
-def get_pinned_recipes() -> List[Recipe]:
+def get_pinned_recipes() -> List[recipe_model.Recipe]:
     """Returns a list of all pinned recipes
     """
-    return Recipe.query.filter_by(pinned=True).all()
+    return recipe_model.Recipe.query.filter_by(pinned=True).all()

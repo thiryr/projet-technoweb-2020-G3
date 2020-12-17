@@ -1,24 +1,24 @@
 """class for static methods around the Category table"""
 
 from app import db
-from app.models.category import Category
+import app.models.category as category_model
 
 
     
-def name_to_category(category_name: str) -> Category:
+def name_to_category(category_name: str) -> category_model.Category:
     """
     Returns the id associated with a category name, None if it doesn't exist
     """
-    return Category.query.filter_by(name=category_name).first()
+    return category_model.Category.query.filter_by(name=category_name).first()
 
-def add_category(name:str) -> Category:
+def add_category(name:str) -> category_model.Category:
     """
     Adds a category to the table
     @returns the new category
     """
     if name_to_category(name) is not None:
         raise ValueError(f"Tried to add an already-existing category, {name}")
-    new_cat = Category(name)
+    new_cat = category_model.Category(name)
     
     db.session.add(new_cat)
     

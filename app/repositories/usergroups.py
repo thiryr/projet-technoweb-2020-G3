@@ -1,12 +1,12 @@
 """This file defines several functions to handle the table of UserGroup"""
 
 from app import db
-from app.models.usergroup import UserGroup
+import app.models.usergroup as usergroup_model
 
 
     
 # Tell login_manager that it can use this function as loader
-def find_group_by_id(id: int) -> UserGroup:
+def find_group_by_id(id: int) -> usergroup_model.UserGroup:
     """Finds a group from an input id
     Args:
         id (str): Id of the usergroup (string repr of an int)
@@ -15,9 +15,9 @@ def find_group_by_id(id: int) -> UserGroup:
         None: otherwise
     """
     # Find the group in the database, else return None
-    return UserGroup.query.get(id)
+    return usergroup_model.UserGroup.query.get(id)
 
-def find_group_by_name(group_name: str) -> UserGroup:
+def find_group_by_name(group_name: str) -> usergroup_model.UserGroup:
     """Finds a group from an input name
     Args:
         username (str): The name of the user
@@ -26,7 +26,7 @@ def find_group_by_name(group_name: str) -> UserGroup:
         None: otherwise
     """
     # Find group with this name, or None if there isn't any
-    return UserGroup.query.filter_by(name=group_name).first()
+    return usergroup_model.UserGroup.query.filter_by(name=group_name).first()
 
 
 def add_usergroup(group_name:str, can_access_user_page=True, can_login = True, is_admin = False, can_have_public_recipes = True, can_access_social_features = True, can_rate = False):
@@ -37,7 +37,7 @@ def add_usergroup(group_name:str, can_access_user_page=True, can_login = True, i
     """
     if find_group_by_name(group_name) is not None:
         raise ValueError("A group with this name already exists")
-    usergroup = UserGroup(group_name, can_access_user_page, can_login, is_admin, can_have_public_recipes, can_access_social_features, can_rate)
+    usergroup = usergroup_model.UserGroup(group_name, can_access_user_page, can_login, is_admin, can_have_public_recipes, can_access_social_features, can_rate)
     db.session.add(usergroup)
     db.session.commit()
 

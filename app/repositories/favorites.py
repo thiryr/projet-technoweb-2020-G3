@@ -4,37 +4,37 @@ import app.repositories.recipes as recipe_rep
 import app.repositories.users as user_rep
 from app import db
 
-from app.models.favorite import Favorite
+import app.models.favorite as favorite_model
 
 from typing import List
 
 
     
-def get_favorites_from(userid: int) -> List[Favorite]:
+def get_favorites_from(userid: int) -> List[favorite_model.Favorite]:
     """
     Returns all favorites from a user, or None
     """
-    return Favorite.query.filter_by(user_id=userid).all()
+    return favorite_model.Favorite.query.filter_by(user_id=userid).all()
 
-def get_favorites_to(recipeid: int) -> List[Favorite]:
+def get_favorites_to(recipeid: int) -> List[favorite_model.Favorite]:
     """
     Returns a list of favorites to that recipe id, or None
     """
-    return Favorite.query.filter_by(recipe_id=recipeid).all()
+    return favorite_model.Favorite.query.filter_by(recipe_id=recipeid).all()
 
 
 def get_favorites_number_to(recipeid: int) -> int:
     """
     Returns the number of favorites to that recipe id
     """
-    return Favorite.query.filter_by(recipe_id=recipeid).count()
+    return favorite_model.Favorite.query.filter_by(recipe_id=recipeid).count()
 
 
-def get_specific_favorite(userid: int, recipeid:int) -> Favorite:
+def get_specific_favorite(userid: int, recipeid:int) -> favorite_model.Favorite:
     """
     Return the specified favorite instance, or None
     """
-    return Favorite.query.filter_by(user_id=userid, recipe_id=recipeid).first()
+    return favorite_model.Favorite.query.filter_by(user_id=userid, recipe_id=recipeid).first()
 
 def user_has_favorite(userid:int, recipeid:int) -> bool:
     """Returns true if the user has favorited that recipe
@@ -43,7 +43,7 @@ def user_has_favorite(userid:int, recipeid:int) -> bool:
         return False
     return True
 
-def add_favorite(userid: int, recipeid:int) -> Favorite:
+def add_favorite(userid: int, recipeid:int) -> favorite_model.Favorite:
     """
     Adds a favorite to the table, provided it is valid
     if one of the targets doesn't exist
@@ -59,7 +59,7 @@ def add_favorite(userid: int, recipeid:int) -> Favorite:
         raise ValueError(f"User did not exist, ID: {userid}")
     if recipe is None:
         raise ValueError(f"Recipe did not exist, ID: {recipeid}")
-    new_fav = Favorite(userid, recipeid)
+    new_fav = favorite_model.Favorite(userid, recipeid)
     recipe.follow_number+=1
     db.session.add(new_fav)
     db.session.commit()
@@ -68,7 +68,7 @@ def add_favorite(userid: int, recipeid:int) -> Favorite:
 def remove_favorite(fav_id: int) -> None:
     """Removes a subscription with some id from the database
     """
-    fav = Favorite.query.get(fav_id)
+    fav = favorite_model.Favorite.query.get(fav_id)
     if fav is None:
         print("WARNING: Tried to remove a non-existant favorite")
         return

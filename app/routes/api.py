@@ -14,6 +14,14 @@ import app.repositories.subscriptions as sub_rep
 import app.repositories.usergroups as group_rep
 import app.repositories.categories as cat_rep
 
+import app.models.subscription as sub_model
+import app.models.user as user_model
+import app.models.recipe as recipe_model
+import app.models.rating as rating_model
+import app.models.category as cat_model
+
+from app import db
+
 
 
 from flask import Blueprint, redirect, request
@@ -22,6 +30,8 @@ from flask_login.utils import login_required, login_user, logout_user
 from flask_login import current_user
 
 import json
+
+import datetime
 
 
 
@@ -269,7 +279,7 @@ def update_recipe_visibility():
 
 
 
-@api.route('/recipe/user_recipes', methods=['POST'])
+@api.route('/recipe/user_recipes', methods=['GET'])
 @login_required
 def retrieve_user_recipes():
     """Returns all the information necessary to display the user's recipes
@@ -290,7 +300,7 @@ def retrieve_user_recipes():
         author = user_rep.find_user_by_id(recipe.author)
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
-        current_favorite = user_rep.user_has_favorite(current_id, recipe.id)
+        current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
@@ -300,8 +310,52 @@ def retrieve_user_recipes():
     return json.dumps({'recipes_info':recipe_jsons})
 
 
+@api.route('/recipe/subscription_sorted', methods=['GET'])
+@login_required
+def retrieve_sorted_recipes():
+    """Returns all the information necessary to display the user's subscription recipes
 
-@api.route('/recipe/get_info', methods=['POST'])
+    Argument: 
+        Expects sorting mode 'trending'/'recent', assumes current_user
+
+    Returns: json {'recipes_info':
+    [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
+    """
+    current_id = current_user.id
+
+    request_content = request.args
+
+    sorting_mode = request_content.get('sorting_mode')
+
+    subscriptions = sub_rep.get_subscriptions_from(current_id)
+    subscribed_ids = list(map(lambda sub: sub.subscribed_id, subscriptions))
+    subscribed_users = user_model.User.query.filter_by(user_model.User.id in subscribed_ids).all()
+    recipes_query = recipe_model.Recipe.query.filter_by(recipe_model.Recipe.author in subscribed_users)
+
+    if sorting_mode is not None and sorting_mode == 'trending':
+        recipes = recipes_query.filter_by(recipe_model.Recipe.publicated_on < datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
+    else:
+        recipes = recipes_query.order_by(recipe_model.Recipe.publicated_on.desc()).all()
+        
+    recipe_jsons = []
+
+    for recipe in recipes:
+        #get key elements
+        author = user_rep.find_user_by_id(recipe.author)
+        ratings_average = rating_rep.get_average_rating_for(recipe.id)
+        favorite_number = fav_rep.get_favorites_number_to(recipe.id)
+        current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
+
+
+        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'average_rating': ratings_average, 
+        'favorites': favorite_number, 'is_favorite': current_favorite, 'img_url': recipe.image_url})
+
+    return json.dumps({'recipes_info':recipe_jsons})
+
+
+@api.route('/recipe/get_info', methods=['GET'])
 def retrieve_recipe_info():
     """Returns all ingredients for a recipe
 
@@ -314,7 +368,7 @@ def retrieve_recipe_info():
     """
 
     #request to dict
-    req_content = request.form
+    req_content = request.args
     
     recipe_id_field = req_content.get('recipe_id')
     if recipe_id_field is None:
@@ -343,7 +397,7 @@ def retrieve_recipe_info():
     'author_nick': author_nick, 'author_first': author_first, 'author_last': author_last, 
     'favorites':favorite_nb, 'rating': average_rating})
 
-@api.route('/recipe/get_ingredients', methods=['POST'])
+@api.route('/recipe/get_ingredients', methods=['GET'])
 def retrieve_ingredients():
     """Returns all ingredients for a recipe
 
@@ -354,7 +408,7 @@ def retrieve_ingredients():
     """
 
     #request to dict
-    req_content = request.form
+    req_content = request.args
     
     recipe_id_field = req_content.get('recipe_id')
     if recipe_id_field is None:
@@ -375,7 +429,7 @@ def retrieve_ingredients():
     return json.dumps({'ingredients':ingredients})
 
 
-@api.route('/recipe/get_steps', methods=['POST'])
+@api.route('/recipe/get_steps', methods=['GET'])
 def retrieve_steps():
     """Returns all steps for a recipe in order
 
@@ -386,7 +440,7 @@ def retrieve_steps():
     """
 
     #request to dict
-    req_content = request.form
+    req_content = request.args
     
     recipe_id_field = req_content.get('recipe_id')
     if recipe_id_field is None:
@@ -407,7 +461,7 @@ def retrieve_steps():
     return json.dumps({'steps':steps})
 
 
-@api.route('/recipe/get_utensils', methods=['POST'])
+@api.route('/recipe/get_utensils', methods=['GET'])
 def retrieve_utensils():
     """Returns all utensils for a recipe
 
@@ -418,7 +472,7 @@ def retrieve_utensils():
     """
 
     #request to dict
-    req_content = request.form
+    req_content = request.args
     
     recipe_id_field = req_content.get('recipe_id')
     if recipe_id_field is None:
@@ -438,7 +492,7 @@ def retrieve_utensils():
 
     return json.dumps({'utensils':utensils})
 
-@api.route('/recipe/get_reviews', methods=['POST'])
+@api.route('/recipe/get_reviews', methods=['GET'])
 def retrieve_reviews():
     """Returns all the reviews
 
@@ -449,7 +503,7 @@ def retrieve_reviews():
     """
 
     #request to dict
-    req_content = request.form
+    req_content = request.args
     
     recipe_id_field = req_content.get('recipe_id')
 

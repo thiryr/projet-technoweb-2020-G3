@@ -1,30 +1,13 @@
-{% extends 'root.html' %}
-{% import 'macros.html' as macros %}
-
-{# to be filled with js #}
-
-{% block body %}
+{% extends 'root.html' %} {% import 'macros.html' as macros %} {# to be filled with js #} {%block head%}
+<script src="{{url_for('static',filename='js/forms/drop-down.js')}}"></script>
+{%endblock%} {% block body %}
 
 <div id="sorted">
     <div class="row expand">
         <h2 class="expand">{{title}}</h2>
 
-        {{ macros.dropdown_menu(
-        id="sort-input",
-        label="Trier",
-        options=[
-            {
-                "name": "Les plus récentes d'abord",
-                "value": "recent"
-            },
-            {
-                "name": "Les plus populaires",
-                "value": "trending"
-            }
-        ],
-        default="recent"
-        ) }}
-        
+        {{ macros.dropdown_menu( id="sort-input", label="Trier", options=[ { "name": "Les plus récentes d'abord", "value": "recent" }, { "name": "Les plus populaires", "value": "trending" } ], default="recent" ) }}
+
     </div>
     <div class="center">
         <ul class="recipe-list" id="sorted-list">

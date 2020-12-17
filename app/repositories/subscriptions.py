@@ -3,29 +3,29 @@
 from typing import List
 
 from app import db
-from app.models.subscription import Subscription
-from app.repositories.users import find_user_by_id
+import app.models.subscription as sub_model
+import app.repositories.users as user_rep
 
 
     
-def get_subscriptions_from(userid: int) -> List[Subscription]:
+def get_subscriptions_from(userid: int) -> List[sub_model.Subscription]:
     """
     Returns a list of subscription from that user id or None
     """
-    return Subscription.query.filter_by(subscriber=userid).all()
+    return sub_model.Subscription.query.filter_by(subscriber=userid).all()
 
-def get_subscriptions_to(userid: int) -> List[Subscription]:
+def get_subscriptions_to(userid: int) -> List[sub_model.Subscription]:
     """
     Returns a list of subscriptions to that user id or None
     """
-    return Subscription.query.filter_by(subscriber=userid).all()
+    return sub_model.Subscription.query.filter_by(subscriber=userid).all()
 
 
-def get_specific_subscription(subscriber_id: int, subscribed_id:int) -> Subscription:
+def get_specific_subscription(subscriber_id: int, subscribed_id:int) -> sub_model.Subscription:
     """
     Return the subscription between the two users, or None
     """
-    return Subscription.query.filter_by(subscriber_id=subscriber_id, subscribed_id=subscribed_id).first()
+    return sub_model.Subscription.query.filter_by(subscriber_id=subscriber_id, subscribed_id=subscribed_id).first()
 
 def add_subscription(subscriber_id: int, subscribed_id:int):
     """
@@ -38,21 +38,21 @@ def add_subscription(subscriber_id: int, subscribed_id:int):
     #no double subscription
     if get_specific_subscription(subscriber_id,subscribed_id) is not None:
         raise ValueError(f"Subscription from {subscriber_id} to {subscribed_id} already exists")
-    subscriber = find_user_by_id(subscriber_id)
-    subscribed = find_user_by_id(subscribed_id)
+    subscriber = user_rep.find_user_by_id(subscriber_id)
+    subscribed = user_rep.find_user_by_id(subscribed_id)
     #check that users exist first
     if subscriber is None:
         raise ValueError(f"Subscriber did not exist, ID: {subscriber_id}")
     if subscribed is None:
         raise ValueError(f"Subscribed user did not exist, ID: {subscribed_id}")
-    new_sub = Subscription(subscriber_id, subscribed_id)
+    new_sub = sub_model.Subscription(subscriber_id, subscribed_id)
     db.session.add(new_sub)
     db.session.commit()
 
 def remove_subscription(subscription_id: int) -> None:
     """Removes a subscription with some id from the database
     """
-    sub = Subscription.query.get(subscription_id)
+    sub = sub_model.Subscription.query.get(subscription_id)
     
     if sub is None:
         print("WARNING: Tried to remove a non-existant subscription")

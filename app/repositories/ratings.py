@@ -5,7 +5,7 @@ import app.repositories.users as user_rep
 import app.repositories.usergroups as usergroup_rep
 from app import db
 
-from app.models.rating import Rating
+import app.models.rating as rating_model
 
 from typing import List
 
@@ -15,7 +15,7 @@ MAX_SCORE = 5
 
 
     
-def get_ratings_from(userid: int) -> List[Rating]:
+def get_ratings_from(userid: int) -> List[rating_model.Rating]:
     """
     Returns all favorites from a user, or None
     """
@@ -24,7 +24,7 @@ def get_ratings_from(userid: int) -> List[Rating]:
         raise ValueError("User does not exist")
     if usergroup_rep.find_group_by_id(user.user_group) != usergroup_rep.find_group_by_name('chef'):
         raise ValueError("User is not a chef")
-    return Rating.query.filter_by(user_id=userid).all()
+    return rating_model.Rating.query.filter_by(user_id=userid).all()
 
 def get_average_rating_for(recipeid: int) -> int:
     """Gives the average of all ratings for a recipe
@@ -50,11 +50,11 @@ def get_average_rating_for(recipeid: int) -> int:
         average_rating = 0
     return average_rating
 
-def get_ratings_to(recipeid: int) -> List[Rating]:
+def get_ratings_to(recipeid: int) -> List[rating_model.Rating]:
     """
     Returns a list of ratings to that recipe id, or None
     """
-    return Rating.query.filter_by(recipe_id=recipeid).all()
+    return rating_model.Rating.query.filter_by(recipe_id=recipeid).all()
 
 def get_ratings_number_to(recipeid: int) -> int:
     """Gives the number of ratings for a given recipe
@@ -65,15 +65,15 @@ def get_ratings_number_to(recipeid: int) -> int:
     Returns:
         int: the number of ratings
     """
-    return Rating.query.filter_by(recipe_id=recipeid).count()
+    return rating_model.Rating.query.filter_by(recipe_id=recipeid).count()
 
-def get_specific_rating(userid: int, recipeid:int) -> Rating:
+def get_specific_rating(userid: int, recipeid:int) -> rating_model.Rating:
     """
     Returns the specified rating instance, or None
     """
-    return Rating.query.filter_by(user_id=userid, recipe_id=recipeid).first()
+    return rating_model.Rating.query.filter_by(user_id=userid, recipe_id=recipeid).first()
 
-def add_rating(userid: int, recipeid:int, score:int, comment: str) -> Rating:
+def add_rating(userid: int, recipeid:int, score:int, comment: str) -> rating_model.Rating:
     """
     Adds a rating to the table, provided it is valid
     if one of the targets doesn't exist
@@ -93,7 +93,7 @@ def add_rating(userid: int, recipeid:int, score:int, comment: str) -> Rating:
         raise ValueError(f"User did not exist, ID: {userid}")
     if recipe is None:
         raise ValueError(f"Recipe did not exist, ID: {recipeid}")
-    new_rating = Rating(user_id=userid, recipe_id=recipeid, value=score, comment=comment)
+    new_rating = rating_model.Rating(user_id=userid, recipe_id=recipeid, value=score, comment=comment)
     db.session.add(new_rating)
     db.session.commit()
     #update the average_score of the recipe
@@ -104,7 +104,7 @@ def add_rating(userid: int, recipeid:int, score:int, comment: str) -> Rating:
 def remove_rating(rating_id: int) -> None:
     """Removes a subscription with some id from the database
     """
-    rating = Rating.query.get(rating_id)
+    rating = rating_model.Rating.query.get(rating_id)
     if rating is None:
         print("WARNING: Tried to remove a non-existant favorite")
         return
@@ -116,21 +116,21 @@ def update_rating_score(rating_id: int, new_score: int) -> None:
     """
     if new_score<MIN_SCORE or new_score>MAX_SCORE:
         raise ValueError(f"Score should be in integer range [0,5], was {new_score}")
-    rating = Rating.query.get(rating_id)
+    rating = rating_model.Rating.query.get(rating_id)
     if rating is None:
         print("WARNING: Tried to remove a non-existant favorite")
         return
-    Rating.value = new_score
+    rating_model.Rating.value = new_score
     db.session.commit()
 
 def update_rating_comment(rating_id: int, new_comment: str) -> None:
     """Removes a subscription with some id from the database
     """
-    rating = Rating.query.get(rating_id)
+    rating = rating_model.Rating.query.get(rating_id)
     if rating is None:
         print("WARNING: Tried to remove a non-existant favorite")
         return
-    Rating.comment = new_comment
+    rating_model.Rating.comment = new_comment
     db.session.commit()
 
 def user_has_rating(user_id: int, recipe_id:int) -> bool:
