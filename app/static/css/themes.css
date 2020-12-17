@@ -73,6 +73,9 @@ html.light {
     --outlined-button-border-color:  #acacac;
     --outlined-button-hover-border-color:  white;
 
+    --icon-button-bg-color: #879397;
+    --icon-button-hover-bg-color: #5b6468;
+
     --text-field-border-color: #c9c9c9;
     --text-field-error-color:  #f8605e;
     --text-field-hover-border-color: #868686;
@@ -98,6 +101,9 @@ html.light {
     --subscribe-button-fg-color: #ffffff;
     --subscribe-button-count-fg-color: #000000;
     --subscribe-button-count-bg-color: #d8dfe7;
+
+    --table-odd-row-bg-color: #edeff3;
+    --table-even-row-bg-color: #d0d3da;
 }
 
 
@@ -153,6 +159,9 @@ html.dark {
     --outlined-button-hover-border-color:  white;
     --button-disabled-color: #808080;
 
+    --icon-button-bg-color: #31393d;
+    --icon-button-hover-bg-color: #4b5357;
+
     --text-field-border-color: transparent;
     --text-field-error-color:  #f8605e;
     --text-field-hover-border-color: #cacaca;
@@ -179,4 +188,6 @@ html.dark {
     --subscribe-button-count-fg-color: #000000;
     --subscribe-button-count-bg-color: #e6e6e6;
 
+    --table-odd-row-bg-color: #1c1c1c;
+    --table-even-row-bg-color: #222222;
 }

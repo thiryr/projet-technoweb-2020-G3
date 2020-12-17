@@ -8,7 +8,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-from app.repositories.usergroups import UserGroupRepository
+from app.repositories.usergroups import find_group_by_name
 
 from app import db
 
@@ -22,6 +22,8 @@ class User(UserMixin, db.Model): #type: ignore
     password_hash = Column(st.String(128), nullable=False)
     mail = Column(st.String(255), unique=True, nullable=False)
 
+    avatar_url = Column(st.String(255), nullable=False)
+
     #foreign key
     user_group = Column(st.Integer, ForeignKey('usergroup.id'), nullable=False)
     
@@ -31,14 +33,23 @@ class User(UserMixin, db.Model): #type: ignore
     birthdate = Column(st.Date, nullable=True)
 
 
+    #display_related
+    dark_mode = Column(st.Boolean, nullable=False)
+
+
 
 
     # Init
-    def __init__(self, username: str, password: str, mail: str, usergroup="regular"):
+    def __init__(self, username: str, password: str, mail: str, usergroup="regular", avatar_url="https://i.stack.imgur.com/l60Hf.png"):
         self.username = username
         self.password_hash = generate_password_hash(password)
         self.mail = mail
         self.set_user_group(usergroup)
+
+        self.avatar_url = avatar_url
+
+        #defaults
+        self.dark_mode = True
 
     #password
     def set_password(self, new_password: str):
@@ -59,7 +70,7 @@ class User(UserMixin, db.Model): #type: ignore
 
     #usergroup
     def set_user_group(self, group_name: str):
-        new_user_group = UserGroupRepository.find_group_by_name(group_name)
+        new_user_group = find_group_by_name(group_name)
 
         if new_user_group == None:
             raise ValueError(f"Could not set the user's group to {group_name}, the group could not be found")

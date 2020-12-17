@@ -9,16 +9,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Add roboto font for modern ui -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <!-- Link CSS for a better look -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <!-- JQUERY from host -->
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.js') }}"></script>
+
+    <!-- js valid in all pages -->
+    <script src="{{ url_for('static', filename='js/generic.js') }}"></script>
     <!-- Use FontAwesome for icons -->
     {{ fontawesome_js() }}
     <!-- Additional lines -->
-    {% block head %}
-    {% endblock %}
+    {% block head %} {% endblock %}
 </head>
 
 <!-- Body -->
@@ -35,36 +39,42 @@
                 <!-- Search bar -->
                 <div class="searchbar">
                     <form>
-                        <input type="search" class="searchbar" aria-label="Rechercher" aria-autocomplete="list"
-                            placeholder="Rechercher" name="search">
+                        <input type="search" class="searchbar" aria-label="Rechercher" aria-autocomplete="list" placeholder="Rechercher" name="search">
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
                 <!-- Navbar -->
                 <nav>
-                    <button class="mobile-menu" type="button"><i class="fa fa-bars"></i></button>
-                    {# if user is connected, show the full menu #}
+                    <button class="mobile-menu" type="button"><i class="fa fa-bars"></i></button> {# if user is connected, show the full menu #}
                     <!-- TODO mettre les vrais liens -->
                     {% if user %}
                     <ul>
-                        <li><a selected href="/light">Accueil</a></li>
-                        <li><a>Abonnements</a></li>
-                        <li><a>Favoris</a></li>
-                        <li><a>Mes recettes</a></li>
+                        <li><a {{ 'selected' if page=='home' }} href="/">Accueil</a></li>
+                        <li><a {{ 'selected' if page=='subscriptions' }} href="/subscriptions">Abonnements</a></li>
+                        <li><a {{ 'selected' if page=='favorites' }} href="/favorites">Favoris</a></li>
+                        <li><a {{ 'selected' if page=='my-recipes' }} href="/my-recipes">Mes recettes</a></li>
                         <li><button class="my-account" type="button">
-                                <img class="avatar" src="https://rosieshouse.org/wp-content/uploads/2016/06/avatar-large-square.jpg"
+                                <img class="avatar" src="{{user.avatar_url}}"
                                     alt="avatar">
                             </button>
 
                             <ul class="user-menu">
+                                <li><a>
+                                {% if theme == 'dark' %}
+                                Passer vers le thème blanc
+                                {% else %}
+                                Passer vers le thème sombre
+                                {% endif %}
+                                </a></li>
                                 <li><a>Mon profil</a></li>
-                                <li><a>Utilisateurs</a></li>
+                                {% if user.is_admin %}
+                                <li><a {{ 'selected' if page=='users' }} href='/users'>Utilisateurs</a></li>
+                                {% endif %}
                                 <li><a>Déconnexion</a></li>
                             </ul>
                         </li>
                     </ul>
-                    {# else show the basic menu #}
-                    {% else %}
+                    {# else show the basic menu #} {% else %}
                     <ul>
                         <li><a href='/'>Accueil</a></li>
                         <li><a href='/login'>Se connecter</a></li>
@@ -77,9 +87,7 @@
         </div>
     </header>
     <main>
-        {% block body %}
-        Cette page n'a pas de contenu.
-        {% endblock %}
+        {% block body %} Cette page n'a pas de contenu. {% endblock %}
     </main>
 </body>
 

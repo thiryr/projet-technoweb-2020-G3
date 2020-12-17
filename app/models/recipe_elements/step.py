@@ -14,13 +14,16 @@ class Step(db.Model): #type: ignore
     id = Column(st.Integer, primary_key=True, autoincrement=True)
     text = Column(st.Text, nullable=False)
 
+    order_in_recipe = Column(st.Integer, nullable=False)
+
     recipe_id =  Column(st.Integer, ForeignKey('recipe.id'), nullable=False)
 
 
 
 
     # Init
-    def __init__(self, text:str, recipe_id:int):
+    def __init__(self, text:str, step_number: int, recipe_id:int):
         
         self.recipe_id = recipe_id
+        self.order_in_recipe = step_number
         self.text = text
