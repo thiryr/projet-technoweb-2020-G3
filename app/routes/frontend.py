@@ -116,12 +116,14 @@ def edit_profile_page():
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=get_user_infos(current_user), form=form)
 
 # Users
-# MODIFIER SI BESOIN -> AJOUTER LA FCT get_all_group_infos
+# MODIFIER SI BESOIN
 @website.route('/users')
 @login_required
 def users_page():
-    return render_template('pages/users.html', theme=get_theme(current_user), page='users', user=get_user_infos(current_user), users=get_all_users_infos(), groups=get_all_group_infos())
-
+    if current_user.user_group.is_admin:
+        return render_template('pages/users.html', theme=get_theme(current_user), page='users', user=get_user_infos(current_user), users=get_all_users_infos(), groups=get_all_group_infos())
+    return redirect(url_for('home_page'))
+    
 # Subscriptions
 # OK POUR MOI, MODIFIER SI BESOIN
 @website.route('/subscriptions')
