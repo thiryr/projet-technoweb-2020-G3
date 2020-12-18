@@ -33,12 +33,16 @@ website = Blueprint('frontend', __name__, url_prefix='/')
 
 # Home
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route('/')
 def home_page():
     return render_template('pages/index.html', page='home', theme=get_theme(current_user), user=get_user_infos(current_user))
 
 # Log In
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -54,11 +58,13 @@ def login():
             user = None
 
         if user is None or not user.check_password(form.password.data):
-            form.password.errors.append('Identifiant ou mot de passe invalide.')
+            form.password.errors.append(
+                'Identifiant ou mot de passe invalide.')
             return redirect(url_for('frontend.login'))
 
         if not group_rep.find_group_by_id(user.user_group).can_login:
-            form.password.errors.append("Vous n'avez pas le droit de vous connectez.")
+            form.password.errors.append(
+                "Vous n'avez pas le droit de vous connectez.")
             return redirect(url_for('frontend.login'))
 
         login_user(user)
@@ -66,13 +72,15 @@ def login():
         next_page = request.args.get('next')
         if not next_page:
             next_page = url_for('frontend.home_page')
-        
+
         return redirect(next_page)
 
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=False, form=form)
 
 # Log out
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route('/logout')
 @login_required
 def logout():
@@ -81,6 +89,8 @@ def logout():
 
 # Register
 # A MODIFIER
+
+
 @website.route('/register', methods=['GET', 'POST'])
 def register_page():
     if current_user.is_authenticated:
@@ -90,22 +100,26 @@ def register_page():
     if form.validate_on_submit():
         print("OK")
         try:
-            new_user = user_rep.add_user(username=form.username.data, password=form.password.data, 
-            mail=form.email.data, birthdate=form.birthday.data, first_name=form.first_name.data, last_name=form.last_name.data)
+            new_user = user_rep.add_user(username=form.username.data, password=form.password.data,
+                                         mail=form.email.data, birthdate=form.birthday.data, first_name=form.first_name.data, last_name=form.last_name.data)
             return redirect(url_for('frontend.login'))
         except ValidationError as e:
             form.username.errors.append(e)
-    
+
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=False, form=form)
 
 # Recipe
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route('/recipe/<int:id>')
 def recipe_page(id):
     return render_template('pages/recipe.html', theme=get_theme(current_user), user=get_user_infos(current_user), recipe=get_recipe_infos(current_user, id))
 
 # Recipes
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route('/my-recipes')
 @login_required
 def my_recipes_page():
@@ -113,6 +127,8 @@ def my_recipes_page():
 
 # Edit recipe
 # A MODIFIER
+
+
 @website.route('/edit-recipe', methods=['GET', 'POST'])
 @login_required
 def edit_recipe_page():
@@ -120,9 +136,12 @@ def edit_recipe_page():
 
 # Profile
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route('/profile/<int:id>', methods=['GET', 'POST'])
 def profile_page(id):
     return render_template('pages/profile.html', theme=get_theme(current_user), user=get_user_infos(current_user), viewed_user=get_viewed_user_infos(current_user, id))
+
 
 @website.route('/profile', methods=['GET'])
 @login_required
@@ -139,7 +158,8 @@ def edit_profile_page():
 
     if form.validate_on_submit():
         try:
-            user_rep.edit_profile(form.username.value, form.password.value, form.email.value, form.first_name.value, form.last_name.value, form.birthday.value, form.picture.value, current_user.id)
+            user_rep.edit_profile(form.username.value, form.password.value, form.email.value, form.first_name.value,
+                                  form.last_name.value, form.birthday.value, form.picture.value, current_user.id)
 
             return redirect('profile/%d' % current_user.id)
         except ValueError as e:
@@ -161,15 +181,19 @@ def edit_profile_page():
 
 # Users
 # MODIFIER SI BESOIN
+
+
 @website.route('/users')
 @login_required
 def users_page():
     if group_rep.find_group_by_id(current_user.user_group).is_admin:
         return render_template('pages/users.html', theme=get_theme(current_user), page='users', user=get_user_infos(current_user), users=get_all_users_infos(), groups=get_all_group_infos())
     return redirect(url_for('frontend.home_page'))
-    
+
 # Subscriptions
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route('/subscriptions')
 @login_required
 def subscriptions_page():
@@ -177,6 +201,8 @@ def subscriptions_page():
 
 # Favorites
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route('/favorites')
 @login_required
 def favorites_page():
@@ -184,12 +210,16 @@ def favorites_page():
 
 # Search
 # A MODIFIER
+
+
 @website.route('/search')
 def search_page():
     return render_template('pages/sorted.html', page='search', title='Résultat de la recherche', theme=get_theme(current_user), user=get_user_infos(current_user))
 
 # 404 error
 # OK POUR MOI, MODIFIER SI BESOIN
+
+
 @website.route("/<path:invalid_path>")
 def error_page(*args, **kwargs):
     # TODO get color theme and user
@@ -197,9 +227,10 @@ def error_page(*args, **kwargs):
 
 # FUNCTIONS #
 
+
 def get_theme(user):
     # function which returns the current user's theme ; Returns dark theme by default if no user is logged in
-    
+
     if user.is_authenticated:
         if user.dark_mode:
             return 'dark'
@@ -207,12 +238,13 @@ def get_theme(user):
             return 'light'
     return 'dark'
 
+
 def get_user_infos(user):
     # function which returns a dictionary containing the current user's basic infos, or False if the user is not authenticated
 
     if user.is_authenticated:
         dict = {}
-        
+
         dict['user_id'] = user.id
 
         # Check if user is chef
@@ -231,6 +263,7 @@ def get_user_infos(user):
 
     return False
 
+
 def get_all_group_infos():
     # function which returns a list of dictionaries containing all group infos
 
@@ -246,6 +279,7 @@ def get_all_group_infos():
         group_list.append(group_dict)
 
     return group_list
+
 
 def get_all_users_infos():
     # function which returns a list of dictionaries containing all user infos
@@ -264,16 +298,7 @@ def get_all_users_infos():
         user_dict['ranking'] = user_rep.get_average_user_rating_for(u.id)
 
         # full name
-        # A VERIFIER SI NOM VIDE EST NONE OU ''
-        if u.first_name == None:
-            fn = ''
-        else:
-            fn = u.first_name
-        if u.last_name == None:
-            ln = ''
-        else:
-            ln = u.last_name
-        user_dict['name'] = '%s %s'%(fn, ln)
+        user_dict['name'] = display_name('', u.first_name, u.last_name)
 
         # avatar url
         user_dict['avatar_url'] = u.avatar_url
@@ -282,11 +307,12 @@ def get_all_users_infos():
         user_dict['usergroup'] = group_rep.find_group_by_id(u.user_group).name
 
         # profile url
-        user_dict['profile_url'] = '/profile/%d'%u.id
+        user_dict['profile_url'] = '/profile/%d' % u.id
 
         dict_list.append(user_dict)
 
     return dict_list
+
 
 def get_viewed_user_infos(user, id):
     # function which returns a dictionary containing the viewed user's profile infos
@@ -301,16 +327,7 @@ def get_viewed_user_infos(user, id):
     dict['ranking'] = user_rep.get_average_user_rating_for(viewed_user.id)
 
     # full name
-    # A VERIFIER SI NOM VIDE EST NONE OU ''
-    if viewed_user.first_name is None:
-        fn = ''
-    else:
-        fn = viewed_user.first_name
-    if viewed_user.last_name is None:
-        ln = ''
-    else:
-        ln = viewed_user.last_name
-    dict['name'] = '%s %s'%(fn, ln)
+    dict['name'] = display_name('', viewed_user.first_name, viewed_user.last_name)
 
     # avatar url
     dict['avatar_url'] = viewed_user.avatar_url
@@ -329,7 +346,8 @@ def get_viewed_user_infos(user, id):
         dict['is_chef'] = False
 
     # is admin
-    dict['is_admin'] = group_rep.find_group_by_id(viewed_user.user_group).is_admin
+    dict['is_admin'] = group_rep.find_group_by_id(
+        viewed_user.user_group).is_admin
 
     # nb subscribers
     dict['nb_subscribers'] = sub_rep.get_subscriptions_to(viewed_user.id)
@@ -351,34 +369,37 @@ def get_viewed_user_infos(user, id):
         current_recipe['name'] = r.name
         current_recipe['average_rating'] = r.average_score
         current_recipe['picture'] = r.image_url
-        current_recipe['url'] = '/recipe/%s'%r.id
+        current_recipe['url'] = '/recipe/%s' % r.id
         current_recipe['nb_favorites'] = r.follow_number
 
         favorited = False
         if not current_user.is_anonymous:
             favorited = fav_rep.user_has_favorite(user.id, r.id)
-        
+
         current_recipe['current_user_favorited'] = favorited
 
         dict['recipes'].append(current_recipe)
 
     return dict
 
+
 def get_recipe_infos(user, id):
     # function which returns a dictionary containing the viewed recipe's infos
 
     recipe = recipe_rep.get_recipe_from_id(id)
+
     author = user_rep.find_user_by_id(recipe.author)
+
     dict = {}
 
     # title
     dict['title'] = recipe.name
 
     # author name
-    dict['author_name'] = author.username
-
+    dict['author_name'] = display_name(
+        author.username, author.first_name, author.last_name)
     # author url
-    dict['author_url'] = '/profile/%d'%author.id
+    dict['author_url'] = '/profile/%d' % author.id
 
     # is chef
     if group_rep.find_group_by_id(author.user_group).name == 'chef':
@@ -420,7 +441,7 @@ def get_recipe_infos(user, id):
     favorited = False
     if not current_user.is_anonymous:
         favorited = fav_rep.user_has_favorite(user.id, recipe.id)
-    
+
     dict['current_user_favorited'] = favorited
 
     # ingredients
@@ -445,14 +466,29 @@ def get_recipe_infos(user, id):
     dict['comments'] = []
     comments = rating_rep.get_ratings_to(recipe.id)
     for c in comments:
+        comment_author = user_rep.find_user_by_id(c.user_id)
+
         current_comment = {}
         current_comment['user_id'] = c.user_id
         current_comment['comment_id'] = c.id
-        current_comment['avatar_url'] = user_rep.find_user_by_id(c.user_id).avatar_url
-        current_comment['username'] = user_rep.find_user_by_id(c.user_id).username
+        current_comment['avatar_url'] = comment_author.avatar_url
+        current_comment['username'] = display_name(
+            comment_author.username, comment_author.first_name, comment_author.last_name)
         current_comment['rating'] = c.value
         current_comment['message'] = c.comment
 
         dict['comments'].append(current_comment)
 
     return dict
+
+
+def display_name(pseudo, first_name, last_name):
+
+    if not first_name and not last_name:
+        return pseudo.strip(' ')
+    else:
+        # Filter out none values
+        first_name = first_name if first_name != None else ''
+        last_name = last_name if last_name != None else ''
+
+        return " ".join((first_name, last_name)).strip(' ')
