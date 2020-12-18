@@ -42,7 +42,7 @@ def home_page():
 @website.route('/login', methods=['GET', 'POST'])
 def login_page():
     if current_user.is_authenticated:
-        return redirect(url_for('home_page'))
+        return redirect(url_for('frontend.home_page'))
 
     form = SignInForm()
     if form.validate_on_submit():
@@ -57,7 +57,7 @@ def login_page():
             form.password.errors.append('Identifiant ou mot de passe invalide.')
             return redirect(url_for('login'))
 
-        if not user.user_group.can_login:
+        if not group_rep.find_group_by_id(user.user_group).can_login:
             form.password.errors.append("Vous n'avez pas le droit de vous connectez.")
             return redirect(url_for('login'))
 
@@ -65,7 +65,7 @@ def login_page():
 
         next_page = request.args.get('next')
         if not next_page or url_for(next_page).netloc != '':
-            next_page = url_for('home_page')
+            next_page = url_for('frontend.home_page')
         
         return redirect(next_page)
 
@@ -77,14 +77,14 @@ def login_page():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('home_page'))
+    return redirect(url_for('frontend.home_page'))
 
 # Register
 # A MODIFIER
 @website.route('/register', methods=['GET', 'POST'])
 def register_page():
     if current_user.is_authenticated:
-        return redirect(url_for('home_page'))
+        return redirect(url_for('frontend.home_page'))
 
     form = RegisterForm()
     if form.validate_on_submit():
@@ -161,7 +161,7 @@ def edit_profile_page():
 def users_page():
     if current_user.user_group.is_admin:
         return render_template('pages/users.html', theme=get_theme(current_user), page='users', user=get_user_infos(current_user), users=get_all_users_infos(), groups=get_all_group_infos())
-    return redirect(url_for('home_page'))
+    return redirect(url_for('frontend.home_page'))
     
 # Subscriptions
 # OK POUR MOI, MODIFIER SI BESOIN
@@ -211,13 +211,13 @@ def get_user_infos(user):
         dict['user_id'] = user.id
 
         # Check if user is chef
-        if user.user_group.name == 'chef':
+        if group_rep.find_group_by_id(user.user_group).name == 'chef':
             dict['is_chef'] = True
         else:
             dict['is_chef'] = False
 
         # Check if user is admin
-        dict['is_admin'] = user.user_group.is_admin
+        dict['is_admin'] = group_rep.find_group_by_id(user.user_group).is_admin
 
         # Check avatar url
         dict['avatar_url'] = user.avatar_url
@@ -256,7 +256,7 @@ def get_all_users_infos():
         user_dict['pseudo'] = u.username
 
         # ranking
-        user_dict['ranking'] = rating_rep.get_ratings_from(u.id)
+        user_dict['ranking'] = user_rep.get_average_user_rating_for(u.id)
 
         # full name
         # A VERIFIER SI NOM VIDE EST NONE OU ''
@@ -318,7 +318,7 @@ def get_viewed_user_infos(user, id):
     dict['birthday'] = viewed_user.birthdate
 
     # is chef
-    if viewed_user.user_group.name == 'chef':
+    if group_rep.find_group_by_id(viewed_user.user_group).name == 'chef':
         dict['is_chef'] = True
     else:
         dict['is_chef'] = False
@@ -355,7 +355,7 @@ def get_recipe_infos(user, id):
     # function which returns a dictionary containing the viewed recipe's infos
 
     recipe = recipe_rep.get_recipe_from_id(id)
-    author = recipe.author
+    author = user_rep.find_user_by_id(recipe.author)
     dict = {}
 
     # title
@@ -368,7 +368,7 @@ def get_recipe_infos(user, id):
     dict['author_url'] = '/profile/%d'%author.id
 
     # is chef
-    if author.user_group.name == 'chef':
+    if group_rep.find_group_by_id(author.user_group).name == 'chef':
         dict['author_is_chef'] = True
     else:
         dict['author_is_chef'] = False

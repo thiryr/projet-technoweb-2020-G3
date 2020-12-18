@@ -4,6 +4,11 @@ from app import db, login_manager
 
 import app.models.user as user_model
 
+import app.models.rating as rating_model
+import app.models.recipe as recipe_model
+
+import app.repositories.ratings as rating_rep
+
 
     
 def add_user(username: str, password: str, mail: str, usergroup='regular', avatar_url = "https://i.stack.imgur.com/l60Hf.png", birthdate=None, first_name=None, last_name=None):
@@ -114,3 +119,34 @@ def edit_profile(username, password, email, first_name, last_name, birthday, pic
     user.avatar_url = picture
 
     db.session.commit()
+
+
+def get_average_user_rating_for(userid: int) -> int:
+    """Gives the average of all ratings for a user, 0 if none
+    Args:
+        userid (int): a valid user id
+    Returns:
+        int: the average of ratings or 0 if no rating OR invalid recipeid
+    """
+    #get ratings or no rating if invalid id
+    try:
+        user = find_user_by_id(recipeid)
+    except ValueError:
+        return 0
+    
+    user_ratings = rating_model.query.join(
+        recipe_model.Recipe, rating_model.Rating.recipe_id == recipe_model.Recipe.id).join(
+        user_model.User, user_model.User.id == recipe_model.Recipe.author).distinct().all()
+
+    ratings = map(lambda rate: rate.value, user_ratings)
+    #compute average
+    rating_sum = 0
+    rating_count = 0
+    for rating in ratings:
+        rating_sum+=rating
+        rating_count+=1
+    if rating_count!=0:
+        average_rating = int(round(rating_sum/rating_count))
+    else:
+        average_rating = 0
+    return average_rating
