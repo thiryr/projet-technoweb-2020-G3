@@ -187,5 +187,5 @@ class EditProfileForm(RegisterForm):
 
     @staticmethod
     def validate_picture(form, field):
-        if (field.data.content_type not in ('image/png', 'image/jpg', 'image/jpeg')):
+        if (field.data and field.data.content_type not in ('image/png', 'image/jpg', 'image/jpeg')):
             raise ValidationError('Ce type de fichier n\'est pas supporté')

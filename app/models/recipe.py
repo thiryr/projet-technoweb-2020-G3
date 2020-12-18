@@ -63,7 +63,7 @@ class Recipe(db.Model):  # type: ignore
         
 
         if image_url is None:
-            image_url = "https://i2.wp.com/www.foodrepublic.com/wp-content/uploads/2012/05/testkitchen_argentinesteak.jpg?resize=1280%2C%20560&ssl=1"
+            image_url = "/static/recipes/0.png"
 
 
 def parse_date(date: str) -> datetime.date:
