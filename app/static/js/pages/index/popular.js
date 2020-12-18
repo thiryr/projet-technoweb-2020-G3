@@ -91,7 +91,7 @@ function display_recipe(recipe) {
         recipe.author_nick, recipe.author_first, recipe.author_last, recipe.author_chef,
         recipe.average_rating, recipe.favorites, recipe.is_favorite)
 
-    $("#more-trending").before($(filled_template))
+    $("#trending-list").append($(filled_template))
 
 }
 
