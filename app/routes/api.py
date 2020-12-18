@@ -313,32 +313,29 @@ def retrieve_user_recipes():
 
 
 @api.route('/recipe/get_popular', methods=['GET'])
-@login_required
 def retrieve_popular_recipes():
     """Returns all the information necessary to display the user's subscription recipes
 
     Argument: 
-        Expects sorting mode '
+        Expects 'number', number of recipes
 
     Returns: json {'recipes_info':
     [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
     'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
     """
-    current_id = current_user.id
 
-    request_content = request.args
-
-    sorting_mode = request_content.get('sorting_mode')
-
-    recipes_query = recipe_model.Recipe.query.join(sub_model.Subscription, sub_model.Subscription.subscriber_id == current_id 
-    and sub_model.Subscription.subscribed_id==recipe_model.Recipe.author
-    and (recipe_model.Recipe.is_public or recipe_model.Recipe.author == current_id))
-
-    if sorting_mode is not None and sorting_mode == 'trending':
-        recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
+    number = request.args.get('number')
+    
+    if number is None:
+        number = 20
     else:
-        recipes = recipes_query.order_by(recipe_model.Recipe.publicated_on.desc()).all()
-        
+        try:
+            number = int(number)
+        except Exception:
+            number = 20
+    
+    recipes = recipe_rep.get_top_recipes(number)
+
     recipe_jsons = []
 
     for recipe in recipes:
@@ -346,7 +343,48 @@ def retrieve_popular_recipes():
         author = user_rep.find_user_by_id(recipe.author)
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
-        current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
+        if not current_user.is_anonymous:
+            current_favorite = fav_rep.user_has_favorite(current_user.id, recipe.id)
+        else:
+            current_favorite = False
+
+
+        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+         'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
+         'img_url': recipe.image_url})
+         
+    return json.dumps({'recipes_info':recipe_jsons})
+
+@api.route('/recipe/get_recommendation', methods=['GET'])
+def retrieve_recommendation():
+    """Returns all the information necessary to display the user's subscription recipes
+
+
+    Returns: json {'recipes_info':
+    [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
+    """
+
+    current_id = -1
+    if not current_user.is_anonymous:
+        current_id = current_user.id
+
+    #recommend based on userid, if not logged in -> random recipe
+    recipes = []
+    recipes.append(recipe_rep.recommend_random_recipe_to(current_id))
+
+    recipe_jsons = []
+
+    for recipe in recipes:
+        #get key elements
+        author = user_rep.find_user_by_id(recipe.author)
+        ratings_average = rating_rep.get_average_rating_for(recipe.id)
+        favorite_number = fav_rep.get_favorites_number_to(recipe.id)
+        if not current_user.is_anonymous:
+            current_favorite = fav_rep.user_has_favorite(current_user.id, recipe.id)
+        else:
+            current_favorite = False
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
@@ -354,9 +392,60 @@ def retrieve_popular_recipes():
          'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
          'img_url': recipe.image_url})
 
+    return json.dumps({'recipes_info':recipe_jsons})
 
+@api.route('/recipe/get_pinned', methods=['GET'])
+def retrieve_pinned():
+    """Returns all the information necessary to display the user's subscription recipes
+
+
+    Returns: json {'recipes_info':
+    [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
+    """
+
+    #recommend based on userid, if not logged in -> random recipe
+    recipes = recipe_rep.get_pinned_recipes()
+
+    recipe_jsons = []
+
+    for recipe in recipes:
+        #get key elements
+        author = user_rep.find_user_by_id(recipe.author)
+        ratings_average = rating_rep.get_average_rating_for(recipe.id)
+        favorite_number = fav_rep.get_favorites_number_to(recipe.id)
+        if not current_user.is_anonymous:
+            current_favorite = fav_rep.user_has_favorite(current_user.id, recipe.id)
+        else:
+            current_favorite = False
+
+
+        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+         'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
+         'img_url': recipe.image_url})
 
     return json.dumps({'recipes_info':recipe_jsons})
+
+@api.route('/recipe/switch_pin', methods=['POST'])
+def switch_pin():
+    """pins or unpins a gived recipe
+
+        expects 'recipe_id'
+
+        sens back the new state or 404
+    """
+    recipe_id = request.form.get('recipe_id')
+    recipe = recipe_rep.get_recipe_from_id(recipe_id)
+    if recipe is None:
+        return 'Invalid recipe',400
+    
+    if recipe.pinned:
+        recipe_rep.unpin_recipe(recipe.id)
+    else:
+        recipe_rep.pin_recipe(recipe.id)
+    
+    return json.dumps({'pinned':recipe.pinned})
 
 @api.route('/recipe/subscription_sorted', methods=['GET'])
 @login_required
