@@ -578,47 +578,6 @@ def retrieve_sorted_favs():
 
     return json.dumps({'recipes_info':recipe_jsons})
 
-
-@api.route('/recipe/switch_visibility', methods=['POST'])
-@login_required
-def switch_visibility():
-    """Returns all the information necessary to display the user's favorite recipes
-
-    Argument: 
-        Expects 'recipe_id'
-
-    Returns: 'ok',200
-    """
-    current_id = current_user.id
-
-    request_content = request.args
-
-    sorting_mode = request_content.get('sorting_mode')
-
-    recipes_query = recipe_model.Recipe.query.join(fav_model.Favorite, fav_model.Favorite.user_id == current_id and recipe_model.Recipe.id==fav_model.Favorite.recipe_id and recipe_model.Recipe.is_public)
-
-    if sorting_mode is not None and sorting_mode == 'trending':
-        recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
-    else:
-        recipes = recipes_query.order_by(recipe_model.Recipe.publicated_on.desc()).all()
-        
-    recipe_jsons = []
-
-    for recipe in recipes:
-        #get key elements
-        author = user_rep.find_user_by_id(recipe.author)
-        ratings_average = rating_rep.get_average_rating_for(recipe.id)
-        favorite_number = fav_rep.get_favorites_number_to(recipe.id)
-        current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
-
-
-        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
-         'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
-         'img_url': recipe.image_url})
-
-    return json.dumps({'recipes_info':recipe_jsons})
-
 #Favorite-related routes
 
 @api.route('/favorite/switch', methods=['POST'])
