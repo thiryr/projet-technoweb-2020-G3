@@ -17,4 +17,4 @@ class Config:
     FONTAWESOME_TYPE='svg/js'
 
     # Upload folder for files
-    UPLOAD_FOLDER=path.join('.', 'app', 'static', 'img')
+    UPLOAD_FOLDER=path.join('.', 'app', 'static', 'img' )
