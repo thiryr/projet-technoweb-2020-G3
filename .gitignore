@@ -4,3 +4,5 @@ __pycache__
 .idea
 *.sqlite3
 **/*.db
+app/static/img/profiles
+app/static/img/recipes

@@ -99,6 +99,7 @@
     </div>
 </article>
 
+{% if recipe.comments|length > 0 or user.is_chef %}
 <div class="recipe-comments">
     <h2>Commentaires des chefs</h2>
     <ul id="comments">
@@ -121,7 +122,7 @@
             </div>
         </li>
         {% endif %}
-        
+
         <!-- other comments here -->
         {% for comment in recipe.comments %}
         <li value="{{comment.comment_id}}" id="{{'comment-' + comment.comment_id|string}}" class="comment row" >
@@ -142,4 +143,5 @@
         {% endfor %}
     </ul>
 </div>
+{% endif %}
 {% endblock %}

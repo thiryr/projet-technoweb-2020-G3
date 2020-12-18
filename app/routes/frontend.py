@@ -3,6 +3,7 @@ This file contains the definition of the "frontend" blueprint containing
 all the routes related to the frontend (pages).
 """
 
+from werkzeug.utils import secure_filename
 from app.forms import RegisterForm, SignInForm, ValidationError, EditProfileForm
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
@@ -157,25 +158,37 @@ def edit_profile_page():
     form = EditProfileForm()
 
     if form.validate_on_submit():
-        try:
-            user_rep.edit_profile(form.username.value, form.password.value, form.email.value, form.first_name.value,
-                                  form.last_name.value, form.birthday.value, form.picture.value, current_user.id)
+        if form.picture.data.content_type in ('image/png', 'image/jpg', 'image/jpeg'):
+            try:
+                user_rep.edit_profile(
+                    form.username.data,
+                    form.password.data,
+                    form.email.data,
+                    form.first_name.data,
+                    form.last_name.data, 
+                    form.birthday.data,
+                    form.picture.data,
+                    current_user.id
+                )
 
-            return redirect('profile/%d' % current_user.id)
-        except ValueError as e:
-            if 'pseudo' in str(e):
-                form.username.errors.append(e)
-            elif 'email' in str(e):
-                form.email.errors.append(e)
+                return redirect('profile/%d' % current_user.id)
+            except ValueError as e:
+                if 'pseudo' in str(e):
+                    form.username.errors.append(e)
+                elif 'email' in str(e):
+                    form.email.errors.append(e)
+        else:
+            form.picture.errors.append('Ce type de fichier n\'est pas supporté.')
 
     else:
         # Fill form with existing data
-        form.username.value = current_user.username
-        form.email.value = current_user.mail
-        form.first_name.value = current_user.first_name
-        form.last_name.value = current_user.last_name
-        form.birthday.value = current_user.birthdate
-        form.picture.value = current_user.avatar_url
+        form.username.data = current_user.username
+        form.email.data = current_user.mail
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
+        form.birthday.data = current_user.birthdate
+        form.picture.data = current_user.avatar_url
+
 
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=get_user_infos(current_user), form=form)
 

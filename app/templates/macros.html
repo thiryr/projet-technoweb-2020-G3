@@ -28,7 +28,7 @@
 
 {# WTForm macro #}
 {% macro wtform(form) %}
-<form class="wtform" method='{{form.method if form.method else "post"}}' {% if form.action %} action="{{form.action}}"
+<form enctype="multipart/form-data" class="wtform" method='{{form.method if form.method else "post"}}' {% if form.action %} action="{{form.action}}"
     {% endif %} novalidate>
 
     {% if form.title != None %}

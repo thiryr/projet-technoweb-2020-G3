@@ -1,8 +1,9 @@
 """This file defines several functions to handle a group of Users"""
 
+from app.utils import save_picture
 from datetime import datetime
-from app import db, login_manager
 
+from app import db, login_manager
 import app.models.user as user_model
 
 import app.models.rating as rating_model
@@ -18,7 +19,7 @@ def add_user(username: str, password: str, mail: str, usergroup: str = 'regular'
         raise ValueError('A user already uses that mail address')
     # Create a new user
     new_user = user_model.User(username, password, mail, usergroup, avatar_url)
-    
+
     if birthdate:
         new_user.birthdate = datetime.strptime(birthdate, '%d/%m/%Y')
 
@@ -95,12 +96,12 @@ def set_user_darkmode(userid: int, darkmode=True) -> None:
     db.session.commit()
 
 
-def edit_profile(username, password, email, first_name, last_name, birthday, picture, user_id):
+def edit_profile(username, password, email, first_name, last_name, birthday: str, picture, user_id):
 
     user = find_user_by_id(user_id)
 
     # username check
-    if find_user_by_username(username) != None and user.username != username:
+    if find_user_by_username(username) is not None and user.username != username:
         raise ValueError('Ce pseudo est déjà utilisé.')
     else:
         user.username = username
@@ -110,7 +111,7 @@ def edit_profile(username, password, email, first_name, last_name, birthday, pic
         user.set_password(password)
 
     # email
-    if find_user_by_mail(email) != None and user.mail != email:
+    if find_user_by_mail(email) is not None and user.mail != email:
         raise ValueError('Cette adresse email est déjà utilisée.')
     else:
         user.mail = email
@@ -122,10 +123,11 @@ def edit_profile(username, password, email, first_name, last_name, birthday, pic
     user.last_name = last_name
 
     # birthday
-    user.birthdate = birthday
+    if birthday:
+        user.birthdate = datetime.strptime(birthday, '%d/%m/%Y')
 
     # picture
-    user.avatar_url = picture
+    user.avatar_url = save_picture(picture, 'profile', user_id)    
 
     db.session.commit()
 

@@ -119,7 +119,6 @@ class RegisterForm(FlaskForm):
     # Use a StringField and validate manually (see below)
     birthday = StringField(
         label='Date de naissance',
-        validators=[InputRequired('Ce champ est obligatoire'), ],
         description='Le format est JJ/MM/AAAA.',
         render_kw={"placeholder": "12/12/1980"}
     )
@@ -136,15 +135,16 @@ class RegisterForm(FlaskForm):
     # That way, we can customize the error message
     @staticmethod
     def validate_birthday(form, field):
-        try:
-            birthday = datetime.strptime(field.data, '%d/%m/%Y')
-        except Exception:
-            raise ValidationError(
-                'Erreur : Date invalide. Le format est JJ/MM/AAAA.')
+        if field.data != "":
+            try:
+                birthday = datetime.strptime(field.data, '%d/%m/%Y')
+            except Exception:
+                raise ValidationError(
+                    'Erreur : Date invalide. Le format est JJ/MM/AAAA.')
 
-        if birthday >= datetime.now():
-            raise ValidationError(
-                'Erreur : Date invalide. La date doit être antérieure à aujourd\'hui.')
+            if birthday >= datetime.now():
+                raise ValidationError(
+                    'Erreur : Date invalide. La date doit être antérieure à aujourd\'hui.')
 
     # Validate second password : must be equal to the first one
     @staticmethod
