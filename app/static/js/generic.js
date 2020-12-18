@@ -126,3 +126,19 @@ function displayName(pseudo, firstName, lastName) {
 function isConnected() {
     return $("body").attr('value') === 'connected';
 }
+
+function display_recipe(recipe, destination_id) {
+    let recipe_element = recipeThumbnail(
+        recipe.recipe_name,
+        recipe.author_id,
+        recipe.img_url,
+        recipe.favorites,
+        recipe.is_favorite,
+        displayName(recipe.author_nick, recipe.author_first, recipe.author_last), 
+        recipe.author_id, 
+        recipe.author_chef,
+        recipe.average_rating
+    )
+
+    $(destination_id).append(recipe_element)
+}

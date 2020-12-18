@@ -15,27 +15,9 @@ function get_recommended_profile_url(id) {
 }
 
 
-
-function display_recommended_recipe(recipe) {
-    let recipe_element = recipeThumbnail(
-        recipe.recipe_name,
-        recipe.author_id,
-        recipe.img_url,
-        recipe.favorites,
-        recipe.is_favorite,
-        displayName(recipe.author_nick, recipe.author_first, recipe.author_last), 
-        recipe.author_id, 
-        recipe.author_chef,
-        recipe.average_rating
-    )
-
-    $("#recommended-list").append(recipe_element)
-
-}
-
 function display_recommended_recipes(recipes_json) {
     recipes = recipes_json.recipes_info
-    recipes.forEach(recipe => display_recommended_recipe(recipe))
+    recipes.forEach(recipe => display_recipe(recipe, "#recommended-list"))
 }
 
 function retrieve_recommended_recipes() {

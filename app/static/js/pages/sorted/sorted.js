@@ -28,28 +28,9 @@ function get_profile_url(id) {
     return `../profile/${id}`
 }
 
-
-function display_recipe(recipe) {
-    let recipe_element = recipeThumbnail(
-        recipe.recipe_name,
-        recipe.author_id,
-        recipe.img_url,
-        recipe.favorites,
-        recipe.is_favorite,
-        displayName(recipe.author_nick, recipe.author_first, recipe.author_last), 
-        recipe.author_id, 
-        recipe.author_chef,
-        recipe.average_rating
-    );
-
-
-    $("#sorted-list").append(recipe_element)
-
-}
-
 function display_recipes(recipes_json) {
     recipes = recipes_json.recipes_info
-    recipes.forEach(recipe => display_recipe(recipe))
+    recipes.forEach(recipe => display_recipe(recipe, "#sorted-list"))
 }
 
 function retrieve_recipes() {

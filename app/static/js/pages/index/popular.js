@@ -1,8 +1,8 @@
-jQuery(function() {
+jQuery(function () {
     starting_popular_number = 20
     retrieve_recipes()
 
-    $("#more-trending").on("click", function() {
+    $("#more-trending").on("click", function () {
         starting_popular_number += 10
         retrieve_recipes()
     })
@@ -19,33 +19,14 @@ function get_profile_url(id) {
 }
 
 
-
-function display_recipe(recipe) {
-    let recipe_element = recipeThumbnail(
-        recipe.recipe_name,
-        recipe.author_id,
-        recipe.img_url,
-        recipe.favorites,
-        recipe.is_favorite,
-        displayName(recipe.author_nick, recipe.author_first, recipe.author_last), 
-        recipe.author_id, 
-        recipe.author_chef,
-        recipe.average_rating
-    )
-
-
-    $("#trending-list").append(recipe_element)
-
-}
-
 function display_recipes(recipes_json) {
     recipes = recipes_json.recipes_info
-    recipes.forEach(recipe => display_recipe(recipe))
+    recipes.forEach(recipe => display_recipe(recipe, "#trending-list"))
 }
 
 function retrieve_recipes() {
 
-    $.get('/api/recipe/get_popular', { 'number': starting_popular_number }).done(function(recipes) {
+    $.get('/api/recipe/get_popular', { 'number': starting_popular_number }).done(function (recipes) {
         //display them
 
         $("#trending-list").find(".recipe").remove()
@@ -59,7 +40,7 @@ function retrieve_recipes() {
             $("#more-trending").remove()
         }
 
-    }).fail(function() {
+    }).fail(function () {
         var new_error = $('<p>there was an issue, try again in a few seconds</p>').addClass("helper-text error")
         $("#trending-list").append($(new_error))
 
