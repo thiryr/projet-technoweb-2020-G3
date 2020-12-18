@@ -66,11 +66,11 @@
                                 Passer vers le thème sombre
                                 {% endif %}
                                 </a></li>
-                                <li><a>Mon profil</a></li>
+                                <li><a href="/profile/{user.user_id}">Mon profil</a></li>
                                 {% if user.is_admin %}
                                 <li><a {{ 'selected' if page=='users' }} href='/users'>Utilisateurs</a></li>
                                 {% endif %}
-                                <li><a>Déconnexion</a></li>
+                                <li><a href="/logout">Déconnexion</a></li>
                             </ul>
                         </li>
                     </ul>

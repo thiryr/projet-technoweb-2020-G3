@@ -1,7 +1,12 @@
-{% extends 'root.html' %} {% import 'macros.html' as macros %} {% block head %}
+{% extends 'root.html' %} 
+{% import 'macros.html' as macros %} 
+
+{% block head %}
 <script src="{{url_for('static',filename='js/pages/recipe/star-rating.js')}}"></script>
 <script src="{{url_for('static',filename='js/pages/recipe/top-buttons.js')}}"></script>
-{% endblock %} {% block body %}
+{% endblock %} 
+
+{% block body %}
 <article class="recipe-detail">
 
     {% if user != None and (recipe.current_user_is_author or user.is_admin) %}
@@ -39,7 +44,8 @@
 
             <div class="row">
                 <span>Par</span>
-                <a class='author' id='author' href="{{ recipe.author_url }}">{{ recipe.author_name }}</a> {% if recipe.author_is_chef %}
+                <a class='author' id='author' href="{{ recipe.author_url }}">{{ recipe.author_name }}</a> 
+                {% if recipe.author_is_chef %}
                 <div class="badge">Chef</div>
                 {% endif %}
             </div>
@@ -47,8 +53,10 @@
             <div class="row">
                 {% if recipe.comments|length > 0 %}
                 <span>Note des chefs : </span> {{ macros.rating(recipe.average_rating) }}
-                <span>({{recipe.comments|length}})</span> {% else %}
-                <span>Aucune évaluation</span> {% endif %}
+                <span>({{recipe.comments|length}})</span> 
+                {% else %}
+                <span>Aucune évaluation</span> 
+                {% endif %}
             </div>
 
             <div class="row">
@@ -113,6 +121,7 @@
             </div>
         </li>
         {% endif %}
+        
         <!-- other comments here -->
         {% for comment in recipe.comments %}
         <li value="{{comment.comment_id}}" id="{{'comment-' + comment.comment_id|string}}" class="comment row" >
