@@ -83,7 +83,7 @@ except ValueError:
 
 #default user (make sure admin group is added before it)
 try:
-    add_user('admin','admin','admin@localhost',usergroup='admin')
+    add_user(username='admin',password='admin',mail='admin@localhost',usergroup='admin')
 except ValueError:
     pass
 
