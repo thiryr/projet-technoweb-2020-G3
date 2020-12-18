@@ -201,6 +201,7 @@ def switch_recipe_visibility(recipeid: int, set_public: bool) -> bool:
         raise ValueError(f"Tried to switch visibility of non-existant recipe {recipeid}")
     
     recipe.is_public = set_public
+    
     db.session.commit()
 
     return recipe.is_public

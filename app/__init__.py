@@ -87,6 +87,12 @@ try:
 except ValueError:
     pass
 
+try:
+    add_usergroup('chef')
+except ValueError:
+    pass
+
+
 #default user (make sure admin group is added before it)
 try:
     add_user('admin','admin','admin@localhost',usergroup='admin')

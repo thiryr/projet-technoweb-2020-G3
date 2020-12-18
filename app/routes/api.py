@@ -45,29 +45,6 @@ def ping():
     return 'OK'
 
 
-# Login
-@api.route('/login', methods=['POST','GET'])
-def login():
-    user = user_rep.find_user_by_username('admin')
-    password = 'admin'
-
-    if user == None:
-        return 'No such user', 400
-
-    if not user.check_password(password):
-        return 'Password did not match', 400
-
-    login_user(user)
-    return redirect('/')
-
-
-
-# example for extracting data from the url path
-@api.route('/new/<int:name>')
-@login_required
-def create(name: int):
-    return f'Created nb {name} !'
-
 
 # User-related operations
 
@@ -166,6 +143,8 @@ def remove_subscription():
 
 
 
+
+
 #Recipe-related routes
 
 @api.route('/recipe/new', methods=['POST'])
@@ -217,6 +196,23 @@ def new_recipe():
         return 'Could not compile the recipe',511
     
     return json.dumps({'new_id':recipe.id})
+
+@api.route('/recipe/remove', methods=['POST'])
+def remove_recipe():
+    """pins or unpins a gived recipe
+
+        expects 'recipe_id'
+
+        sens back the new state or 404
+    """
+    recipe_id = request.form.get('recipe_id')
+    recipe = recipe_rep.get_recipe_from_id(recipe_id)
+    if recipe is None:
+        return 'Invalid recipe',400
+    
+    recipe_rep.remove_recipe(recipe_id)
+    
+    return 'Ok',200
     
 @api.route('/recipe/update_visibility', methods=['POST'])
 @login_required
@@ -252,25 +248,15 @@ def update_recipe_visibility():
     
     if recipe.author != current_id and not group_rep.find_group_by_id(current_user.user_group).is_admin:
         return 'Insufficient permissions',400
-
-
-    #visibility field
-    public_field = req_content.get('public')
-    if public_field is None:
-        return 'Missing "public" field',400
+    
     
     try:
-        set_public = bool(recipe_id_field)
-    except Exception:
-        return '"public" should be a boolean',400
-    
-    try:
-        status = recipe_rep.switch_recipe_visibility(recipe_id, set_public)
+        status = recipe_rep.switch_recipe_visibility(recipe_id, not recipe.is_public)
     except ValueError:
         return 'Invalid input of some sort',400
     except Exception:
         return 'Could not satisfy request',400
-    
+
     return json.dumps({'public':status}),200
 
 
@@ -291,16 +277,18 @@ def retrieve_user_recipes():
 
     recipe_jsons = []
 
+
     for recipe in recipes:
         #get key elements
         author = user_rep.find_user_by_id(recipe.author)
+        chef = group_rep.find_group_by_id(author.user_group).name == "chef"
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
         current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'average_rating': ratings_average, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'average_rating': ratings_average, 'author_id': int(author.id), 'author_chef': chef,
         'favorites': favorite_number, 'is_favorite': current_favorite, 'img_url': recipe.image_url})
 
     return json.dumps({'recipes_info':recipe_jsons})
@@ -336,6 +324,7 @@ def retrieve_popular_recipes():
     for recipe in recipes:
         #get key elements
         author = user_rep.find_user_by_id(recipe.author)
+        chef = group_rep.find_group_by_id(author.user_group).name == "chef"
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
         if not current_user.is_anonymous:
@@ -345,7 +334,7 @@ def retrieve_popular_recipes():
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': chef,
          'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
          'img_url': recipe.image_url})
          
@@ -374,6 +363,7 @@ def retrieve_recommendation():
     for recipe in recipes:
         #get key elements
         author = user_rep.find_user_by_id(recipe.author)
+        chef = group_rep.find_group_by_id(author.user_group).name == "chef"
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
         if not current_user.is_anonymous:
@@ -383,7 +373,7 @@ def retrieve_recommendation():
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': chef,
          'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
          'img_url': recipe.image_url})
 
@@ -407,6 +397,7 @@ def retrieve_pinned():
     for recipe in recipes:
         #get key elements
         author = user_rep.find_user_by_id(recipe.author)
+        chef = group_rep.find_group_by_id(author.user_group).name == "chef"
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
         if not current_user.is_anonymous:
@@ -416,7 +407,7 @@ def retrieve_pinned():
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': chef,
          'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
          'img_url': recipe.image_url})
 
@@ -474,13 +465,14 @@ def retrieve_sorted_subs():
     for recipe in recipes:
         #get key elements
         author = user_rep.find_user_by_id(recipe.author)
+        chef = group_rep.find_group_by_id(author.user_group).name == "chef"
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
         current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': chef,
          'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
          'img_url': recipe.image_url})
 
@@ -517,6 +509,7 @@ def retrieve_sorted_search():
     for recipe in recipes:
         #get key elements
         author = user_rep.find_user_by_id(recipe.author)
+        chef = group_rep.find_group_by_id(author.user_group).name == "chef"
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
         if current_user.is_anonymous:
@@ -527,7 +520,7 @@ def retrieve_sorted_search():
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': chef,
          'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
          'img_url': recipe.image_url})
 
@@ -566,13 +559,14 @@ def retrieve_sorted_favs():
     for recipe in recipes:
         #get key elements
         author = user_rep.find_user_by_id(recipe.author)
+        chef = group_rep.find_group_by_id(author.user_group).name == "chef"
         ratings_average = rating_rep.get_average_rating_for(recipe.id)
         favorite_number = fav_rep.get_favorites_number_to(recipe.id)
         current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
 
 
         recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
-        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': chef,
          'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
          'img_url': recipe.image_url})
 
