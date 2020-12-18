@@ -81,8 +81,9 @@ $(document).ready(function() {
                         'tags': tags
                     }),
                     contentType: "application/json"
-                }).done(function() {
-                    window.location.href = "./edit-recipe"
+                }).done(function(r) {
+                    let new_id = JSON.parse(r).new_id
+                    window.location.href = `./recipe/${new_id}`
                 })
                 .fail(function() {
                     //append error and disable for two seconds

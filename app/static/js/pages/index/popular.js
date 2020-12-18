@@ -105,7 +105,7 @@ function retrieve_recipes() {
     $.get('/api/recipe/get_popular', { 'number': starting_popular_number }).done(function(recipes) {
         //display them
 
-        $("#trending").find(".recipe").remove()
+        $("#trending-list").find(".recipe").remove()
 
         let json_info = JSON.parse(recipes)
 
@@ -118,7 +118,7 @@ function retrieve_recipes() {
 
     }).fail(function() {
         var new_error = $('<p>there was an issue, try again in a few seconds</p>').addClass("helper-text error")
-        $("#trending").append($(new_error))
+        $("#trending-list").append($(new_error))
 
     })
 }

@@ -1,9 +1,6 @@
-{% extends 'root.html' %}
-{% import 'macros.html' as macros %}
-
-{# to be filled with js #}
-
-{% block body %}
+{% extends 'root.html' %} {% import 'macros.html' as macros %} {%block head%}
+<script src="{{url_for('static',filename='js/pages/my-recipes/get-recipes.js')}}"></script>
+{%endblock%} {# to be filled with js #} {% block body %}
 
 <div id="my-recipes">
     <div class="row ">
