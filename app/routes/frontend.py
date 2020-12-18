@@ -3,11 +3,28 @@ This file contains the definition of the "frontend" blueprint containing
 all the routes related to the frontend (pages).
 """
 
-from app.forms import RegisterForm, SignInForm, ValidationError
+from app.forms import RegisterForm, SignInForm, ValidationError, EditProfileForm
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
 
 import app.repositories.users as user_rep
+import app.repositories.ratings as rating_rep
+import app.repositories.favorites as fav_rep
+import app.repositories.recipes as recipe_rep
+import app.repositories.recipe_elements.ingredients as ing_rep
+import app.repositories.recipe_elements.utensils as uten_rep
+import app.repositories.recipe_elements.steps as step_rep
+import app.repositories.subscriptions as sub_rep
+import app.repositories.usergroups as group_rep
+import app.repositories.categories as cat_rep
+import app.repositories.taglinks as taglink_rep
+
+import app.models.subscription as sub_model
+import app.models.user as user_model
+import app.models.recipe as recipe_model
+import app.models.rating as rating_model
+import app.models.category as cat_model
+import app.models.usergroup as usergroup_model
 
 # Create blueprint
 website = Blueprint('frontend', __name__, url_prefix='/')
@@ -29,9 +46,9 @@ def login_page():
 
     form = SignInForm()
     if form.validate_on_submit():
-        if user_rep.find_user_by_username(form.username.data) != None:
+        if user_rep.find_user_by_username(form.username.data) is not None:
             user = user_rep.find_user_by_username(form.username.data)
-        elif user_rep.find_user_by_mail(form.username.data) != None:
+        elif user_rep.find_user_by_mail(form.username.data) is not None:
             user = user_rep.find_user_by_mail(form.username.data)
         else:
             user = None
@@ -40,16 +57,16 @@ def login_page():
             form.password.errors.append('Identifiant ou mot de passe invalide.')
             return redirect(url_for('login'))
 
-        if user.user_group.can_login:
-            form.password.errors.append('Impossible de se connecter à votre compte.')
+        if not user.user_group.can_login:
+            form.password.errors.append("Vous n'avez pas le droit de vous connectez.")
             return redirect(url_for('login'))
 
         login_user(user)
 
         next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
+        if not next_page or url_for(next_page).netloc != '':
             next_page = url_for('home_page')
-
+        
         return redirect(next_page)
 
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=False, form=form)
@@ -71,13 +88,14 @@ def register_page():
 
     form = RegisterForm()
     if form.validate_on_submit():
+        print("OK")
         try:
             new_user = user_rep.add_user(username=form.username.data, password=form.password.data, 
-            mail=form.mail.data, birthdate=form.birthdate.data, first_name=form.first_name.data, last_name=form.last_name.data)
+            mail=form.email.data, birthdate=form.birthday.data, first_name=form.first_name.data, last_name=form.last_name.data)
             return redirect(url_for('login'))
         except ValidationError as e:
             form.username.errors.append(e)
-
+    
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=False, form=form)
 
 # Recipe
@@ -105,7 +123,7 @@ def edit_recipe_page():
 @website.route('/profile/<int:id>', methods=['GET', 'POST'])
 @login_required # LAISSER OU ENLEVER ?
 def profile_page(id):
-    return render_template('pages/profile.html', theme=get_theme(current_user), user=get_user_infos(current_user), viewed_user=viewed_user_infos(current_user, id))
+    return render_template('pages/profile.html', theme=get_theme(current_user), user=get_user_infos(current_user), viewed_user=get_viewed_user_infos(current_user, id))
 
 # Edit profile
 # OK POUR MOI, MODIFIER SI BESOIN
@@ -116,7 +134,7 @@ def edit_profile_page():
 
     if form.validate_on_submit():
         try:
-            rep.users.edit_profile(form.username.value, form.password.value, form.email.value, form.first_name.value, form.last_name.value, form.birthday.value, form.picture.value, current_user.id)
+            user_rep.edit_profile(form.username.value, form.password.value, form.email.value, form.first_name.value, form.last_name.value, form.birthday.value, form.picture.value, current_user.id)
 
             return redirect(url_for('profile/%d'%current_user.id))
         except ValueError as e:
@@ -212,7 +230,7 @@ def get_all_group_infos():
     # function which returns a list of dictionaries containing all group infos
 
     group_list = []
-    usergroups = UserGroup.query.all()
+    usergroups = usergroup_model.UserGroup.query.all()
 
     for group in usergroups:
         group_dict = {}
@@ -229,7 +247,7 @@ def get_all_users_infos():
 
     dict_list = []
 
-    users = User.query.all()
+    users = user_model.User.query.all()
 
     for u in users:
         user_dict = {}
@@ -238,7 +256,7 @@ def get_all_users_infos():
         user_dict['pseudo'] = u.username
 
         # ranking
-        user_dict['ranking'] = rep.ratings.get_ratings_from(u.id)
+        user_dict['ranking'] = rating_rep.get_ratings_from(u.id)
 
         # full name
         # A VERIFIER SI NOM VIDE EST NONE OU ''
@@ -256,7 +274,7 @@ def get_all_users_infos():
         user_dict['avatar_url'] = u.avatar_url
 
         # usergroup
-        user_dict['usergroup'] = rep.usergroups.find_group_by_id(u.user_group).name
+        user_dict['usergroup'] = group_rep.find_group_by_id(u.user_group).name
 
         # profile url
         user_dict['profile_url'] = '/profile/%d'%u.id
@@ -267,7 +285,7 @@ def get_all_users_infos():
 
 def get_viewed_user_infos(user, id):
     # function which returns a dictionary containing the viewed user's profile infos
-    viewed_user = rep.users.find_user_by_id(id)
+    viewed_user = user_rep.find_user_by_id(id)
     dict = {}
 
     # username
@@ -275,15 +293,15 @@ def get_viewed_user_infos(user, id):
 
     # ranking
     # A VERIFIER
-    dict['ranking'] = rep.ratings.get_ratings_from(viewed_user.id)
+    dict['ranking'] = rating_rep.get_ratings_from(viewed_user.id)
 
     # full name
     # A VERIFIER SI NOM VIDE EST NONE OU ''
-    if viewed_user.first_name == None:
+    if viewed_user.first_name is None:
         fn = ''
     else:
         fn = viewed_user.first_name
-    if viewed_user.last_name == None:
+    if viewed_user.last_name is None:
         ln = ''
     else:
         ln = viewed_user.last_name
@@ -293,7 +311,7 @@ def get_viewed_user_infos(user, id):
     dict['avatar_url'] = viewed_user.avatar_url
 
     # birthdate
-    if viewed_user.birthdate == None:
+    if viewed_user.birthdate is None:
         bd = ''
     else:
         bd = str(viewed_user.birthdate)
@@ -309,17 +327,17 @@ def get_viewed_user_infos(user, id):
     dict['is_admin'] = viewed_user.user_group.is_admin
 
     # nb subscribers
-    dict['nb_subscribers'] = rep.subscriptions.get_subscriptions_to(viewed_user.id)
+    dict['nb_subscribers'] = sub_rep.get_subscriptions_to(viewed_user.id)
 
     # current user is subscribed
-    if rep.subscriptions.get_specific_subscription(user.id, viewed_user.id) == None:
+    if sub_rep.get_specific_subscription(user.id, viewed_user.id) == None:
         dict['current_user_is_subscribed'] = False
     else:
         dict['current_user_is_subscribed'] = True
 
     # recipes
     dict['recipes'] = []
-    viewed_recipes = rep.recipes.get_recipe_from_user(viewed_user.id)
+    viewed_recipes = recipe_rep.get_recipe_from_user(viewed_user.id)
     for r in viewed_recipes:
         current_recipe = {}
         current_recipe['name'] = r.name
@@ -327,7 +345,7 @@ def get_viewed_user_infos(user, id):
         current_recipe['picture'] = r.image_url
         current_recipe['url'] = '/recipe/%s'%r.id
         current_recipe['nb_favorites'] = r.follow_number
-        current_recipe['current_user_favorited'] = rep.favorites.user_has_favorite(user.id, r.id)
+        current_recipe['current_user_favorited'] = fav_rep.user_has_favorite(user.id, r.id)
 
         dict['recipes'].append(current_recipe)
 
@@ -336,7 +354,7 @@ def get_viewed_user_infos(user, id):
 def get_recipe_infos(user, id):
     # function which returns a dictionary containing the viewed recipe's infos
 
-    recipe = rep.recipes.get_recipe_from_id(id)
+    recipe = recipe_rep.get_recipe_from_id(id)
     author = recipe.author
     dict = {}
 
@@ -377,7 +395,7 @@ def get_recipe_infos(user, id):
     dict['category'] = recipe.category_id
 
     # tags
-    dict['tags'] = rep.taglink.get_recipe_tags(recipe.id)
+    dict['tags'] = taglink_rep.get_recipe_tags(recipe.id)
 
     # user is author
     if user == author:
@@ -386,32 +404,32 @@ def get_recipe_infos(user, id):
         dict['current_user_is_author'] = False
 
     # user has favorite
-    dict['current_user_favorited'] = rep.favorites.user_has_favorite(user.id, recipe.id)
+    dict['current_user_favorited'] = fav_rep.user_has_favorite(user.id, recipe.id)
 
     # ingredients
-    dict['ingredients'] = rep.recipe_elements.ingredients.get_ingredients_as_string_of(recipe.id)
+    dict['ingredients'] = ing_rep.get_ingredients_as_string_of(recipe.id)
 
     # utensils
-    dict['ustensiles'] = rep.recipe_elements.utensils.get_utensils_as_string_of(recipe.id)
+    dict['ustensiles'] = uten_rep.get_utensils_as_string_of(recipe.id)
 
     # picture
     dict['picture'] = recipe.image_url
 
     # steps
-    dict['steps'] = rep.recipe_elements.steps.get_steps_as_string_of(recipe.id)
+    dict['steps'] = step_rep.get_steps_as_string_of(recipe.id)
 
     # rated by user
-    dict['already_rated_by_current_user'] = rep.ratings.user_has_rating(user.id, recipe.id)
+    dict['already_rated_by_current_user'] = rating_rep.user_has_rating(user.id, recipe.id)
 
     # comments
     dict['comments'] = []
-    comments = rep.ratings.get_ratings_to(recipe.id)
+    comments = rating_rep.get_ratings_to(recipe.id)
     for c in comments:
         current_comment = {}
         current_comment['user_id'] = c.user_id
         current_comment['comment_id'] = c.id
-        current_comment['avatar_url'] = rep.users.find_user_by_id(c.user_id).avatar_url
-        current_comment['username'] = rep.users.find_user_by_id(c.user_id).username
+        current_comment['avatar_url'] = user_rep.find_user_by_id(c.user_id).avatar_url
+        current_comment['username'] = user_rep.find_user_by_id(c.user_id).username
         current_comment['rating'] = c.value
         current_comment['message'] = c.comment
 
