@@ -1,11 +1,14 @@
-{% extends 'root.html' %} {% import 'macros.html' as macros %} {% block head %}
+{% extends 'root.html' %} 
+{% import 'macros.html' as macros %} 
 
+{% block head %}
 <script src="{{url_for('static',filename='js/forms/drop-down.js')}}"></script>
 <script src="{{url_for('static',filename='js/forms/list-menu.js')}}"></script>
 <script src="{{url_for('static',filename='js/forms/tag-like.js')}}"></script>
 <script src="{{url_for('static',filename='js/pages/edit-recipe/form-handler.js')}}"></script>
+{% endblock %} 
 
-{% endblock %} {% block body %}
+{% block body %}
 <div class="small-container">
     <h2>Créer une recette</h2>
     <form novalidate class="wtform">

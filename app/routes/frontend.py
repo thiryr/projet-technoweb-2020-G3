@@ -64,7 +64,7 @@ def login():
         login_user(user)
 
         next_page = request.args.get('next')
-        if not next_page or url_for("frontend."+next_page).netloc != '':
+        if not next_page:
             next_page = url_for('frontend.home_page')
         
         return redirect(next_page)

@@ -1,9 +1,12 @@
-{% extends 'root.html' %} {# to be filled with js #} {%block head%}
+{% extends 'root.html' %}
+
+{%block head%}
 <script src="{{url_for('static',filename='js/pages/index/pinned.js')}}"></script>
 <script src="{{url_for('static',filename='js/pages/index/recommend.js')}}"></script>
 <script src="{{url_for('static',filename='js/pages/index/popular.js')}}"></script>
-{%endblock%} {% block body %}
+{%endblock%} 
 
+{% block body %}
 <h1>Le coin des chefs</h1>
 <div id="featured">
     <h2>Recettes mise en avant</h2>
