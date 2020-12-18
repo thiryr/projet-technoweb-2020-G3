@@ -733,4 +733,27 @@ def add_review():
         return 'Could not add a review',500
 
     return 'ok',200
+
+#USER
+
+
+
+
+
+#Review-related (Rating-related) routes
+
+@api.route('/theme/switch', methods=['POST'])
+@login_required
+def switch_theme():
+    """Adds a rating for a specific recipe from the currently logged-in user
+    Returns:
+        200 'ok' if alright
+    """
+
+    dark = True
+    if current_user.dark_mode  == True:
+        dark = False
     
+    user_rep.set_user_darkmode(current_user.id,dark)
+    
+    return 'ok',200

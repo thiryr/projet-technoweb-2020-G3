@@ -193,7 +193,7 @@ def search_page():
 @website.route("/<path:invalid_path>")
 def error_page(*args, **kwargs):
     # TODO get color theme and user
-    return render_template('pages/404.html', theme='dark', user=None), 404
+    return render_template('pages/404.html', theme=get_theme(current_user), user=get_user_infos(current_user)), 404
 
 # FUNCTIONS #
 

@@ -63,9 +63,9 @@ jQuery(function () {
     });
 
     //link profile, theme and disconnect buttons
-    // let menu_buttons = $(".user-menu").find("a")
-    // menu_buttons.g.attr('href', '/profile')
-    // menu_buttons[3].attr('href', '/logout')
-    // menu_buttons[0].attr('href', '/profile')
-
+    $("#theme-switch-button").on("click", function() {
+        $.post("/api/theme/switch").done(function() {
+            window.location.href = window.location.href
+        })
+    })
 })
