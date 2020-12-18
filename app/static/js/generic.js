@@ -1,7 +1,7 @@
-jQuery(function () {
+jQuery(function() {
 
     //disable default redirects for forms
-    $("input").not(".searchbar").on('keypress', function (e) {
+    $("input").not(".searchbar").on('keypress', function(e) {
         if (e.which == 13) {
             // e.preventDefault();
         }
@@ -9,7 +9,7 @@ jQuery(function () {
 
 
     //like/dislike
-    $("body").on("click", ".fa-heart", function (e) {
+    $("body").on("click", ".fa-heart", function(e) {
         e.preventDefault();
 
 
@@ -29,7 +29,7 @@ jQuery(function () {
             var recipe_url_path = recipe_url.split("/")
             var recipe_id = parseInt(recipe_url_path[recipe_url_path.length - 1])
 
-            $.post("/api/favorite/switch", { 'recipe_id': recipe_id }).done(function (r) {
+            $.post("/api/favorite/switch", { 'recipe_id': recipe_id }).done(function(r) {
                 //get response
                 var new_state = JSON.parse(r).is_favorite
 
@@ -45,18 +45,18 @@ jQuery(function () {
                     $(counter).html(`${parseInt($(counter).html()) - 1}`)
                     console.log("removed")
                 }
-            }).fail(function () {
+            }).fail(function() {
                 //do nothing for now
             })
         }
     })
 
     //link submit buttons
-    $.each($("a"), function (ind, link) {
+    $.each($("a"), function(ind, link) {
         if ($(link).attr("type") && $(link).attr("type") === "submit") {
             $(link).removeAttr("href");
 
-            $(link).on("click", function () {
+            $(link).on("click", function() {
                 $("form").trigger("submit");
             });
         }

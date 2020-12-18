@@ -115,7 +115,12 @@ def register_page():
 
 @website.route('/recipe/<int:id>')
 def recipe_page(id):
-    return render_template('pages/recipe.html', theme=get_theme(current_user), user=get_user_infos(current_user), recipe=get_recipe_infos(current_user, id))
+    theme=get_theme(current_user)
+    user=get_user_infos(current_user)
+    recipe=get_recipe_infos(current_user, id)
+    if recipe is None:
+        return redirect(url_for('frontend.home_page'))
+    return render_template('pages/recipe.html', theme=theme, user=user, recipe=recipe)
 
 # Recipes
 # OK POUR MOI, MODIFIER SI BESOIN
@@ -271,7 +276,7 @@ def get_user_infos(user):
 
         return dict
 
-    return False
+    return {'user_id':-1, 'is_chef': False, 'is_admin':False, 'avatar_url':'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg'}
 
 
 def get_all_group_infos():
