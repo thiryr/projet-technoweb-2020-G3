@@ -63,7 +63,7 @@ class Recipe(db.Model):  # type: ignore
         
 
         if image_url is None:
-            image_url = "/static/recipes/0.png"
+            image_url = "/static/img/recipes/0.jpg"
 
 
 def parse_date(date: str) -> datetime.date:

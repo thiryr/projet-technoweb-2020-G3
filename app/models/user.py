@@ -40,7 +40,7 @@ class User(UserMixin, db.Model): #type: ignore
 
 
     # Init
-    def __init__(self, username: str, password: str, mail: str, usergroup="regular", avatar_url="https://i.stack.imgur.com/l60Hf.png"):
+    def __init__(self, username: str, password: str, mail: str, usergroup="regular", avatar_url=None):
         self.username = username
         self.password_hash = generate_password_hash(password)
         self.mail = mail
@@ -50,6 +50,10 @@ class User(UserMixin, db.Model): #type: ignore
 
         #defaults
         self.dark_mode = True
+
+
+        if avatar_url is None:
+            self.avatar_url = "/static/img/profiles/0.png"
 
     #password
     def set_password(self, new_password: str):

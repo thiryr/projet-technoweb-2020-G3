@@ -12,7 +12,7 @@ import app.models.recipe as recipe_model
 import app.repositories.ratings as rating_rep
 
 
-def add_user(username: str, password: str, mail: str, usergroup: str = 'regular', avatar_url = "https://i.stack.imgur.com/l60Hf.png", birthdate: str = None, first_name = None, last_name = None):
+def add_user(username: str, password: str, mail: str, usergroup: str = 'regular', avatar_url = None, birthdate: str = None, first_name = None, last_name = None):
     if find_user_by_username(username) is not None:
         raise ValueError('A user already uses that username')
     if find_user_by_mail(mail) is not None:
