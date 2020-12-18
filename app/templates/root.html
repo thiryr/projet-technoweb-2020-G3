@@ -59,14 +59,14 @@
                             </button>
 
                             <ul class="user-menu">
-                                <li><a>
+                                <li><a id="theme-switch-button">
                                 {% if theme == 'dark' %}
                                 Passer vers le thème blanc
                                 {% else %}
                                 Passer vers le thème sombre
                                 {% endif %}
                                 </a></li>
-                                <li><a href="/profile/{user.user_id}">Mon profil</a></li>
+                                <li><a href="/profile/{{user.user_id}}">Mon profil</a></li>
                                 {% if user.is_admin %}
                                 <li><a {{ 'selected' if page=='users' }} href='/users'>Utilisateurs</a></li>
                                 {% endif %}

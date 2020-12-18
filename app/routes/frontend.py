@@ -55,11 +55,11 @@ def login():
 
         if user is None or not user.check_password(form.password.data):
             form.password.errors.append('Identifiant ou mot de passe invalide.')
-            return redirect(url_for('login'))
+            return redirect(url_for('frontend.login'))
 
         if not group_rep.find_group_by_id(user.user_group).can_login:
             form.password.errors.append("Vous n'avez pas le droit de vous connectez.")
-            return redirect(url_for('login'))
+            return redirect(url_for('frontend.login'))
 
         login_user(user)
 
@@ -92,7 +92,7 @@ def register_page():
         try:
             new_user = user_rep.add_user(username=form.username.data, password=form.password.data, 
             mail=form.email.data, birthdate=form.birthday.data, first_name=form.first_name.data, last_name=form.last_name.data)
-            return redirect(url_for('login'))
+            return redirect(url_for('frontend.login'))
         except ValidationError as e:
             form.username.errors.append(e)
     
@@ -102,7 +102,12 @@ def register_page():
 # OK POUR MOI, MODIFIER SI BESOIN
 @website.route('/recipe/<int:id>')
 def recipe_page(id):
-    return render_template('pages/recipe.html', theme=get_theme(current_user), user=get_user_infos(current_user), recipe=get_recipe_infos(current_user, id))
+    theme=get_theme(current_user)
+    user=get_user_infos(current_user)
+    recipe=get_recipe_infos(current_user, id)
+    if recipe is None:
+        return redirect(url_for('frontend.home_page'))
+    return render_template('pages/recipe.html', theme=theme, user=user, recipe=recipe)
 
 # Recipes
 # OK POUR MOI, MODIFIER SI BESOIN
@@ -141,7 +146,7 @@ def edit_profile_page():
         try:
             user_rep.edit_profile(form.username.value, form.password.value, form.email.value, form.first_name.value, form.last_name.value, form.birthday.value, form.picture.value, current_user.id)
 
-            return redirect(url_for('profile/%d'%current_user.id))
+            return redirect('profile/%d' % current_user.id)
         except ValueError as e:
             if 'pseudo' in str(e):
                 form.username.errors.append(e)
@@ -193,7 +198,7 @@ def search_page():
 @website.route("/<path:invalid_path>")
 def error_page(*args, **kwargs):
     # TODO get color theme and user
-    return render_template('pages/404.html', theme='dark', user=None), 404
+    return render_template('pages/404.html', theme=get_theme(current_user), user=get_user_infos(current_user)), 404
 
 # FUNCTIONS #
 
@@ -229,7 +234,7 @@ def get_user_infos(user):
 
         return dict
 
-    return False
+    return {'user_id':-1, 'is_chef': False, 'is_admin':False, 'avatar_url':'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg'}
 
 def get_all_group_infos():
     # function which returns a list of dictionaries containing all group infos
@@ -368,7 +373,11 @@ def get_recipe_infos(user, id):
     # function which returns a dictionary containing the viewed recipe's infos
 
     recipe = recipe_rep.get_recipe_from_id(id)
+    if recipe is None:
+        return None
     author = user_rep.find_user_by_id(recipe.author)
+    if author is None:
+        return None
     dict = {}
 
     # title

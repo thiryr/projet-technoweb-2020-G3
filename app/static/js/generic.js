@@ -1,19 +1,20 @@
-$(document).ready(function() {
+jQuery(function () {
 
     //disable default redirects for forms
-    $("input").not(".searchbar").on('keypress', function(e) {
-        if (e.which == 13)
-            e.preventDefault();
+    $("input").not(".searchbar").on('keypress', function (e) {
+        if (e.which == 13) {
+            // e.preventDefault();
+        }
     })
 
 
     //like/dislike
-    $("body").on("click", ".fa-heart", function(e) {
+    $("body").on("click", ".fa-heart", function (e) {
         e.preventDefault();
 
 
-        var heart = $(e.target)
-        var container = $(heart).parent()
+        var heart = $(e.target);
+        var container = $(heart).parent();
 
         //if we land on the svg
         if ($(container).is("svg")) {
@@ -28,46 +29,43 @@ $(document).ready(function() {
             var recipe_url_path = recipe_url.split("/")
             var recipe_id = parseInt(recipe_url_path[recipe_url_path.length - 1])
 
-            $.post("/api/favorite/switch", { 'recipe_id': recipe_id }).done(function(r) {
+            $.post("/api/favorite/switch", { 'recipe_id': recipe_id }).done(function (r) {
                 //get response
                 var new_state = JSON.parse(r).is_favorite
 
                 //switch
                 if (new_state === true && $(heart).attr("data-prefix") === "far") {
                     $(heart).attr("data-prefix", "fa")
-                    $(counter).html(`${parseInt($(counter).html())+1}`)
+                    $(counter).html(`${parseInt($(counter).html()) + 1}`)
 
                     console.log("added")
 
                 } else if (new_state === false && $(heart).attr("data-prefix") === "fa") {
                     $(heart).attr("data-prefix", "far")
-                    $(counter).html(`${parseInt($(counter).html())-1}`)
+                    $(counter).html(`${parseInt($(counter).html()) - 1}`)
                     console.log("removed")
                 }
-            }).fail(function() {
+            }).fail(function () {
                 //do nothing for now
             })
         }
     })
 
     //link submit buttons
-    $.each($("a"), function(ind, lin) {
-        if ($(lin).attr("type") && $(lin).attr("type") === "submit") {
-            $(lin).removeAttr("href")
-            $(lin).on("click", function() {
-                $("form").trigger("submit")
+    $.each($("a"), function (ind, link) {
+        if ($(link).attr("type") && $(link).attr("type") === "submit") {
+            $(link).removeAttr("href");
+
+            $(link).on("click", function () {
+                $("form").trigger("submit");
             });
         }
     });
 
     //link profile, theme and disconnect buttons
-    let menu_buttons = $(".user-menu").find("a")
-    $($(menu_buttons)[1]).attr('href', '/profile')
-    $($(menu_buttons)[2]).attr('href', '/logout')
-    $($(menu_buttons)[0]).on("click", function() {
+    $("#theme-switch-button").on("click", function() {
         $.post("/api/theme/switch").done(function() {
             window.location.href = window.location.href
         })
-
     })
 })
