@@ -41,11 +41,13 @@ function get_recipe_element(img_url, recipe_id, recipe_name, author_id, author_n
     var full_stars = ''
     var empty_stars = ''
 
-    for (var i = 0; i < 5; i++) {
-        if (i < rating)
-            full_stars += full_star
-        else
-            empty_stars += empty_star
+    if (rating > 0) {
+        for (var i = 0; i < 5; i++) {
+            if (i < rating)
+                full_stars += full_star
+            else
+                empty_stars += empty_star
+        }
     }
 
     var heart = ''
@@ -73,7 +75,7 @@ function get_recipe_element(img_url, recipe_id, recipe_name, author_id, author_n
 
     return `<div class="recipe">
     <img src="${img_url}"
-        alt="RECIPE_NAME">
+        alt="${recipe_name}">
     <a class="name" href="${recipe_url}">${recipe_name}</a>
 
     <div class="row all-width">
@@ -109,7 +111,38 @@ function display_recipes(recipes_json) {
 }
 
 function retrieve_recipes() {
-    $.get("/api/recipe/subscription_sorted", { 'sorting_mode': current_sorting }).done(function(recipes) {
+
+    var current_url = window.location.href
+    var current_url_path = current_url.split('/')
+    var current_url_end = current_url_path[current_url_path.length - 1]
+    var current_url_no_args = current_url_end.split('?')[0]
+
+    var search_term = ''
+    var target_url = ''
+
+    if (current_url_no_args === 'subscriptions') {
+
+        target_url = '/api/recipe/subscription_sorted'
+
+    } else if (current_url_no_args === 'favorites') {
+
+        target_url = '/api/recipe/favorites_sorted'
+
+    } else if (current_url_no_args === 'search') {
+
+        target_url = '/api/recipe/search_sorted'
+        search_term = current_url_end.split('?')[1].split('=')[1]
+
+    } else {
+
+        console.log('unknown page, will not fetch')
+        return;
+
+    }
+
+    console.log(target_url)
+
+    $.get(target_url, { 'sorting_mode': current_sorting, 'search_term': search_term }).done(function(recipes) {
         //display them
 
         $("#sorted-list").find(".recipe").remove()
@@ -121,7 +154,7 @@ function retrieve_recipes() {
         $($("#sort-input").find("button")[0]).parent().before($(new_error))
 
         setTimeout(() => {
-            $("html").find(".helper-text error").remove()
+            $("html").find(".helper-text.error").remove()
         }, 2000)
 
     })

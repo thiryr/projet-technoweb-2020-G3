@@ -1210,6 +1210,17 @@ ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth
     padding: 0.5rem;
 }
 
+.recipe-comments .delete-button {
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.recipe-comments .delete-button:hover {
+    text-decoration: underline;
+}
+
+/* comment */
+
 .comment {
     margin: 1rem 0;
     max-width: var(--comment-width);

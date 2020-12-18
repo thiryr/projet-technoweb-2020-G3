@@ -15,6 +15,7 @@ import app.repositories.usergroups as group_rep
 import app.repositories.categories as cat_rep
 
 import app.models.subscription as sub_model
+import app.models.favorite as fav_model
 import app.models.user as user_model
 import app.models.recipe as recipe_model
 import app.models.rating as rating_model
@@ -305,13 +306,14 @@ def retrieve_user_recipes():
     return json.dumps({'recipes_info':recipe_jsons})
 
 
-@api.route('/recipe/subscription_sorted', methods=['GET'])
+
+@api.route('/recipe/get_popular', methods=['GET'])
 @login_required
-def retrieve_sorted_recipes():
+def retrieve_popular_recipes():
     """Returns all the information necessary to display the user's subscription recipes
 
     Argument: 
-        Expects sorting mode 'trending'/'recent', assumes current_user
+        Expects sorting mode '
 
     Returns: json {'recipes_info':
     [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
@@ -323,7 +325,9 @@ def retrieve_sorted_recipes():
 
     sorting_mode = request_content.get('sorting_mode')
 
-    recipes_query = recipe_model.Recipe.query.join(sub_model.Subscription, sub_model.Subscription.subscriber_id == current_id and sub_model.Subscription.subscribed_id==recipe_model.Recipe.author)
+    recipes_query = recipe_model.Recipe.query.join(sub_model.Subscription, sub_model.Subscription.subscriber_id == current_id 
+    and sub_model.Subscription.subscribed_id==recipe_model.Recipe.author
+    and (recipe_model.Recipe.is_public or recipe_model.Recipe.author == current_id))
 
     if sorting_mode is not None and sorting_mode == 'trending':
         recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
@@ -346,199 +350,144 @@ def retrieve_sorted_recipes():
          'img_url': recipe.image_url})
 
 
-    recipe_jsons.append({'recipe_id': 1, 'recipe_name': "test", 'author_nick': "test", 
-    'author_first': "first", 'author_last': "last", 'author_id':1, 'average_rating': 3, 'author_chef': True,
-    'favorites': 12, 'is_favorite': True, 
-    'img_url': "https://i2.wp.com/www.foodrepublic.com/wp-content/uploads/2012/05/testkitchen_argentinesteak.jpg?resize=1280%2C%20560&ssl=1"})
 
-    recipe_jsons.append({'recipe_id': 1, 'recipe_name': "test", 'author_nick': "test", 
-    'author_first': "first", 'author_last': "last", 'author_id':1, 'average_rating': 3, 'author_chef': True,
-    'favorites': 12, 'is_favorite': True, 
-    'img_url': "https://i2.wp.com/www.foodrepublic.com/wp-content/uploads/2012/05/testkitchen_argentinesteak.jpg?resize=1280%2C%20560&ssl=1"})
+    return json.dumps({'recipes_info':recipe_jsons})
+
+@api.route('/recipe/subscription_sorted', methods=['GET'])
+@login_required
+def retrieve_sorted_subs():
+    """Returns all the information necessary to display the user's subscription recipes
+
+    Argument: 
+        Expects sorting mode 'trending'/'recent', assumes current_user
+
+    Returns: json {'recipes_info':
+    [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
+    """
+    current_id = current_user.id
+
+    request_content = request.args
+
+    sorting_mode = request_content.get('sorting_mode')
+
+    recipes_query = recipe_model.Recipe.query.join(sub_model.Subscription, sub_model.Subscription.subscriber_id == current_id 
+    and sub_model.Subscription.subscribed_id==recipe_model.Recipe.author
+    and (recipe_model.Recipe.is_public or recipe_model.Recipe.author == current_id))
+
+    if sorting_mode is not None and sorting_mode == 'trending':
+        recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
+    else:
+        recipes = recipes_query.order_by(recipe_model.Recipe.publicated_on.desc()).all()
+        
+    recipe_jsons = []
+
+    for recipe in recipes:
+        #get key elements
+        author = user_rep.find_user_by_id(recipe.author)
+        ratings_average = rating_rep.get_average_rating_for(recipe.id)
+        favorite_number = fav_rep.get_favorites_number_to(recipe.id)
+        current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
+
+
+        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+         'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
+         'img_url': recipe.image_url})
+
+
+
+    return json.dumps({'recipes_info':recipe_jsons})
+
+@api.route('/recipe/search_sorted', methods=['GET'])
+def retrieve_sorted_search():
+    """Returns all the information necessary to display the recipes in some order
+
+    Argument: 
+        Expects sorting mode 'trending'/'recent', assumes current_user
+
+    Returns: json {'recipes_info':
+    [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
+    """
+    search_term = request.args.get('search_term')
+    if search_term is None:
+        search_term = ""
+
+    recipes_query = recipe_rep.search(search_term)
+
+    sorting_mode = request.args.get('sorting_mode')
+
+    if sorting_mode is not None and sorting_mode == 'trending':
+        recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
+    else:
+        recipes = recipes_query.order_by(recipe_model.Recipe.publicated_on.desc()).all()
+        
+    recipe_jsons = []
+
+    for recipe in recipes:
+        #get key elements
+        author = user_rep.find_user_by_id(recipe.author)
+        ratings_average = rating_rep.get_average_rating_for(recipe.id)
+        favorite_number = fav_rep.get_favorites_number_to(recipe.id)
+        if current_user.is_anonymous:
+            current_favorite = False
+        
+        else:
+            current_favorite = fav_rep.user_has_favorite(current_user.id, recipe.id)
+
+
+        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+         'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
+         'img_url': recipe.image_url})
 
 
     return json.dumps({'recipes_info':recipe_jsons})
 
 
-@api.route('/recipe/get_info', methods=['GET'])
-def retrieve_recipe_info():
-    """Returns all ingredients for a recipe
 
-    Arguments:
-    Expects a specific recipe id as 'recipe_id' field
+@api.route('/recipe/favorites_sorted', methods=['GET'])
+@login_required
+def retrieve_sorted_favs():
+    """Returns all the information necessary to display the user's favorite recipes
 
-    Returns: json {'recipe_id': int, 'recipe_name': str, 'img_url': str, 
-    'author_nick': str, 'author_first': str, 'author_last': str, 
-    'favorites':int, 'rating': int}
+    Argument: 
+        Expects sorting mode 'trending'/'recent', assumes current_user
+
+    Returns: json {'recipes_info':
+    [{'recipe_id': int, 'recipe_name': str, 'author_nick': str, 'author_first': str, 'author_last': str, 
+    'average_rating': int, 'favorites': int, 'is_favorite': bool, 'img_url':str},..]}
     """
+    current_id = current_user.id
 
-    #request to dict
-    req_content = request.args
-    
-    recipe_id_field = req_content.get('recipe_id')
-    if recipe_id_field is None:
-        return 'Missing recipe_id field',400
-    #convert to int
-    try:
-        recipe_id = int(recipe_id_field)
-    except Exception:
-        return 'recipe_id should be integer',400
-    
-    recipe = recipe_rep.get_recipe_from_id(recipe_id)
-    if recipe is None:
-        return 'recipe_id does not correspond to any recipe',400
+    request_content = request.args
 
-    favorite_nb = fav_rep.get_favorites_number_to(recipe_id)
-    average_rating = rating_rep.get_average_rating_for(recipe_id)
-    
-    img_url = recipe.image_url
+    sorting_mode = request_content.get('sorting_mode')
 
-    author = user_rep.find_user_by_id(recipe.author)
-    author_nick = author.username
-    author_first = author.first_name
-    author_last = author.last_name
+    recipes_query = recipe_model.Recipe.query.join(fav_model.Favorite, fav_model.Favorite.user_id == current_id and recipe_model.Recipe.id==fav_model.Favorite.recipe_id and recipe_model.Recipe.is_public)
 
-    return json.dumps({'recipe_id':recipe.id, 'recipe_name': recipe.name, 'img_url':img_url,
-    'author_nick': author_nick, 'author_first': author_first, 'author_last': author_last, 
-    'favorites':favorite_nb, 'rating': average_rating})
+    if sorting_mode is not None and sorting_mode == 'trending':
+        recipes = recipes_query.filter(recipe_model.Recipe.publicated_on <= datetime.date.today().replace(day=1)).order_by(recipe_model.Recipe.average_score.desc()).all()
+    else:
+        recipes = recipes_query.order_by(recipe_model.Recipe.publicated_on.desc()).all()
+        
+    recipe_jsons = []
 
-@api.route('/recipe/get_ingredients', methods=['GET'])
-def retrieve_ingredients():
-    """Returns all ingredients for a recipe
-
-    Arguments:
-    Expects a specific recipe id as 'recipe_id' field
-
-    Returns: json {ingredients:[str]}
-    """
-
-    #request to dict
-    req_content = request.args
-    
-    recipe_id_field = req_content.get('recipe_id')
-    if recipe_id_field is None:
-        return 'Missing recipe_id field',400
-    #convert to int
-    try:
-        recipe_id = int(recipe_id_field)
-    except Exception:
-        return 'recipe_id should be integer',400
-
-    try:
-        ingredients = ing_rep.get_ingredients_of(recipe_id)
-    except ValueError:
-        return 'recipe_id might have been invalid',400
-    except Exception:
-        return 'Something went wrong',500
-
-    return json.dumps({'ingredients':ingredients})
+    for recipe in recipes:
+        #get key elements
+        author = user_rep.find_user_by_id(recipe.author)
+        ratings_average = rating_rep.get_average_rating_for(recipe.id)
+        favorite_number = fav_rep.get_favorites_number_to(recipe.id)
+        current_favorite = fav_rep.user_has_favorite(current_id, recipe.id)
 
 
-@api.route('/recipe/get_steps', methods=['GET'])
-def retrieve_steps():
-    """Returns all steps for a recipe in order
+        recipe_jsons.append({'recipe_id': recipe.id, 'recipe_name': recipe.name, 'author_nick': author.username, 
+        'author_first': author.first_name, 'author_last': author.last_name, 'author_id': int(author.id), 'author_chef': True,
+         'average_rating': ratings_average, 'favorites': favorite_number, 'is_favorite': current_favorite, 
+         'img_url': recipe.image_url})
 
-    Arguments:
-    Expects a specific recipe id as 'recipe_id' field
-
-    Returns: json {steps:[str]}
-    """
-
-    #request to dict
-    req_content = request.args
-    
-    recipe_id_field = req_content.get('recipe_id')
-    if recipe_id_field is None:
-        return 'Missing recipe_id field',400
-    #convert to int
-    try:
-        recipe_id = int(recipe_id_field)
-    except Exception:
-        return 'recipe_id should be integer',400
-
-    try:
-        steps = step_rep.get_steps_of(recipe_id)
-    except ValueError:
-        return 'recipe_id might have been invalid',400
-    except Exception:
-        return 'Something went wrong',500
-
-    return json.dumps({'steps':steps})
-
-
-@api.route('/recipe/get_utensils', methods=['GET'])
-def retrieve_utensils():
-    """Returns all utensils for a recipe
-
-    Arguments:
-    Expects a specific recipe id as 'recipe_id' field
-
-    Returns: json {utensils:[str]}
-    """
-
-    #request to dict
-    req_content = request.args
-    
-    recipe_id_field = req_content.get('recipe_id')
-    if recipe_id_field is None:
-        return 'Missing recipe_id field',400
-    #convert to int
-    try:
-        recipe_id = int(recipe_id_field)
-    except Exception:
-        return 'recipe_id should be integer',400
-
-    try:
-        utensils = uten_rep.get_utensils_of(recipe_id)
-    except ValueError:
-        return 'recipe_id might have been invalid',400
-    except Exception:
-        return 'Something went wrong',500
-
-    return json.dumps({'utensils':utensils})
-
-@api.route('/recipe/get_reviews', methods=['GET'])
-def retrieve_reviews():
-    """Returns all the reviews
-
-    Arguments:
-    Expects a specific recipe id as 'recipe_id' field
-
-    Returns: json {reviews:[{'text':str,'score':int}]}
-    """
-
-    #request to dict
-    req_content = request.args
-    
-    recipe_id_field = req_content.get('recipe_id')
-
-    if recipe_id_field is None:
-        return 'Missing recipe_id field',400
-    #convert to int
-    try:
-        recipe_id = int(recipe_id_field)
-    except Exception:
-        return 'recipe_id should be integer',400
-
-    try:
-        ratings = rating_rep.get_ratings_to(recipe_id)
-    except ValueError:
-        return 'recipe_id might have been invalid',400
-    except Exception:
-        return 'Something went wrong',500
-    
-
-    reviews = []
-    for review in ratings:
-        review_text = review.comment
-        review_score = review.value
-        reviews.append({'text':review_text,'score':review_score})
-
-
-    return json.dumps({'reviews':reviews})
-
-
-
+    return json.dumps({'recipes_info':recipe_jsons})
 
 #Favorite-related routes
 

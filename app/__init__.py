@@ -47,7 +47,7 @@ from app.models.category import Category
 from app.repositories.users import add_user
 from app.repositories.usergroups import add_usergroup
 from app.repositories.categories import add_category, name_to_category
-from app.repositories.recipes import add_recipe, compile_recipe
+from app.repositories.recipes import add_recipe, compile_recipe, search
 # Blueprints (routers)
 from app.routes.api import api
 from app.routes.frontend import website

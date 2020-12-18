@@ -1,11 +1,13 @@
 $(document).ready(function() {
 
     //disable default redirects for forms
-    $(document).on('keypress', function(e) {
+    $("input").not(".searchbar").on('keypress', function(e) {
         if (e.which == 13)
             e.preventDefault();
     })
 
+
+    //like/dislike
     $("body").on("click", ".fa-heart", function(e) {
         e.preventDefault();
 
@@ -18,7 +20,7 @@ $(document).ready(function() {
             heart = $(container)
             container = $(container).parent()
         }
-
+        var counter = $(container).parent().children("span")
         if ($(container).is("button")) {
 
 
@@ -33,12 +35,29 @@ $(document).ready(function() {
                 //switch
                 if (new_state === true && $(heart).attr("data-prefix") === "far") {
                     $(heart).attr("data-prefix", "fa")
+                    $(counter).html(`${parseInt($(counter).html())+1}`)
+
+                    console.log("added")
+
                 } else if (new_state === false && $(heart).attr("data-prefix") === "fa") {
                     $(heart).attr("data-prefix", "far")
+                    $(counter).html(`${parseInt($(counter).html())-1}`)
+                    console.log("removed")
                 }
             }).fail(function() {
                 //do nothing for now
             })
         }
     })
+
+    //link submit buttons
+    $.each($("a"), function(ind, lin) {
+        if ($(lin).attr("type") && $(lin).attr("type") === "submit") {
+            $(lin).removeAttr("href")
+            $(lin).on("click", function() {
+                $("form").trigger("submit")
+            });
+        }
+    });
+
 })

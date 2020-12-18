@@ -4,11 +4,19 @@
 from datetime import date
 from typing import List
 
+import random as rd
+
+from sqlalchemy import or_
+
 from app import db
 import app.models.recipe as recipe_model
 import app.models.recipe_elements.ingredient as ingredient_model
 import app.models.recipe_elements.step as step_model
 import app.models.recipe_elements.utensil as utensil_model
+
+import app.models.category as cat_model
+import app.models.taglink as taglink_model
+import app.models.tag as tag_model
 
 import app.repositories.tags as tag_rep
 import app.repositories.taglinks as taglink_rep
@@ -16,6 +24,7 @@ import app.repositories.taglinks as taglink_rep
 
 import app.repositories.favorites as fav_rep
 import app.repositories.ratings as rating_rep
+import app.repositories.users as user_rep
 
 import app.repositories.recipe_elements.ingredients as ing_rep
 import app.repositories.recipe_elements.utensils as uten_rep
@@ -27,8 +36,30 @@ import app.repositories.recipe_elements.steps as step_rep
 def search(word: str):
     """
     Should return all recipes matching some search term (look up tags and categories too..)
+
+    Returns a query, that needs to be completed by the user (giving freedom to enhance it)
     """
+    return recipe_model.Recipe.query.join(cat_model.Category, 
+    cat_model.Category.id == recipe_model.Recipe.category_id).join(ingredient_model.Ingredient,
+            recipe_model.Recipe.id == ingredient_model.Ingredient.recipe_id).join(taglink_model.TagLink,
+                recipe_model.Recipe.id == taglink_model.TagLink.recipe_id).join(tag_model.Tag,
+                    taglink_model.TagLink.id == tag_model.Tag.id).filter(or_(
+            recipe_model.Recipe.name.like(f"%{word}%"),
+            tag_model.Tag.name.like(f"%{word}%"),
+            ingredient_model.Ingredient.text.like(f"%{word}%"),
+            cat_model.Category.name.like(f"%{word}%"))).filter(recipe_model.Recipe.is_public).distinct()
+
+
+
+def recommend_random_recipe_to(userid: int)->recipe_model.Recipe:
+    random_recipe = rd.choice(get_recipe_from_user(userid))
+    random_tag = rd.choice(taglink_rep.get_recipe_tags(random_recipe.id))
+    random_recommendation = find_random_recipe_with_tag(random_tag)
+    return random_recommendation
     
+
+def find_random_recipe_with_tag(tag:str)->recipe_model.Recipe:
+    return rd.choice(recipe_model.Recipe.join(taglink_model.TagLink, taglink_model.TagLink.tag_id == tag_rep.name_to_tag(tag)).all())
 
 def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 
 is_public:bool, category_id:int, image_url=None)->recipe_model.Recipe:
