@@ -365,7 +365,7 @@ def get_viewed_user_infos(user, id):
         viewed_user.user_group).is_admin
 
     # nb subscribers
-    dict['nb_subscribers'] = sub_rep.get_subscriptions_to(viewed_user.id)
+    dict['nb_subscribers'] = len(sub_rep.get_subscriptions_to(viewed_user.id))
 
     # current user is subscribed
     if current_user.is_anonymous:
