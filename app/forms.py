@@ -140,7 +140,8 @@ class RegisterForm(FlaskForm):
 
     # Custom validator for the birthday field
     # That way, we can customize the error message
-    def validate_birthday(self, form, field):
+    @staticmethod
+    def validate_birthday(form, field):
         try:
             birthday = datetime.strptime(field.data, '%d/%m/%Y')
         except Exception:
@@ -152,7 +153,8 @@ class RegisterForm(FlaskForm):
                 'Erreur : Date invalide. La date doit être antérieure à aujourd\'hui.')
 
     # Validate second password : must be equal to the first one
-    def validate_confirm_password(self, form, field):
+    @staticmethod
+    def validate_confirm_password(form, field):
         if field.data != form.password.data:
             raise ValidationError(
                 'Erreur : Les deux mots de passe sont différents.')

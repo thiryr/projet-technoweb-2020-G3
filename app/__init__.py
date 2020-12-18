@@ -27,7 +27,7 @@ fa = FontAwesome(app)
 
 # Configure login manager
 login_manager = LoginManager(app)
-login_manager.login_view = "frontend.login" # type: ignore
+login_manager.login_view = "frontend.login_page" # type: ignore
 login_manager.login_message_category = "info"
 login_manager.login_message = "You cannot access this page. Please log in to access this page."
 login_manager.session_protection = "strong"
