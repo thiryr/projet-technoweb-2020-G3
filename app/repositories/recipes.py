@@ -58,7 +58,10 @@ def recommend_random_recipe_to(userid: int)->recipe_model.Recipe:
         userid (int): valid userid or -1 for a purely random recipe
     """
     if userid>=0:
-        random_recipe = rd.choice(get_recipe_from_user(userid))
+        user_recipes = get_recipe_from_user(userid)
+        if len(user_recipes)<1:
+            return rd.choice(recipe_model.Recipe.query.all())
+        random_recipe = rd.choice(user_recipes)
         tags = taglink_rep.get_recipe_tags(random_recipe.id)
         if len(tags) == 0:
             return rd.choice(recipe_model.Recipe.query.all())
