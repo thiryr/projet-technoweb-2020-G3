@@ -1,14 +1,13 @@
-$(document).ready(function() {
-
-    retrieve_recipes()
+jQuery(function() {
+    retrieve_recommended_recipes()
 
 });
 
 
-function retrieve_recipes() {
+function retrieve_recommended_recipes() {
     $.get('/api/recipe/get_recommendation').done(function(recipes) {
         //display them
-
+        console.log(recipes)
         $("#recommended-list").find(".recipe").remove();
 
         display_recipes(JSON.parse(recipes), "#recommended-list");

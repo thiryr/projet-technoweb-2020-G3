@@ -1,15 +1,15 @@
 jQuery(function () {
     starting_popular_number = 20
-    retrieve_recipes(starting_popular_number)
+    retrieve_popular_recipes(starting_popular_number)
 
     $("#more-trending").on("click", function () {
         starting_popular_number += 10
-        retrieve_recipes(starting_popular_number)
+        retrieve_popular_recipes(starting_popular_number)
     })
 });
 
 
-function retrieve_recipes(starting_popular_number) {
+function retrieve_popular_recipes(starting_popular_number) {
 
     $.get('/api/recipe/get_popular', { 'number': starting_popular_number }).done(function (recipes) {
         //display them

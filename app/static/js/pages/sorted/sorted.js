@@ -5,13 +5,13 @@ jQuery(function() {
     var sort_selector = $("#sort-input")
     var buttons = $(sort_selector).find("button")
 
-    retrieve_recipes()
+    retrieve_sorted_recipes()
 
     $.each($(buttons), function(button_id, button) {
         $(button).on("click", function() {
 
             current_sorting = get_drop_down_values("sort-input")
-            retrieve_recipes()
+            retrieve_sorted_recipes()
 
 
         });
@@ -19,7 +19,7 @@ jQuery(function() {
 });
 
 
-function retrieve_recipes() {
+function retrieve_sorted_recipes() {
 
     var current_url = window.location.href
     var current_url_path = current_url.split('/')
