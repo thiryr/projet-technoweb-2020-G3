@@ -61,15 +61,36 @@ def create_user():
 @api.route('/user/update_role', methods=['POST'])
 @login_required
 def update_user_group():
-    if not current_user.is_admin:
-        return 'You do not have the necessary permissions'
+    """Updates the user group
 
-    user_rep.find_user_by_username("Bob").set_user_group("admin")
+        Expects 'user_id' and 'group_id'
+    """
+    if not group_rep.find_group_by_id(current_user.user_group).is_admin:
+        return 'You do not have the necessary permissions',400
 
-    # send to previous page if possible, index otherwise
-    if request.referrer:
-        return redirect(request.referrer)
-    return redirect("/")
+
+    user_id = request.form.get('user_id')
+    group_id = request.form.get('group_id')
+    if group_id is None or user_id is None:
+        return 'No ids', 400
+    
+    try:
+        user_id = int(user_id)
+        group_id = int(group_id)
+    except Exception:
+        return 'Ids should be integer',400
+    user = user_rep.find_user_by_id(user_id)
+    group = group_rep.find_group_by_id(group_id)
+    if group is None or user is None:
+        return 'Invalid ids',400
+    
+    try:
+        user.user_group = group.id
+        db.session.commit()
+    except Exception:
+        return 'Something went wrong', 500
+    
+    return 'ok',200
 
 
 # Subscription-related operations
