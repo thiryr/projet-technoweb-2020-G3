@@ -104,7 +104,7 @@ def register_page():
             new_user = user_rep.add_user(username=form.username.data, password=form.password.data,
                                          mail=form.email.data, birthdate=form.birthday.data, first_name=form.first_name.data, last_name=form.last_name.data)
             return redirect(url_for('frontend.login'))
-        except ValidationError as e:
+        except ValueError as e:
             form.username.errors.append(e)
 
     return render_template('pages/formpage.html', theme=get_theme(current_user), user=False, form=form)
