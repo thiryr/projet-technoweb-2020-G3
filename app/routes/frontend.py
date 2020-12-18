@@ -436,7 +436,10 @@ def get_recipe_infos(user, id):
     dict['steps'] = step_rep.get_steps_as_string_of(recipe.id)
 
     # rated by user
-    dict['already_rated_by_current_user'] = rating_rep.user_has_rating(user.id, recipe.id)
+    has_rating = False
+    if not current_user.is_anonymous:
+        has_rating = rating_rep.user_has_rating(user.id, recipe.id)
+    dict['already_rated_by_current_user'] = has_rating
 
     # comments
     dict['comments'] = []
