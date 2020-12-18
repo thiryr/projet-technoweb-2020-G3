@@ -40,7 +40,7 @@ def home_page():
 # Log In
 # OK POUR MOI, MODIFIER SI BESOIN
 @website.route('/login', methods=['GET', 'POST'])
-def login_page():
+def login():
     if current_user.is_authenticated:
         return redirect(url_for('frontend.home_page'))
 
@@ -64,7 +64,7 @@ def login_page():
         login_user(user)
 
         next_page = request.args.get('next')
-        if not next_page or url_for(next_page).netloc != '':
+        if not next_page or url_for("frontend."+next_page).netloc != '':
             next_page = url_for('frontend.home_page')
         
         return redirect(next_page)
@@ -121,9 +121,14 @@ def edit_recipe_page():
 # Profile
 # OK POUR MOI, MODIFIER SI BESOIN
 @website.route('/profile/<int:id>', methods=['GET', 'POST'])
-@login_required # LAISSER OU ENLEVER ?
 def profile_page(id):
     return render_template('pages/profile.html', theme=get_theme(current_user), user=get_user_infos(current_user), viewed_user=get_viewed_user_infos(current_user, id))
+
+@website.route('/profile', methods=['GET'])
+@login_required
+def own_profile_page():
+    return render_template('pages/profile.html', theme=get_theme(current_user), user=get_user_infos(current_user), viewed_user=get_viewed_user_infos(current_user, current_user.id))
+
 
 # Edit profile
 # OK POUR MOI, MODIFIER SI BESOIN
@@ -159,7 +164,7 @@ def edit_profile_page():
 @website.route('/users')
 @login_required
 def users_page():
-    if current_user.user_group.is_admin:
+    if group_rep.find_group_by_id(current_user.user_group).is_admin:
         return render_template('pages/users.html', theme=get_theme(current_user), page='users', user=get_user_infos(current_user), users=get_all_users_infos(), groups=get_all_group_infos())
     return redirect(url_for('frontend.home_page'))
     
@@ -293,7 +298,7 @@ def get_viewed_user_infos(user, id):
 
     # ranking
     # A VERIFIER
-    dict['ranking'] = rating_rep.get_ratings_from(viewed_user.id)
+    dict['ranking'] = user_rep.get_average_user_rating_for(viewed_user.id)
 
     # full name
     # A VERIFIER SI NOM VIDE EST NONE OU ''
@@ -324,16 +329,19 @@ def get_viewed_user_infos(user, id):
         dict['is_chef'] = False
 
     # is admin
-    dict['is_admin'] = viewed_user.user_group.is_admin
+    dict['is_admin'] = group_rep.find_group_by_id(viewed_user.user_group).is_admin
 
     # nb subscribers
     dict['nb_subscribers'] = sub_rep.get_subscriptions_to(viewed_user.id)
 
     # current user is subscribed
-    if sub_rep.get_specific_subscription(user.id, viewed_user.id) == None:
+    if current_user.is_anonymous:
         dict['current_user_is_subscribed'] = False
     else:
-        dict['current_user_is_subscribed'] = True
+        if sub_rep.get_specific_subscription(user.id, viewed_user.id) is None:
+            dict['current_user_is_subscribed'] = False
+        else:
+            dict['current_user_is_subscribed'] = True
 
     # recipes
     dict['recipes'] = []
@@ -345,7 +353,12 @@ def get_viewed_user_infos(user, id):
         current_recipe['picture'] = r.image_url
         current_recipe['url'] = '/recipe/%s'%r.id
         current_recipe['nb_favorites'] = r.follow_number
-        current_recipe['current_user_favorited'] = fav_rep.user_has_favorite(user.id, r.id)
+
+        favorited = False
+        if not current_user.is_anonymous:
+            favorited = fav_rep.user_has_favorite(user.id, r.id)
+        
+        current_recipe['current_user_favorited'] = favorited
 
         dict['recipes'].append(current_recipe)
 
@@ -404,7 +417,11 @@ def get_recipe_infos(user, id):
         dict['current_user_is_author'] = False
 
     # user has favorite
-    dict['current_user_favorited'] = fav_rep.user_has_favorite(user.id, recipe.id)
+    favorited = False
+    if not current_user.is_anonymous:
+        favorited = fav_rep.user_has_favorite(user.id, recipe.id)
+    
+    dict['current_user_favorited'] = favorited
 
     # ingredients
     dict['ingredients'] = ing_rep.get_ingredients_as_string_of(recipe.id)

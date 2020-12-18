@@ -130,11 +130,11 @@ def get_average_user_rating_for(userid: int) -> int:
     """
     #get ratings or no rating if invalid id
     try:
-        user = find_user_by_id(recipeid)
+        user = find_user_by_id(userid)
     except ValueError:
         return 0
     
-    user_ratings = rating_model.query.join(
+    user_ratings = rating_model.Rating.query.join(
         recipe_model.Recipe, rating_model.Rating.recipe_id == recipe_model.Recipe.id).join(
         user_model.User, user_model.User.id == recipe_model.Recipe.author).distinct().all()
 

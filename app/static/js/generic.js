@@ -60,4 +60,11 @@ $(document).ready(function() {
         }
     });
 
+    //link profile, theme and disconnect buttons
+    let menu_buttons = $(".user-menu").find("a")
+    $($(menu_button)[2]).attr('href', '/profile')
+    $($(menu_button)[3]).attr('href', '/logout')
+    $($(menu_button)[0]).attr('href', '/profile')
+    $.each($(".user-menu").find("a"), function(ind, menu_button) {});
+
 })
