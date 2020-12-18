@@ -28,50 +28,50 @@ $(document).ready(function() {
 
         if (!check_title(title)) {
             error_occured = true
-            append_error("Enter a title with regular characters", $("#title"))
+            append_error("Veuillez n'utiliser que des lettres, des chiffres, des tirets ou des espaces.", $("#title"))
         }
 
         if (!check_people(people)) {
             error_occured = true
-            append_error("You must select at least one person as target", $("#nb-people"))
+            append_error("Vous devez indiquer au moins une personne.", $("#nb-people"))
         }
 
         if (!check_difficulty(diff)) {
             error_occured = true
-            append_error("difficulty must be selected", $("#diff3"))
+            append_error("Ce champ est obligatoire.", $("#diff3"))
         }
 
 
         if (!check_category(cat)) {
             error_occured = true
-            preppend_error("Category must be selected", $("#category-input").find("button")[0])
+            append_error("Ce champ est obligatoire.", $("#category-input").find("button")[0])
         }
 
         if (!check_ingredients(ingredients)) {
             error_occured = true
-            preppend_error("Select at least one ingredient", $("#ingredients-input").find(".add-line"))
+            append_error("Veuillez au moins entrer une ligne.", $("#ingredients-input").find(".add-line"))
         }
 
         if (!check_utensils(utensils)) {
             error_occured = true
-            preppend_error("Select at least one utensil", $("#utensils-input").find(".add-line"))
+            append_error("Veuillez au moins entrer une ligne.", $("#utensils-input").find(".add-line"))
         }
 
         if (!check_ingredients(steps)) {
             error_occured = true
-            preppend_error("Select at least one step", $("#steps-input").find(".add-line"))
+            append_error("Veuillez au moins entrer une ligne.", $("#steps-input").find(".add-line"))
         }
 
         if (image && !check_image(image)) {
             error_occured = true
-            preppend_error("File must be jpg or png", $("#image-input"))
+            append_error("Seules les images JPG ou PNG sont autorisées.", $("#image-input"))
         }
 
 
 
         //if input-error
         if (error_occured) {
-            append_error("Correct the form before resubmitting", $(submit))
+            append_error("Veuillez corriger le formulaire avant de soumettre.", $(submit))
         } else {
 
             $.ajax({
@@ -304,6 +304,8 @@ function check_steps(steps) {
 function append_error(error_str, toElement) {
     var new_error = $(`<p>${error_str}</p>`).addClass("helper-text error")
     $(toElement).parent().after($(new_error))
+    $(toElement).addClass('error');
+    $(toElement).parent().addClass('error');
     console.log(error_str)
 }
 
