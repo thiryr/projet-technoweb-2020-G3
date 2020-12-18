@@ -61,18 +61,6 @@ app.register_blueprint(website, url_prefix='/')
 
 
 
-# Init database if it is empty
-# TODO Remove the start-up clear
-def clear_data(session):
-    meta = db.metadata
-    for table in reversed(meta.sorted_tables):
-        print(f'Clearing table {table}')
-        session.execute(table.delete())
-    session.commit()
-
-clear_data(db.session)
-
-
 #Existence check was moved to repositories
 #Exceptions are only ignored here because they're expected to already exist
 
@@ -125,16 +113,3 @@ try:
 except ValueError:
     pass
 
-
-
-#TESTS
-# import app.tests.repository_tests.categories_test as cat_test
-
-# cat_test.run_all_tests()
-
-#test recipe
-cat = name_to_category('main').id
-reci = add_recipe("Steak Frite", author_id=1, portion_number=4, difficulty=1, is_public=True, category_id=cat)
-
-compile_recipe(reci, ingredients=["4 Steaks","1Kg pomme de terres"], 
-utensils=["1 grand couteau","une poelle"], steps=["Do the thing"], tags= ["simple","saveur"])
