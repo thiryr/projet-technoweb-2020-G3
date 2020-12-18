@@ -1,16 +1,14 @@
-{% extends 'root.html' %} 
-{% import 'macros.html' as macros %} 
+{% extends 'root.html' %} {% import 'macros.html' as macros %} {% block head %}
 
-{% block head %}
 <script src="{{url_for('static',filename='js/forms/drop-down.js')}}"></script>
 <script src="{{url_for('static',filename='js/forms/list-menu.js')}}"></script>
 <script src="{{url_for('static',filename='js/forms/tag-like.js')}}"></script>
 <script src="{{url_for('static',filename='js/pages/edit-recipe/form-handler.js')}}"></script>
-{% endblock %} 
 
-{% block body %}
+{% endblock %} {% block body %}
 <div class="small-container">
     <h2>Créer une recette</h2>
+
     <form novalidate class="wtform">
         <!-- Name of the recipe -->
         {{macros.text_field( id='title', label='Nom de la recette', placeholder='Spaghettis bolognèse', )}}
@@ -60,9 +58,16 @@
         {{macros.list_input( id="steps-input", label="Étapes", placeholder="Ajouter une étape", ordered=true )}}
 
 
+        <div class="file-field">
+            <label for="image">Image</label>
+            <input id="image-input" name="image" type="file">
+        </div>
+
 
         <!-- Should the recipe be set as public -->
         {{macros.checkbox( id='public', label='Rendre cette recette publique' )}}
+
+
 
         <!-- Buttons -->
         <button class="filled-button">Ajouter</button>

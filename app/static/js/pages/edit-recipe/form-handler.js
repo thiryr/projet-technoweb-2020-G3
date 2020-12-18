@@ -23,6 +23,9 @@ $(document).ready(function() {
         var utensils = get_utensils()
         var steps = get_steps()
 
+        let image = get_image()
+
+
         if (!check_title(title)) {
             error_occured = true
             append_error("Enter a title with regular characters", $("#title"))
@@ -59,6 +62,11 @@ $(document).ready(function() {
             preppend_error("Select at least one step", $("#steps-input").find(".add-line"))
         }
 
+        if (image && !check_image(image)) {
+            error_occured = true
+            preppend_error("File must be jpg or png", $("#image-input"))
+        }
+
 
 
         //if input-error
@@ -83,7 +91,24 @@ $(document).ready(function() {
                     contentType: "application/json"
                 }).done(function(r) {
                     let new_id = JSON.parse(r).new_id
-                    window.location.href = `./recipe/${new_id}`
+
+                    if (image) {
+                        let fd = new FormData()
+                        fd.append('file', image)
+                        fd.append('id', new_id)
+                        $.ajax({
+                            url: '/api/recipe/add_image',
+                            type: 'post',
+                            data: fd,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                window.location.href = `./recipe/${new_id}`
+                            }
+                        });
+                    } else {
+                        window.location.href = `./recipe/${new_id}`
+                    }
                 })
                 .fail(function() {
                     //append error and disable for two seconds
@@ -94,6 +119,8 @@ $(document).ready(function() {
                         clear_errors()
                     }, 2000)
                 })
+
+
         }
 
     });
@@ -185,6 +212,8 @@ function check_tags() {
 
 
 
+
+
 function get_drop_down_values(drop_down_id) {
     return $(`#${drop_down_id}`).children('div.field').children('button').val()
 }
@@ -201,6 +230,25 @@ function check_category(category) {
     return true
 }
 
+
+
+
+
+function get_image() {
+    files = document.getElementById("image-input").files
+    if (files.length < 1) {
+        return null
+    }
+    return files[0]
+}
+
+function check_image(file) {
+    const fileTypes = [
+        "image/jpeg",
+        "image/png"
+    ];
+    return fileTypes.includes(file.type)
+}
 
 
 

@@ -3,6 +3,7 @@ This file contains the definition of the "api" blueprint containing
 all the routes related to the api (CRUD operations on the database).
 """
 
+from wtforms.fields.core import FieldList
 import app.repositories.ratings as rating_rep
 import app.repositories.favorites as fav_rep
 import app.repositories.recipes as recipe_rep
@@ -22,6 +23,7 @@ import app.models.rating as rating_model
 import app.models.category as cat_model
 
 from app import db
+from app.utils import save_picture
 
 
 
@@ -714,8 +716,8 @@ def add_review():
 
 
 
-#Review-related (Rating-related) routes
 
+#Theme
 @api.route('/theme/switch', methods=['POST'])
 @login_required
 def switch_theme():
@@ -729,5 +731,31 @@ def switch_theme():
         dark = False
     
     user_rep.set_user_darkmode(current_user.id,dark)
+    
+    return 'ok',200
+
+#Image
+
+@api.route('/recipe/add_image', methods=['POST'])
+@login_required
+def add_image():
+    """Adds image for a specified recipe
+    Returns:
+        200 'ok' if alright
+    """
+
+    file = request.files.get('file')
+
+    new_id = int(request.form.get('id'))
+
+    if file is None or new_id is None:
+        return 'No file or id to link to',400
+    
+    
+    recipe = recipe_rep.get_recipe_from_id(new_id)
+    recipe.image_url = save_picture(file, 'recipe', new_id)
+    
+    
+    db.session.commit()
     
     return 'ok',200
