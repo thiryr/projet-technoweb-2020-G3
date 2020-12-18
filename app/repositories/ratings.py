@@ -42,7 +42,7 @@ def get_average_rating_for(recipeid: int) -> int:
     rating_sum = 0
     rating_count = 0
     for rating in ratings:
-        rating_sum+=rating
+        rating_sum+=rating.value
         rating_count+=1
     if rating_count!=0:
         average_rating = int(round(rating_sum/rating_count))
