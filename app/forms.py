@@ -1,4 +1,5 @@
 from datetime import datetime
+from os import stat
 from flask_wtf import FlaskForm
 from wtforms.fields import PasswordField, StringField
 from wtforms.fields.core import Field
@@ -183,3 +184,8 @@ class EditProfileForm(RegisterForm):
     )
 
     submit = SubmitField('Valider')
+
+    @staticmethod
+    def validate_picture(form, field):
+        if (field.data.content_type not in ('image/png', 'image/jpg', 'image/jpeg')):
+            raise ValidationError('Ce type de fichier n\'est pas supporté')

@@ -158,27 +158,24 @@ def edit_profile_page():
     form = EditProfileForm()
 
     if form.validate_on_submit():
-        if form.picture.data.content_type in ('image/png', 'image/jpg', 'image/jpeg'):
-            try:
-                user_rep.edit_profile(
-                    form.username.data,
-                    form.password.data,
-                    form.email.data,
-                    form.first_name.data,
-                    form.last_name.data, 
-                    form.birthday.data,
-                    form.picture.data,
-                    current_user.id
-                )
+        try:
+            user_rep.edit_profile(
+                form.username.data,
+                form.password.data,
+                form.email.data,
+                form.first_name.data,
+                form.last_name.data, 
+                form.birthday.data,
+                form.picture.data,
+                current_user.id
+            )
 
-                return redirect('profile/%d' % current_user.id)
-            except ValueError as e:
-                if 'pseudo' in str(e):
-                    form.username.errors.append(e)
-                elif 'email' in str(e):
-                    form.email.errors.append(e)
-        else:
-            form.picture.errors.append('Ce type de fichier n\'est pas supporté.')
+            return redirect('profile/%d' % current_user.id)
+        except ValueError as e:
+            if 'pseudo' in str(e):
+                form.username.errors.append(e)
+            elif 'email' in str(e):
+                form.email.errors.append(e)
 
     else:
         # Fill form with existing data
