@@ -18,12 +18,6 @@ function get_profile_url(id) {
     return `../profile/${id}`
 }
 
-
-function display_recipes(recipes_json) {
-    recipes = recipes_json.recipes_info
-    recipes.forEach(recipe => display_recipe(recipe, "#trending-list"))
-}
-
 function retrieve_recipes() {
 
     $.get('/api/recipe/get_popular', { 'number': starting_popular_number }).done(function (recipes) {
@@ -33,7 +27,7 @@ function retrieve_recipes() {
 
         let json_info = JSON.parse(recipes)
 
-        display_recipes(json_info)
+        display_recipes(json_info, "#trending-list")
 
         //remove button if at the end
         if (json_info.recipes_info.length < starting_popular_number) {

@@ -28,11 +28,6 @@ function get_profile_url(id) {
     return `../profile/${id}`
 }
 
-function display_recipes(recipes_json) {
-    recipes = recipes_json.recipes_info
-    recipes.forEach(recipe => display_recipe(recipe, "#sorted-list"))
-}
-
 function retrieve_recipes() {
 
     var current_url = window.location.href
@@ -70,7 +65,7 @@ function retrieve_recipes() {
 
         $("#sorted-list").find(".recipe").remove()
 
-        display_recipes(JSON.parse(recipes))
+        display_recipes(JSON.parse(recipes), "#sorted-list")
 
     }).fail(function() {
         var new_error = $('<p>there was an issue, try again in a few seconds</p>').addClass("helper-text error")

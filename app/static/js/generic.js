@@ -142,3 +142,8 @@ function display_recipe(recipe, destination_id) {
 
     $(destination_id).append(recipe_element)
 }
+
+function display_recipes(recipes_json, target_id) {
+    recipes = recipes_json.recipes_info
+    recipes.forEach(recipe => display_recipe(recipe, target_id))
+}
