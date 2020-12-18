@@ -1,7 +1,9 @@
-{% extends 'root.html' %}
-{% import 'macros.html' as macros %}
+{% extends 'root.html' %} {% import 'macros.html' as macros %} {%block head%}
 
-{% block body %}
+<script src="{{url_for('static',filename='js/forms/drop-down.js')}}"></script>
+<script src="{{url_for('static',filename='js/pages/users/change-group.js')}}"></script>
+
+{%endblock%} {% block body %}
 <h2>Utilisateurs</h2>
 <table>
     <thead>
@@ -26,12 +28,8 @@
                 </div>
                 {% endif %}
             </td>
-            <td>{{macros.dropdown_menu(
-                id="user" + loop.index|string,
-                label="",
-                options=groups,
-                default=user.usergroup
-            )}}</td>
+            <td>{{macros.dropdown_menu( id="user" + loop.index|string, label="", options=groups, default=user.usergroup )}}
+            </td>
         </tr>
         {% endfor %}
     </tbody>

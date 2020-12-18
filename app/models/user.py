@@ -76,6 +76,7 @@ class User(UserMixin, db.Model): #type: ignore
             raise ValueError(f"Could not set the user's group to {group_name}, the group could not be found")
         else:
             self.user_group = new_user_group.id
+
     
     #subscriptions
 
