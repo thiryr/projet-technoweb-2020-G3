@@ -234,7 +234,11 @@
         {% endif %}
         <div class="fav-number">
             <span>{{nb_favorites}}</span>
+            {% if user %}
             <button><i class="{{'fa' if current_user_favorited else 'far'}} fa-heart"></i></button>
+            {% else %}
+            <i class="far fa-heart"></i>
+            {% endif %}
         </div>
     </div>
 </div>

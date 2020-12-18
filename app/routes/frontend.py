@@ -276,7 +276,7 @@ def get_user_infos(user):
 
         return dict
 
-    return {'user_id':-1, 'is_chef': False, 'is_admin':False, 'avatar_url':'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg'}
+    return None
 
 
 def get_all_group_infos():
@@ -319,7 +319,7 @@ def get_all_users_infos():
         user_dict['avatar_url'] = u.avatar_url
 
         # usergroup
-        user_dict['usergroup'] = group_rep.find_group_by_id(u.user_group).name
+        user_dict['usergroup'] = group_rep.find_group_by_id(u.user_group).id
 
         # profile url
         user_dict['profile_url'] = '/profile/%d' % u.id
