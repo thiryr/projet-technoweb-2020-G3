@@ -52,9 +52,17 @@ def search(word: str):
 
 
 def recommend_random_recipe_to(userid: int)->recipe_model.Recipe:
-    random_recipe = rd.choice(get_recipe_from_user(userid))
-    random_tag = rd.choice(taglink_rep.get_recipe_tags(random_recipe.id))
-    random_recommendation = find_random_recipe_with_tag(random_tag)
+    """returns a recommendation
+
+    Args:
+        userid (int): valid userid or -1 for a purely random recipe
+    """
+    if userid>=0:
+        random_recipe = rd.choice(get_recipe_from_user(userid))
+        random_tag = rd.choice(taglink_rep.get_recipe_tags(random_recipe.id))
+        random_recommendation = find_random_recipe_with_tag(random_tag)
+    else:
+        random_recommendation = rd.choice(recipe_model.Recipe.query.all())
     return random_recommendation
     
 
@@ -166,6 +174,9 @@ def unpin_recipe(recipeid: int) -> None:
         recipe.pinned = False
         db.session.commit()
 
+def get_pinned_recipes() -> List[recipe_model.Recipe]:
+    return recipe_model.Recipe.query.filter(recipe_model.Recipe.pinned == True).all()
+
 def switch_recipe_visibility(recipeid: int, set_public: bool) -> bool:
     """Modifies visibility of the recipe ("private"/"public")
 
@@ -210,8 +221,8 @@ def get_top_recipes(recipe_number = 20, up_to=date.today().replace(day=1)) -> Li
         number (int, optional): the number of recipes to fetch. Defaults to 20.
         up_to (date, optional): the maximum date for a recipe. Defaults to the first day of the current month.
     """
-    return recipe_model.Recipe.query.filter(recipe_model.Recipe.publicated_on<=up_to).order_by(recipe_model.Recipe.average_score.desc(), recipe_model.Recipe.follow_number.desc()).all()[:recipe_number]
-
+    recipes = recipe_model.Recipe.query.filter(recipe_model.Recipe.publicated_on>=up_to).order_by(recipe_model.Recipe.average_score.desc(), recipe_model.Recipe.follow_number.desc()).all()[:recipe_number]
+    return recipes
 def get_n_recipes(recipe_number = 20, up_to=date(2020,1,1), newest_first=False) -> List[recipe_model.Recipe]:
     """Gives all recipes to to some date (first day of 2020 by default)
 
@@ -223,7 +234,7 @@ def get_n_recipes(recipe_number = 20, up_to=date(2020,1,1), newest_first=False) 
     Returns:
         List[Recipe]: list of recipe in order of date
     """
-    default_query = recipe_model.Recipe.query.filter(recipe_model.Recipe.publicated_on<=up_to)
+    default_query = recipe_model.Recipe.query.filter(recipe_model.Recipe.publicated_on>=up_to)
     if newest_first:
         query = default_query.order_by(recipe_model.Recipe.average_score.desc())
     else:
