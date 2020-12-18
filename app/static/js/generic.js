@@ -1,7 +1,7 @@
-jQuery(function () {
+jQuery(function() {
 
     //disable default redirects for forms
-    $("input").not(".searchbar").on('keypress', function (e) {
+    $("input").not(".searchbar").on('keypress', function(e) {
         if (e.which == 13) {
             // e.preventDefault();
         }
@@ -9,12 +9,14 @@ jQuery(function () {
 
 
     //like/dislike
-    $("body").on("click", ".fa-heart", function (e) {
+    $("body").on("click", ".fa-heart", function(e) {
         e.preventDefault();
 
 
         var heart = $(e.target);
         var container = $(heart).parent();
+
+
 
         //if we land on the svg
         if ($(container).is("svg")) {
@@ -24,12 +26,20 @@ jQuery(function () {
         var counter = $(container).parent().children("span")
         if ($(container).is("button")) {
 
+            let url_str = window.location.href
+            let url_path = url_str.split('/')
+            let second_to_last = url_path[url_path.length - 2]
+            console.log(second_to_last)
+            let is_recipe_page = second_to_last.trim() == 'recipe' ? true : false
+            if (is_recipe_page) {
+                recipe_id = parseInt(url_path[url_path.length - 1])
+            } else {
+                var recipe_url = $(container).parent().parent().parent().children("a").attr("href")
+                var recipe_url_path = recipe_url.split('/')
+                var recipe_id = parseInt(recipe_url_path[recipe_url_path.length - 1])
+            }
 
-            var recipe_url = $(container).parent().parent().parent().children("a").attr("href")
-            var recipe_url_path = recipe_url.split("/")
-            var recipe_id = parseInt(recipe_url_path[recipe_url_path.length - 1])
-
-            $.post("/api/favorite/switch", { 'recipe_id': recipe_id }).done(function (r) {
+            $.post("/api/favorite/switch", { 'recipe_id': recipe_id }).done(function(r) {
                 //get response
                 var new_state = JSON.parse(r).is_favorite
 
@@ -45,26 +55,26 @@ jQuery(function () {
                     $(counter).html(`${parseInt($(counter).html()) - 1}`)
                     console.log("removed")
                 }
-            }).fail(function () {
+            }).fail(function() {
                 //do nothing for now
             })
         }
     })
 
     //link submit buttons
-    $.each($("a"), function (ind, link) {
+    $.each($("a"), function(ind, link) {
         if ($(link).attr("type") && $(link).attr("type") === "submit") {
             $(link).removeAttr("href");
 
-            $(link).on("click", function () {
+            $(link).on("click", function() {
                 $("form").trigger("submit");
             });
         }
     });
 
     //link profile, theme and disconnect buttons
-    $("#theme-switch-button").on("click", function () {
-        $.post("/api/theme/switch").done(function () {
+    $("#theme-switch-button").on("click", function() {
+        $.post("/api/theme/switch").done(function() {
             window.location.href = window.location.href
         })
     })
@@ -78,8 +88,7 @@ function recipeThumbnail(name, url, picture, nb_favorites, current_user_favorite
         for (let i = 0; i < 5; i++) {
             if (i < average_rating) {
                 rating_html += "<li><i class=\"fa fa-star\"></i></li>";
-            }
-            else {
+            } else {
                 rating_html += "<li><i class=\"far fa-star\"></i></li>";
             }
         }
