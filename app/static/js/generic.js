@@ -50,4 +50,14 @@ $(document).ready(function() {
         }
     })
 
+    //link submit buttons
+    $.each($("a"), function(ind, lin) {
+        if ($(lin).attr("type") && $(lin).attr("type") === "submit") {
+            $(lin).removeAttr("href")
+            $(lin).on("click", function() {
+                $("form").trigger("submit")
+            });
+        }
+    });
+
 })
