@@ -102,7 +102,7 @@ def update_user_group():
 def create_subscription():
     """adds a subscription from the current user to a another user
     Arguments:
-        Expects a name in post header
+        Expects 'id'
     Returns:
         200 response if ok
     """
@@ -110,10 +110,10 @@ def create_subscription():
     req_content = request.form
 
     #retrieve name
-    subscribed_name = str(req_content.get('username'))
+    subscribed_id = int(req_content.get('id'))
 
     current_id = current_user.id
-    subscribed_user = user_rep.find_user_by_username(subscribed_name)
+    subscribed_user = user_rep.find_user_by_id(subscribed_id)
 
     #make sure user was found
     if subscribed_user is None:
@@ -137,18 +137,18 @@ def create_subscription():
 def remove_subscription():
     """adds a subscription from the current user to a another user
     Arguments:
-        Expects a name in post header
+        Expects 'id' 
     Returns:
         200 response if ok
     """
     #request to dict
     req_content = request.form
-    
+
     #retrieve name
-    subscribed_name = str(req_content.get('username'))
+    subscribed_id = int(req_content.get('id'))
 
     current_id = current_user.id
-    subscribed_user = user_rep.find_user_by_username(subscribed_name)
+    subscribed_user = user_rep.find_user_by_id(subscribed_id)
 
     #make sure user was found
     if subscribed_user is None:
