@@ -2,7 +2,7 @@ from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms.fields import PasswordField, StringField
 from wtforms.fields.core import Field
-from wtforms.fields.simple import FileField
+from wtforms.fields.simple import FileField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from wtforms.widgets.core import HTMLString, escape_html, html_params
 
@@ -66,10 +66,7 @@ class SignInForm(FlaskForm):
         render_kw={"placeholder": "azerty1234"}
     )
 
-    submit = Field(
-        widget=ButtonWidget(submit=True),
-        label='Se connecter'
-    )
+    submit = SubmitField('Se connecter')
 
     register = Field(
         widget=ButtonWidget(outlined=True, href='/register'),
@@ -133,10 +130,7 @@ class RegisterForm(FlaskForm):
         description='Si vous êtes un chef cuisinier, vous pouvez le signaler par courrier électronique à l\'administration du site (admin@coin-des-chefs.be) pour obtenir le status de chef. Ce status donne accès à diverses fonctionnalités supplémentaires. Une preuve sera demandée pour vérifier que vous êtes bien chef cuisinier.'
     )
 
-    submit = Field(
-        widget=ButtonWidget(submit=True),
-        label='S\'inscrire'
-    )
+    submit = SubmitField('S\'inscrire')
 
     # Custom validator for the birthday field
     # That way, we can customize the error message
@@ -188,7 +182,4 @@ class EditProfileForm(RegisterForm):
         label='Annuler'
     )
 
-    submit = Field(
-        widget=ButtonWidget(submit=True),
-        label='Valider'
-    )
+    submit = SubmitField('Valider')

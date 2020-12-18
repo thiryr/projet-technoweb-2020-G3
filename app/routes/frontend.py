@@ -55,11 +55,11 @@ def login():
 
         if user is None or not user.check_password(form.password.data):
             form.password.errors.append('Identifiant ou mot de passe invalide.')
-            return redirect(url_for('login'))
+            return redirect(url_for('frontend.login'))
 
         if not group_rep.find_group_by_id(user.user_group).can_login:
             form.password.errors.append("Vous n'avez pas le droit de vous connectez.")
-            return redirect(url_for('login'))
+            return redirect(url_for('frontend.login'))
 
         login_user(user)
 
@@ -92,7 +92,7 @@ def register_page():
         try:
             new_user = user_rep.add_user(username=form.username.data, password=form.password.data, 
             mail=form.email.data, birthdate=form.birthday.data, first_name=form.first_name.data, last_name=form.last_name.data)
-            return redirect(url_for('login'))
+            return redirect(url_for('frontend.login'))
         except ValidationError as e:
             form.username.errors.append(e)
     
@@ -141,7 +141,7 @@ def edit_profile_page():
         try:
             user_rep.edit_profile(form.username.value, form.password.value, form.email.value, form.first_name.value, form.last_name.value, form.birthday.value, form.picture.value, current_user.id)
 
-            return redirect(url_for('profile/%d'%current_user.id))
+            return redirect('profile/%d' % current_user.id)
         except ValueError as e:
             if 'pseudo' in str(e):
                 form.username.errors.append(e)
