@@ -5,16 +5,6 @@ jQuery(function() {
 });
 
 
-
-function get_own_recipe_url(id) {
-    return `../recipe/${id}`
-}
-
-function get_own_profile_url(id) {
-    return `../profile/${id}`
-}
-
-
 function retrieve_own_recipes() {
 
 

@@ -1,18 +1,9 @@
 $(document).ready(function() {
 
-    retrieve_recommended_recipes()
+    retrieve_recipes()
 
 });
 
-
-
-function get_recommended_recipe_url(id) {
-    return `../recipe/${id}`
-}
-
-function get_recommended_profile_url(id) {
-    return `../profile/${id}`
-}
 
 function retrieve_recipes() {
     $.get('/api/recipe/get_recommendation').done(function(recipes) {

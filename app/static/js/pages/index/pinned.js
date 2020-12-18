@@ -5,17 +5,6 @@ $(document).ready(function() {
 });
 
 
-
-function get_pinned_recipe_url(id) {
-    return `../recipe/${id}`
-}
-
-function get_pinned_profile_url(id) {
-    return `../profile/${id}`
-}
-
-
-
 function retrieve_pinned_recipes() {
 
 

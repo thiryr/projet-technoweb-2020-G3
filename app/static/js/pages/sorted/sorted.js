@@ -19,15 +19,6 @@ jQuery(function() {
 });
 
 
-
-function get_recipe_url(id) {
-    return `../recipe/${id}`
-}
-
-function get_profile_url(id) {
-    return `../profile/${id}`
-}
-
 function retrieve_recipes() {
 
     var current_url = window.location.href

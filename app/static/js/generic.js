@@ -147,3 +147,11 @@ function display_recipes(recipes_json, target_id) {
     recipes = recipes_json.recipes_info
     recipes.forEach(recipe => display_recipe(recipe, target_id))
 }
+
+function get_recipe_url(id) {
+    return `../recipe/${id}`
+}
+
+function get_profile_url(id) {
+    return `../profile/${id}`
+}
