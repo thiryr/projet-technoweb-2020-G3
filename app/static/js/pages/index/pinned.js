@@ -87,7 +87,7 @@ function display_pinned_recipe(recipe) {
         recipe.author_nick, recipe.author_first, recipe.author_last, recipe.author_chef,
         recipe.average_rating, recipe.favorites, recipe.is_favorite)
 
-    $("#featured").append($(filled_template))
+    $("#featured-list").append($(filled_template))
 
 }
 
@@ -102,12 +102,12 @@ function retrieve_pinned_recipes() {
     $.get('/api/recipe/get_pinned').done(function(recipes) {
         //display them
 
-        $("#featured").find(".recipe").remove()
+        $("#featured-list").find(".recipe").remove()
 
         display_pinned_recipes(JSON.parse(recipes))
 
     }).fail(function() {
         var new_error = $('<p>there was an issue, try again in a few seconds</p>').addClass("helper-text error")
-        $("#featured").append($(new_error))
+        $("#featured-list").append($(new_error))
     })
 }

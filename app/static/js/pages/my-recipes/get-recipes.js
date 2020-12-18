@@ -1,21 +1,21 @@
 $(document).ready(function() {
 
-    retrieve_recommended_recipes()
+    retrieve_own_recipes()
 
 });
 
 
 
-function get_recommended_recipe_url(id) {
+function get_own_recipe_url(id) {
     return `../recipe/${id}`
 }
 
-function get_recommended_profile_url(id) {
+function get_own_profile_url(id) {
     return `../profile/${id}`
 }
 
 
-function get_recommended_recipe_element(img_url, recipe_id, recipe_name, author_id, author_nick, author_first, author_last, is_chef, rating, fav_number, is_fav) {
+function get_own_recipe_element(img_url, recipe_id, recipe_name, author_id, author_nick, author_first, author_last, is_chef, rating, fav_number, is_fav) {
 
     var chef_badge = '<span class="badge">Chef</span>\n'
     if (!is_chef)
@@ -44,8 +44,8 @@ function get_recommended_recipe_element(img_url, recipe_id, recipe_name, author_
     else
         heart = empty_heart
 
-    var recipe_url = get_recommended_recipe_url(recipe_id)
-    var profile_url = get_recommended_profile_url(author_id)
+    var recipe_url = get_own_recipe_url(recipe_id)
+    var profile_url = get_own_profile_url(author_id)
 
     var username = ''
     if (!author_first && !author_last) {
@@ -82,34 +82,32 @@ function get_recommended_recipe_element(img_url, recipe_id, recipe_name, author_
 }
 
 
-function display_recommended_recipe(recipe) {
-    var filled_template = get_recommended_recipe_element(recipe.img_url, recipe.recipe_id, recipe.recipe_name, recipe.author_id,
+function display_own_recipe(recipe) {
+    var filled_template = get_own_recipe_element(recipe.img_url, recipe.recipe_id, recipe.recipe_name, recipe.author_id,
         recipe.author_nick, recipe.author_first, recipe.author_last, recipe.author_chef,
         recipe.average_rating, recipe.favorites, recipe.is_favorite)
 
-    $("#recommended-list").append($(filled_template))
+    $("#my-recipes-list").append($(filled_template))
 
 }
 
-function display_recommended_recipes(recipes_json) {
+function display_own_recipes(recipes_json) {
     recipes = recipes_json.recipes_info
-    recipes.forEach(recipe => display_recommended_recipe(recipe))
+    recipes.forEach(recipe => display_own_recipe(recipe))
 }
 
-function retrieve_recommended_recipes() {
+function retrieve_own_recipes() {
 
 
-    $.get('/api/recipe/get_recommendation').done(function(recipes) {
+    $.get('/api/recipe/user_recipes').done(function(recipes) {
         //display them
 
-        $("#recommended-list").find(".recipe").remove()
+        $("#my-recipes-list").find(".recipe").remove()
 
-        display_recommended_recipes(JSON.parse(recipes))
+        display_own_recipes(JSON.parse(recipes))
 
     }).fail(function() {
         var new_error = $('<p>there was an issue, try again in a few seconds</p>').addClass("helper-text error")
-        $("#recommended-list").append($(new_error))
-
-
+        $("#my-recipes-list").append($(new_error))
     })
 }
