@@ -137,7 +137,7 @@ def get_average_user_rating_for(userid: int) -> int:
     Args:
         userid (int): a valid user id
     Returns:
-        int: the average of ratings or 0 if no rating OR invalid recipeid
+        int: the average of ratings or None if no rating OR invalid recipeid
     """
     # get ratings or no rating if invalid id
     try:
@@ -150,14 +150,16 @@ def get_average_user_rating_for(userid: int) -> int:
         user_model.User, user_model.User.id == recipe_model.Recipe.author).distinct().all()
 
     ratings = map(lambda rate: rate.value, user_ratings)
+
     # compute average
     rating_sum = 0
     rating_count = 0
     for rating in ratings:
         rating_sum += rating
         rating_count += 1
+    
     if rating_count != 0:
         average_rating = int(round(rating_sum/rating_count))
     else:
-        average_rating = 0
+        average_rating = None
     return average_rating

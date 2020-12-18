@@ -1349,6 +1349,7 @@ ul.difficulty>li:first-child:nth-last-child(3), ul.difficulty>li:first-child:nth
 }
 
 #profile .subscribe-button {
+    margin-top: 0.8rem;
     border-radius: 0.7rem;
     border-top-left-radius: 0.9rem;
     border-bottom-left-radius: 0.9rem;
