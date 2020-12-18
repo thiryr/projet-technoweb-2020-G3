@@ -726,6 +726,12 @@ ul.tags>li {
     text-align: left;
 }
 
+/* Helper text */
+
+p.helper-text {
+    color: var(--text-field-error-color);
+    font-size: 1.1rem;
+}
 
 
 /* == App bar == */
