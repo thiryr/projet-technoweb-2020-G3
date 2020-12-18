@@ -30,4 +30,4 @@ def get_recipe_tags(recipeid: int) -> List[str]:
 
     taglinks = taglink_model.TagLink.query.filter_by(recipe_id=recipeid).all()
     tags = map(lambda taglink: tag_rep.id_to_tag(taglink.tag_id), taglinks)
-    return map(lambda tag: tag.name, tags)
+    return list(map(lambda tag: tag.name, tags))

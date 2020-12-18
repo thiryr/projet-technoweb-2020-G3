@@ -59,15 +59,23 @@ def recommend_random_recipe_to(userid: int)->recipe_model.Recipe:
     """
     if userid>=0:
         random_recipe = rd.choice(get_recipe_from_user(userid))
-        random_tag = rd.choice(taglink_rep.get_recipe_tags(random_recipe.id))
+        tags = taglink_rep.get_recipe_tags(random_recipe.id)
+        if len(tags) == 0:
+            return rd.choice(recipe_model.Recipe.query.all())
+        random_tag = rd.choice(tags)
         random_recommendation = find_random_recipe_with_tag(random_tag)
+        if random_recommendation is None:
+            rd.choice(recipe_model.Recipe.query.all())
     else:
         random_recommendation = rd.choice(recipe_model.Recipe.query.all())
     return random_recommendation
     
 
 def find_random_recipe_with_tag(tag:str)->recipe_model.Recipe:
-    return rd.choice(recipe_model.Recipe.join(taglink_model.TagLink, taglink_model.TagLink.tag_id == tag_rep.name_to_tag(tag)).all())
+    recipes = recipe_model.Recipe.query.join(taglink_model.TagLink, taglink_model.TagLink.tag_id == tag_rep.name_to_tag(tag).id).all()
+    if len(recipes) == 0:
+        return None
+    return rd.choice(recipes)
 
 def add_recipe(name: str, author_id: int, portion_number:int, difficulty:int, 
 is_public:bool, category_id:int, image_url=None)->recipe_model.Recipe:
