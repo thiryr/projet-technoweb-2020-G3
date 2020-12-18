@@ -78,7 +78,7 @@ clear_data(db.session)
 
 #groups
 try:
-    add_usergroup('admin')
+    add_usergroup('admin', is_admin=True, can_rate=True, can_access_user_page=True, can_access_social_features=True, can_login=True, can_have_public_recipes=True)
 except ValueError:
     pass
 
